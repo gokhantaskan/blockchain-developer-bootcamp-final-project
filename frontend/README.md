@@ -1,4 +1,7 @@
-# frontend
+# Sertifie.me Front-End
+ConsenSys Blockchain Developer Bootcamp 2021 - Proof Of Attendance Front-End Codebase
+
+Vue version `^3.0.0`
 
 ## Project setup
 ```
