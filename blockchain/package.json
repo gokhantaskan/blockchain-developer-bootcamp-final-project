@@ -1,0 +1,20 @@
+{
+  "name": "sertifie-contracts",
+  "version": "0.1.0",
+  "description": "ConsenSys Blockchain Developer Bootcamp Final Project",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "prettier --write 'contracts/**/*.sol' && solhint 'contracts/**/*.sol' --config .solhint.json --fix"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-solidity": "^1.0.0-beta.18"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.5.1"
+  }
+}
