@@ -21,5 +21,6 @@ module.exports = {
     indent: 1,
     quotes: [1, "double", "avoid-escape"],
     semi: [1, "always", { omitLastInOneLineBlock: true }],
+    "space-before-function-paren": [1, { anonymous: "never", named: "never", asyncArrow: "always" }],
   },
 };

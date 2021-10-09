@@ -4,7 +4,13 @@
       alt="Vue logo"
       src="../assets/logo.png"
     >
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <HelloWorld />
+  </div>
+
+  <div>
+    <button @click="connectMetamask">
+      Connect Metamask
+    </button>
   </div>
 </template>
 
@@ -16,6 +22,11 @@ export default defineComponent({
   name: "Home",
   components: {
     HelloWorld,
+  },
+  methods: {
+    connectMetamask(): void {
+      alert("clicked!");
+    },
   },
 });
 </script>
