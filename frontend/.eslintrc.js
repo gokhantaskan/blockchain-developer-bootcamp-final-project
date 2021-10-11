@@ -13,6 +13,7 @@ module.exports = {
   },
   rules: {
     "@typescript-eslint/explicit-module-boundary-types": 0,
+    "@typescript-eslint/no-explicit-any": 0,
     "arrow-parens": [1, "as-needed"],
     "comma-dangle": [1, { arrays: "always-multiline", objects: "always-multiline", imports: "never", exports: "never", functions: "never" }],
     "max-len": [0, { code: 80, ignoreComments: false, ignoreStrings: false }],

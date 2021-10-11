@@ -1,50 +1,24 @@
 <template>
   <div class="home">
-    <HelloWorld />
-  </div>
+    <suspense>
+      <template #default>
+        <HelloWorld />
+      </template>
 
-  <div>
-    <button
-      :disabled="!isMetaMask()"
-      @click="requestAccounts"
-    >
-      {{ isConnected() ? "Connected to Metamask" : "Connect to Metamask" }}
-    </button>
-
-    <div v-if="isMetaMask()">
-      {{ accounts }}
-    </div>
-    <div v-else>
-      Please install MetaMask extension to continue
-    </div>
+      <template #fallback>
+        <p>Loading...</p>
+      </template>
+    </suspense>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useEthereum } from "@/composables/ethereum";
-import HelloWorld from "@/components/HelloWorld.vue";
+import { defineAsyncComponent, defineComponent } from "vue";
 
 export default defineComponent({
   name: "Home",
   components: {
-    HelloWorld,
-  },
-  setup() {
-    const { isMetaMask, isConnected, requestAccounts, accounts } = useEthereum();
-
-    return {
-      isMetaMask,
-      isConnected,
-      requestAccounts,
-      accounts,
-    };
+    HelloWorld: defineAsyncComponent(() => import("../components/HelloWorld.vue")),
   },
 });
 </script>
-
-<style scoped>
-div {
-  margin-top: 1rem;
-}
-</style>

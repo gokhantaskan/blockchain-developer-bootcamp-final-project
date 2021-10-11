@@ -1,29 +1,56 @@
 import { _window } from "@/lib/globals";
-import { onMounted, onUnmounted, readonly, ref, watch } from "vue";
+import { onMounted, onUnmounted, reactive, readonly, watch } from "vue";
+interface IEthereum {
+  accounts: string[];
+  selectedAddress: string;
+  networkVersion: string;
+  chainId: string;
+  isMetaMask: boolean;
+  isConnected: boolean;
+  initialize: () => Promise<void>;
+  requestAccounts: () => void;
+}
 
-const ethereum = _window.ethereum ? readonly(_window.ethereum) : undefined;
-const accounts = ref<string[]>([]);
+const state = reactive<IEthereum>({
+  accounts: [],
+  isMetaMask: false,
+  isConnected: false,
+  selectedAddress: "",
+  networkVersion: "",
+  chainId: "",
+  initialize: async (): Promise<void> => {
+    try {
+      const eth = await _window.ethereum;
 
-const isMetaMask = () => Boolean(ethereum && ethereum.isMetaMask);
-const isConnected = () => Boolean(ethereum && ethereum.isConnected);
-const selectedAddress = () => ethereum.selectedAddress || "";
+      state.isMetaMask = Boolean(eth && eth.isMetaMask);
+      state.isConnected = Boolean(eth && eth.isConnected);
+      state.selectedAddress = (eth !== undefined) ? eth.selectedAddress : "";
+      state.chainId = (eth !== undefined) ? eth.chainId : "";
+      state.networkVersion = (eth !== undefined) ? eth.networkVersion : "";
 
-const requestAccounts = async () => {
-  try {
-    accounts.value = await ethereum.request({ method: "eth_requestAccounts" });
-  } catch (error: any) {
-    if (error.code === 4001) {
-      // EIP-1193 userRejectedRequest error
-      // If this happens, the user rejected the connection request.
-      alert(error.message);
-    } else {
+      return;
+      /*  */
+    } catch (error: any) {
       console.error(error);
     }
-  }
-};
+  },
+  requestAccounts: async () => {
+    try {
+      state.accounts = await _window.ethereum.request({ method: "eth_requestAccounts" });
+    } catch (error: any) {
+      if (error.code === 4001) {
+        // EIP-1193 userRejectedRequest error
+        // If this happens, the user rejected the connection request.
+        alert(error.message);
+      } else {
+        console.error(error);
+      }
+    }
+  },
+});
 
 watch(
-  accounts,
+  state.accounts,
   (newAccounts, oldAccounts) => {
     if (JSON.stringify(newAccounts) !== JSON.stringify(oldAccounts)) {
       console.log(`Selected Account: ${newAccounts[0]}`);
@@ -37,7 +64,7 @@ export function useEthereum() {
     if (_window.ethereum !== undefined) {
       _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
       _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
-      _window.ethereum.on("accountsChanged", (accs: string[]): void => { accounts.value = accs });
+      _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
       _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
     }
   });
@@ -46,17 +73,12 @@ export function useEthereum() {
     if (_window.ethereum !== undefined) {
       _window.ethereum.removeListener("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
       _window.ethereum.removeListener("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
-      _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (accounts.value = accs));
+      _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
       _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
     }
   });
 
   return {
-    ethereum,
-    isMetaMask,
-    isConnected,
-    accounts,
-    requestAccounts,
-    selectedAddress,
+    state: readonly(state),
   };
 }

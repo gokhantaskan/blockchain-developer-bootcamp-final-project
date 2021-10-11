@@ -12,12 +12,18 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import { useEthereum } from "./composables/ethereum";
+import Web3 from "web3";
 
-const { ethereum, requestAccounts } = useEthereum();
+const { state: ethereum } = useEthereum();
+const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
 
-onBeforeMount(() => {
-  if (ethereum !== undefined) requestAccounts();
+onBeforeMount(async () => {
+  await ethereum.initialize();
+});
+
+onMounted(() => {
+  console.log(web3);
 });
 </script>
