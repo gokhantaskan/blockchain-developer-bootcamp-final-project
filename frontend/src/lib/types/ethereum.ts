@@ -18,6 +18,7 @@ export interface IEthereum {
   chainName: string;
   isMetaMask: boolean;
   isConnected: boolean;
+  request: (args: IRequestArguments) => Promise<unknown>;
   initialize: () => Promise<void>;
   requestAccounts: () => Promise<void>;
   setChainName: () => void;

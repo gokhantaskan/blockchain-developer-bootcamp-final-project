@@ -14,14 +14,10 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useEthereum } from "./composables/ethereum";
-import Web3 from "web3";
 
 const { state: ethereum } = useEthereum();
-const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
 
 onMounted(async () => {
   await ethereum.initialize();
-  console.log(ethereum);
-  console.log(web3);
 });
 </script>

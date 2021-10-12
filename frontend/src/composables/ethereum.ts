@@ -1,5 +1,5 @@
 import { _window } from "@/lib/globals";
-import { IEthereum, IProviderMessage } from "@/lib/types/ethereum";
+import { IEthereum, IProviderMessage, IRequestArguments } from "@/lib/types/ethereum";
 import { onMounted, onUnmounted, reactive, readonly, watch } from "vue";
 
 const state = reactive<IEthereum>({
@@ -10,15 +10,14 @@ const state = reactive<IEthereum>({
   networkVersion: "",
   chainId: "",
   chainName: "",
+  request: (args: IRequestArguments) => _window.ethereum.request(args),
   initialize: async (): Promise<void> => {
     try {
-      const eth = await _window.ethereum;
-
-      state.isMetaMask = Boolean(eth && eth.isMetaMask);
-      state.isConnected = Boolean(eth && eth.isConnected);
-      state.selectedAddress = (eth !== undefined) ? eth.selectedAddress : "";
-      state.networkVersion = (eth !== undefined) ? eth.networkVersion : "";
-      state.chainId = (eth !== undefined) ? eth.chainId : "";
+      state.isMetaMask = Boolean(_window.ethereum && _window.ethereum.isMetaMask);
+      state.isConnected = Boolean(_window.ethereum && _window.ethereum.isConnected);
+      state.selectedAddress = (_window.ethereum !== undefined) ? _window.ethereum.selectedAddress : "";
+      state.networkVersion = (_window.ethereum !== undefined) ? _window.ethereum.networkVersion : "";
+      state.chainId = (_window.ethereum !== undefined) ? _window.ethereum.chainId : "";
       state.setChainName();
       /*  */
     } catch (error: any) {
