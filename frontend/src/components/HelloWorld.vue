@@ -7,12 +7,16 @@
     <button
       :disabled="!ethereum.isMetaMask"
       @click="ethereum.requestAccounts"
-    >{{ ethereum.isConnected ? "Connected to Metamask" : "Connect to Metamask" }}</button>
+    >
+      {{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}
+    </button>
 
     <div v-if="ethereum.isMetaMask">
-      <pre><code>{{ data }}</code></pre>
+      <pre><code>{{ ethereum }}</code></pre>
     </div>
-    <div v-else>Please install MetaMask extension to continue</div>
+    <div v-else>
+      Please install MetaMask extension to continue
+    </div>
   </div>
 </template>
 
@@ -29,15 +33,6 @@ withDefaults(defineProps<Props>(), {
 });
 
 const { state: ethereum } = useEthereum();
-
-const data = {
-  accounts: ethereum.accounts,
-  isMetaMask: ethereum.isMetaMask,
-  isConnected: ethereum.isConnected,
-  selectedAddress: ethereum.selectedAddress,
-  networkVersion: ethereum.networkVersion,
-  chainId: ethereum.chainId,
-};
 </script>
 
 <style scoped lang="scss">

@@ -1,15 +1,6 @@
 import { _window } from "@/lib/globals";
+import { IEthereum, IProviderMessage } from "@/lib/types/ethereum";
 import { onMounted, onUnmounted, reactive, readonly, watch } from "vue";
-interface IEthereum {
-  accounts: string[];
-  selectedAddress: string;
-  networkVersion: string;
-  chainId: string;
-  isMetaMask: boolean;
-  isConnected: boolean;
-  initialize: () => Promise<void>;
-  requestAccounts: () => void;
-}
 
 const state = reactive<IEthereum>({
   accounts: [],
@@ -18,6 +9,7 @@ const state = reactive<IEthereum>({
   selectedAddress: "",
   networkVersion: "",
   chainId: "",
+  chainName: "",
   initialize: async (): Promise<void> => {
     try {
       const eth = await _window.ethereum;
@@ -25,10 +17,9 @@ const state = reactive<IEthereum>({
       state.isMetaMask = Boolean(eth && eth.isMetaMask);
       state.isConnected = Boolean(eth && eth.isConnected);
       state.selectedAddress = (eth !== undefined) ? eth.selectedAddress : "";
-      state.chainId = (eth !== undefined) ? eth.chainId : "";
       state.networkVersion = (eth !== undefined) ? eth.networkVersion : "";
-
-      return;
+      state.chainId = (eth !== undefined) ? eth.chainId : "";
+      state.setChainName();
       /*  */
     } catch (error: any) {
       console.error(error);
@@ -37,24 +28,38 @@ const state = reactive<IEthereum>({
   requestAccounts: async () => {
     try {
       state.accounts = await _window.ethereum.request({ method: "eth_requestAccounts" });
+      state.initialize();
     } catch (error: any) {
       if (error.code === 4001) {
         // EIP-1193 userRejectedRequest error
         // If this happens, the user rejected the connection request.
+        alert(error.message);
+      } else if (error.code === -32002) {
+        // If this happens, the user requested the connection and MetaMask is waiting for confirmation.
         alert(error.message);
       } else {
         console.error(error);
       }
     }
   },
+  setChainName: (): void => {
+    if (state.chainId === "0x1") state.chainName = "Ethereum Main Network (Mainnet)";
+    else if (state.chainId === "0x3") state.chainName = "Ropsten Test Network";
+    else if (state.chainId === "0x4") state.chainName = "Rinkeby Test Network";
+    else if (state.chainId === "0x5") state.chainName = "Goerli Test Network";
+    else if (state.chainId === "0x2a") state.chainName = "Kovan Test Network";
+    else state.chainName = "Unknown Chain/Network";
+  },
 });
 
 watch(
-  state.accounts,
-  (newAccounts, oldAccounts) => {
+  () => [state.accounts],
+  ([newAccounts], [oldAccounts]) => {
     if (JSON.stringify(newAccounts) !== JSON.stringify(oldAccounts)) {
-      console.log(`Selected Account: ${newAccounts[0]}`);
-      if (oldAccounts[0]) console.log(`Switched Account: ${oldAccounts[0]}`);
+      state.initialize();
+
+      console.log(`Selected Account: ${newAccounts[0].slice(0, 4)}...`);
+      if (oldAccounts[0]) console.log(`Switched Account: ${oldAccounts[0].slice(0, 4)}...`);
     }
   }
 );
@@ -66,6 +71,7 @@ export function useEthereum() {
       _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
       _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
       _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
+      _window.ethereum.on("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
     }
   });
 
