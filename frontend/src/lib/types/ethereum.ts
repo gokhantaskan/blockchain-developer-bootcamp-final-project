@@ -1,5 +1,3 @@
-import { ComputedRef } from "vue";
-
 export interface IRequestArguments {
   method: string;
   params?: unknown[] | Record<string, any>;

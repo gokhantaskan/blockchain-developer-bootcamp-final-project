@@ -9,12 +9,16 @@
       >
         {{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}
       </el-button>
+      <!-- <OnboardButton /> -->
 
       <div v-if="ethereum.isMetaMask">
         <pre><code>{{ ethereum }}</code></pre>
 
         <div>
-          <el-button type="primary" @click="getBalance">
+          <el-button
+            type="primary"
+            @click="getBalance"
+          >
             Get ETH Balance
           </el-button>
 
@@ -47,7 +51,11 @@
           </el-form-item>
 
           <el-form-item label=" ">
-            <el-button type="primary" :disabled="!address.length" @click="sendEth">
+            <el-button
+              type="primary"
+              :disabled="!address.length"
+              @click="sendEth"
+            >
               Send ETH
             </el-button>
           </el-form-item>
@@ -64,10 +72,11 @@
 </template>
 
 <script setup lang="ts">
-import Web3 from "web3";
-import { defineProps, ref, withDefaults } from "vue";
+import { ref, withDefaults, defineProps } from "vue";
 import { useEthereum } from "@/composables/ethereum";
 import { ElMessage } from "element-plus";
+import { web3 } from "@/lib/web3";
+// import OnboardButton from "./OnboardButton.vue";
 
 interface Props {
   msg?: string
@@ -77,7 +86,6 @@ withDefaults(defineProps<Props>(), {
   msg: "Web3.js",
 });
 
-const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
 const { state: ethereum } = useEthereum();
 
 const address = ref("");
