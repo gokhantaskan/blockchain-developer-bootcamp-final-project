@@ -1,0 +1,23 @@
+.el-message {
+  font-family: inherit;
+  min-width: 640px;
+  max-width: 640px;
+
+  .el-message__content {
+    line-height: 1.5;
+  }
+
+  &.is-closable #{&}__content {
+    padding-right: 26px;
+  }
+
+  [class*=" el-icon-"] {
+    align-self: flex-start;
+    margin-top: 2px;
+  }
+
+  .el-message__closeBtn {
+    top: 15px;
+    transform: translate(0);
+  }
+}

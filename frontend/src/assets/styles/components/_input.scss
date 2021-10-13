@@ -1,0 +1,10 @@
+.el-input {
+  &.inline {
+    display: inline-block !important;
+    width: auto !important;
+  }
+
+  &.inline #{&}__inner {
+    width: auto !important;
+  }
+}

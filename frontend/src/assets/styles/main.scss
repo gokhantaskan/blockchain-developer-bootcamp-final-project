@@ -1,31 +1,13 @@
 @import "abstracts/variables";
 
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+@import
+  "base/typography",
+  "base/base";
 
-#nav {
-  padding: 30px;
+@import
+  "components/message",
+  "components/form",
+  "components/input";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
-}
-
-pre {
-  display: inline-block;
-  text-align: left;
-  background: #fcfcfc;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 1rem;
-}
+@import
+  "layout/grid";

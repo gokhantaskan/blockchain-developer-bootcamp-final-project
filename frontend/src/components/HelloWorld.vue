@@ -1,48 +1,73 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-  </div>
 
-  <div v-if="ethereum">
-    <button
-      :disabled="!!ethereum.accounts[0]"
-      @click="ethereum.requestAccounts"
-    >{{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}</button>
+    <div v-if="ethereum">
+      <el-button
+        :disabled="!!ethereum.accounts[0]"
+        @click="ethereum.requestAccounts"
+      >
+        {{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}
+      </el-button>
 
-    <div v-if="ethereum.isMetaMask">
-      <pre><code>{{ ethereum }}</code></pre>
+      <div v-if="ethereum.isMetaMask">
+        <pre><code>{{ ethereum }}</code></pre>
 
-      <div>
-        <button @click="getBalance">Get ETH Balance</button>
+        <div>
+          <el-button type="primary" @click="getBalance">
+            Get ETH Balance
+          </el-button>
 
-        <div>{{ ethBalance }}</div>
-      </div>
+          <el-input
+            class="inline ml-4px"
+            :readonly="true"
+            :model-value="ethBalance"
+          />
+        </div>
 
-      <div>
-        <label for="#to">
-          Address to be sent
-          <input id="to" type="text" v-model="address" />
-        </label>
+        <el-form
+          class="padded"
+          label-width="100px"
+          label-position="left"
+        >
+          <el-form-item label="Address">
+            <el-input
+              id="to"
+              v-model="address"
+              type="text"
+            />
+          </el-form-item>
 
-        <label for="#amount">
-          ETH amount to be sent
-          <input id="amount" type="number" v-model="sendAmount" />
-        </label>
+          <el-form-item label="Amount">
+            <el-input
+              id="amount"
+              v-model.number="sendAmount"
+              type="number"
+            />
+          </el-form-item>
 
-        <button @click="sendEth">Send ETH</button>
+          <el-form-item label=" ">
+            <el-button type="primary" :disabled="!address.length" @click="sendEth">
+              Send ETH
+            </el-button>
+          </el-form-item>
+        </el-form>
 
         <pre><code>{{ receipt }}</code></pre>
       </div>
-    </div>
 
-    <div v-else>Please install MetaMask extension to continue</div>
+      <div v-else>
+        Please install MetaMask extension to continue
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, reactive, ref, withDefaults } from "vue";
-import { useEthereum } from "@/composables/ethereum";
 import Web3 from "web3";
+import { defineProps, ref, withDefaults } from "vue";
+import { useEthereum } from "@/composables/ethereum";
+import { ElMessage } from "element-plus";
 
 interface Props {
   msg?: string
@@ -62,37 +87,46 @@ const receipt = ref({});
 
 const getBalance = async () => {
   try {
-    web3.eth.getBalance(ethereum.selectedAddress || "", (_error, balance) => {
+    web3.eth.getBalance(ethereum.accounts[0] || ethereum.selectedAddress || "", (_error, balance) => {
       ethBalance.value = (web3.utils.fromWei(balance, "ether"));
     });
-  } catch (error) {
-    alert(error);
+  } catch (error: any) {
+    ElMessage({
+      showClose: true,
+      message: error,
+      type: "error",
+      duration: 5000,
+    });
   }
 };
 
 const sendEth = async () => {
-  console.log({
-    from: ethereum.accounts[0],
-    to: address,
-    value: (sendAmount.value) * 10e18,
-  });
-
   try {
     web3.eth.sendTransaction({
-      from: ethereum.accounts[0] || undefined,
+      from: ethereum.accounts[0] || ethereum.selectedAddress || undefined,
       to: address.value,
       value: (sendAmount.value) * 10e17,
     })
       .then(tx => {
         receipt.value = tx;
-      })
-  } catch (error) {
-    alert(error);
+      });
+  } catch (error: any) {
+    ElMessage({
+      showClose: true,
+      message: error,
+      type: "error",
+      duration: 5000,
+    });
   }
 };
 </script>
 
 <style scoped lang="scss">
+.hello {
+  max-width: 960px;
+  margin: auto;
+}
+
 h3 {
   margin: 40px 0 0;
 }
