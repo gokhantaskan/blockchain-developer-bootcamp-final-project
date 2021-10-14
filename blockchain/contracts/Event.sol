@@ -2,6 +2,5 @@
 pragma solidity 0.8.9;
 
 contract Event {
-  constructor() public {
-  }
+  constructor() public {}
 }

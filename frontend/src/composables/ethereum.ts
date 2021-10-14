@@ -19,6 +19,8 @@ const state = reactive<IEthereum>({
       state.networkVersion = (_window.ethereum !== undefined) ? _window.ethereum.networkVersion : "";
       state.chainId = (_window.ethereum !== undefined) ? _window.ethereum.chainId : "";
       state.setChainName();
+      state.setListeners();
+      state.removeListeners();
       /*  */
     } catch (error: any) {
       console.error(error);
@@ -49,6 +51,23 @@ const state = reactive<IEthereum>({
     else if (state.chainId === "0x2a") state.chainName = "Kovan Test Network";
     else state.chainName = "Unknown Chain/Network";
   },
+  setListeners: (): void => {
+    if (_window.ethereum !== undefined) {
+      _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
+      _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
+      _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
+      _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
+      _window.ethereum.on("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
+    }
+  },
+  removeListeners: () => {
+    if (_window.ethereum !== undefined) {
+      _window.ethereum.removeListener("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
+      _window.ethereum.removeListener("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
+      _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
+      _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
+    }
+  }
 });
 
 watch(
@@ -64,25 +83,6 @@ watch(
 );
 
 export function useEthereum() {
-  onMounted(() => {
-    if (_window.ethereum !== undefined) {
-      _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
-      _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
-      _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
-      _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
-      _window.ethereum.on("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
-    }
-  });
-
-  onUnmounted(() => {
-    if (_window.ethereum !== undefined) {
-      _window.ethereum.removeListener("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
-      _window.ethereum.removeListener("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
-      _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
-      _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
-    }
-  });
-
   return {
     state: readonly(state),
   };
