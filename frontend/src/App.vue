@@ -24,5 +24,5 @@ onMounted(async () => {
 
 onUnmounted(async () => {
   ethereum.removeListeners();
-})
+});
 </script>

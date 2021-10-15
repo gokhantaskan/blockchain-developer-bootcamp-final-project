@@ -20,10 +20,9 @@ const state = reactive<IEthereum>({
       state.chainId = (_window.ethereum !== undefined) ? _window.ethereum.chainId : "";
       state.setChainName();
       state.setListeners();
-      state.removeListeners();
       /*  */
     } catch (error: any) {
-      console.error(error);
+      alert(error.message);
     }
   },
   requestAccounts: async () => {
@@ -67,7 +66,7 @@ const state = reactive<IEthereum>({
       _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
       _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
     }
-  }
+  },
 });
 
 watch(

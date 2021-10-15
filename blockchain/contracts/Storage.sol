@@ -9,12 +9,15 @@ pragma solidity 0.8.9;
 contract Storage {
   uint256 number;
 
+  event setEvent(uint newValue);
+
   /**
    * @dev Store value in variable
    * @param num value to store
    */
   function store(uint256 num) public {
     number = num;
+    emit setEvent(num);
   }
 
   /**

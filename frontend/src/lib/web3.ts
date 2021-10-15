@@ -1,7 +1,21 @@
 import Web3 from "web3";
+import { useEthereum } from "@/composables/ethereum";
 import storageJson from "../../../blockchain/build/contracts/Storage.json";
+
+export const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
+
+const defaultAccount = useEthereum().state.selectedAddress;
+web3.eth.defaultAccount = defaultAccount;
+
+const storageContractAddress = "0x831Bf273BEE9c812cD7d8C10A93f048F951a301F";
+const storageContract = new web3.eth.Contract(storageJson.abi as any, storageContractAddress);
+
+console.log(web3.eth);
+
+console.log(storageContract);
+if (defaultAccount) storageContract.methods.store(15).send({ from: defaultAccount }).then(console.log);
+
 // import Onboard from "bnc-onboard";
-// import { useEthereum } from "@/composables/ethereum";
 
 // let web3;
 
@@ -22,11 +36,3 @@ import storageJson from "../../../blockchain/build/contracts/Storage.json";
 //   await onboard.walletSelect();
 //   await onboard.walletCheck();
 // }
-
-const storageContractAddress = "0x9909829a2a18132a775B31746738A76E903d84d0";
-
-export const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
-export const storageContract = new web3.eth.Contract(storageJson.abi as any, storageContractAddress);
-
-console.log(storageContract);
-// if (useEthereum().state.selectedAddress) storageContract.methods.store(15).send({ from: useEthereum().state.selectedAddress }).then(console.log);
