@@ -17,11 +17,12 @@
 
 pre {
   display: inline-block;
+  box-sizing: border-box;
   text-align: left;
   background: #fcfcfc;
   border: 1px solid #e5e5e5;
   border-radius: 4px;
   padding: 1rem;
-  max-width: 100%;
+  width: 100%;
   overflow: auto;
 }

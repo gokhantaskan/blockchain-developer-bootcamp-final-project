@@ -3,6 +3,7 @@
     <div class="container">
       <PageHeader title="Home" />
       <HelloWorld />
+      <CreateAttendeeForm class="mt-4" />
     </div>
   </div>
 </template>
@@ -15,6 +16,7 @@ export default defineComponent({
   components: {
     PageHeader: () => import("@/components/PageHeader.vue"),
     HelloWorld: () => import("@/components/HelloWorld.vue"),
+    CreateAttendeeForm: () => import("@/components/forms/attendees/CreateAttendeeForm.vue"),
   },
 });
 </script>
