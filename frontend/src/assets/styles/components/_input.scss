@@ -8,3 +8,34 @@
     width: auto !important;
   }
 }
+
+.form-item {
+  padding: 0.5rem 0;
+
+  &.not-valid {
+    .el-input__inner {
+      border-color: red;
+    }
+  }
+
+  &__label {
+    display: block;
+    line-height: 1.5;
+  }
+
+  &__error,
+  &__message {
+    display: block;
+    padding: 0.25rem 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  &__error {
+    color: red;
+  }
+
+  &__message {
+    color: gray;
+  }
+}

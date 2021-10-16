@@ -1,6 +1,9 @@
 import Vue from "vue";
 import "./plugins/composition-api";
 import "./plugins/element-ui";
+import "./plugins/vee-validate";
+import "./components/globals";
+
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";

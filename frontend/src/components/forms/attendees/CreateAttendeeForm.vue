@@ -5,66 +5,80 @@
         Create Attendee Profile
       </template>
 
-      <el-form
-        label-position="top"
-      >
-        <div class="row">
-          <div class="col-12 col-md-6">
-            <el-form-item label="First Name">
-              <el-input
-                id="firstname"
+      <ValidationObserver v-slot="{ handleSubmit }">
+        <form
+          @submit.prevent="handleSubmit(createAttendee)"
+          novalidate
+        >
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <FormItem
                 v-model="form.firstName"
-                type="text"
+                id="firstName"
+                label="First Name"
+                vv-name="First Name"
+                vv-rules="required|min:2"
+                message="At least 2 characters"
+                required
               />
-            </el-form-item>
-          </div>
+            </div>
 
-          <div class="col-12 col-md-6">
-            <el-form-item label="Last Name">
-              <el-input
-                id="lastname"
+            <div class="col-12 col-md-6">
+              <FormItem
                 v-model="form.lastName"
+                id="lastName"
+                label="Last Name"
+                vv-name="Last Name"
+                vv-rules="required|min:2"
+                message="At least 2 characters"
+                required
               />
-            </el-form-item>
-          </div>
+            </div>
 
-          <div class="col-12 col-md-6">
-            <el-form-item label="National ID">
-              <el-input
-                id="nationalid"
+            <div class="col-12 col-md-6">
+              <FormItem
                 v-model="form.nationalId"
+                id="nationalId"
+                label="National ID"
+                vv-name="National ID"
+                vv-rules="required"
+                required
               />
-            </el-form-item>
-          </div>
+            </div>
 
-          <div class="col-12 col-md-6">
-            <el-form-item label="E-mail">
-              <el-input
-                id="email"
+            <div class="col-12 col-md-6">
+              <FormItem
                 v-model="form.email"
+                id="email"
+                label="E-mail"
+                vv-name="E-mail"
+                vv-rules="required|email"
+                required
               />
-            </el-form-item>
-          </div>
+            </div>
 
-          <div class="col-12 col-md-6">
-            <el-form-item label="Phone">
-              <el-input
-                id="phone"
+            <div class="col-12 col-md-6">
+              <FormItem
                 v-model="form.phone"
+                id="phone"
+                label="Phone"
+                vv-name="Phone"
+                vv-rules="required"
+                required
               />
-            </el-form-item>
-          </div>
+            </div>
 
-          <div class="col-12">
+            <div class="col-12">
               <el-button
                 type="primary"
-                @click="createAttendee"
+                native-type="submit"
               >
                 Submit
               </el-button>
+            </div>
           </div>
-        </div>
-      </el-form>
+        </form>
+      </ValidationObserver>
     </el-card>
   </div>
 </template>
@@ -83,7 +97,7 @@ export default defineComponent({
       phone: null,
     });
 
-    const createAttendee = () => {};
+    const createAttendee = () => { };
 
     return { form, createAttendee };
   },
