@@ -17,7 +17,7 @@
                 id="firstName"
                 label="First Name"
                 vv-name="First Name"
-                vv-rules="required|min:2"
+                vv-rules="required|min:2|alpha_spaces"
                 message="At least 2 characters"
                 required
               />
@@ -29,7 +29,7 @@
                 id="lastName"
                 label="Last Name"
                 vv-name="Last Name"
-                vv-rules="required|min:2"
+                vv-rules="required|min:2|alpha"
                 message="At least 2 characters"
                 required
               />
@@ -68,7 +68,7 @@
               />
             </div>
 
-            <div class="col-12">
+            <div class="col-12 pt-3">
               <el-button
                 type="primary"
                 native-type="submit"
@@ -80,15 +80,24 @@
         </form>
       </ValidationObserver>
     </el-card>
+
+    <pre><code>{{ transaction }}</code></pre>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from "@vue/composition-api";
+import { defineComponent, reactive, ref } from "@vue/composition-api";
+import { IContractAbi } from "@/lib/types/web3";
+import { web3 } from "@/lib/web3";
+import abi from "@/abi/attendee.js";
+import { useEthereum } from "@/composables/ethereum";
+import { Message } from "element-ui";
 
 export default defineComponent({
   name: "CreateAttendeeForm",
   setup() {
+    const { state: ethereum } = useEthereum();
+
     const form = reactive({
       firstName: null,
       lastName: null,
@@ -97,9 +106,22 @@ export default defineComponent({
       phone: null,
     });
 
-    const createAttendee = () => { };
+    const contract = new web3.eth.Contract(abi as IContractAbi, "0x8dBD06ba12cFb1AE34951Ec4658ff516f7563399");
+    const transaction = ref({});
 
-    return { form, createAttendee };
+    const createAttendee = () => {
+      contract.methods
+        .createAttendee(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
+        .send({ from: ethereum.selectedAddress })
+          .then((res: any) => { transaction.value = res })
+          .catch((error: any) => Message({
+            type: "error",
+            message: error.message,
+            duration: 5000,
+          }));
+    };
+
+    return { form, transaction, createAttendee };
   },
 });
 </script>

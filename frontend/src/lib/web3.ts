@@ -1,18 +1,13 @@
 import Web3 from "web3";
-import { useEthereum } from "@/composables/ethereum";
-import storageJson from "../../../blockchain/build/contracts/Storage.json";
-import attendeesJson from "../../../blockchain/build/contracts/Attendees.json";
-import { IContractAbi } from "./types/web3";
+// import { useEthereum } from "@/composables/ethereum";
+// import storageJson from "../../../blockchain/build/contracts/Storage.json";
+// import attendeesJson from "../../../blockchain/build/contracts/Attendees.json";
+// import { IContractAbi } from "./types/web3";
 
 export const web3 = new Web3(Web3.givenProvider || "http://localhost:7545");
 
-const storageContract = new web3.eth.Contract(storageJson.abi as IContractAbi, "0xeD6a7A806E26b0aA9289D352fEFAEB80081F78b2");
-const attendeesContract = new web3.eth.Contract(attendeesJson.abi as IContractAbi, "0xa08467363a560A6b1227669fa2352C9B0767BF72");
-
-console.log(web3.eth);
-
-console.log(storageContract);
-console.log(attendeesContract);
+// const storageContract = new web3.eth.Contract(storageJson.abi as IContractAbi, "0xeD6a7A806E26b0aA9289D352fEFAEB80081F78b2");
+// const attendeesContract = new web3.eth.Contract(attendeesJson.abi as IContractAbi, "0xa08467363a560A6b1227669fa2352C9B0767BF72");
 
 // if (useEthereum().state.selectedAddress) {
 //   storageContract.methods.store(15).send({

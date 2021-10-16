@@ -3,6 +3,7 @@
     :vid="vvVid"
     :rules="vvRules"
     :name="vvName"
+    :bails="false"
     skip-if-empty
     v-slot="{ errors }"
   >
