@@ -1,12 +1,16 @@
-import { createApp } from "vue";
-import ElementPlus from "element-plus";
-import "element-plus/dist/index.css";
+import Vue from "vue";
+import "./plugins/composition-api";
+import "./plugins/element-ui";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
+
 import "./assets/styles/main.scss";
 
-const app = createApp(App);
-app.use(ElementPlus);
+Vue.config.productionTip = false;
 
-app.use(store).use(router).mount("#app");
+new Vue({
+  router,
+  store,
+  render: h => h(App),
+}).$mount("#app");

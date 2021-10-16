@@ -1,5 +1,21 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <div class="container">
+      <PageHeader title="About" />
+      <SendEthForm />
+    </div>
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+
+export default defineComponent({
+  name: "About",
+  components: {
+    PageHeader: () => import("@/components/PageHeader.vue"),
+    SendEthForm: () => import("@/components/forms/SendEthForm.vue"),
+  },
+  setup() {},
+});
+</script>

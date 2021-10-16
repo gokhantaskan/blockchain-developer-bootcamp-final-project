@@ -1,6 +1,6 @@
 import { _window } from "@/lib/globals";
 import { IEthereum, IProviderMessage, IRequestArguments } from "@/lib/types/ethereum";
-import { reactive, readonly, watch } from "vue";
+import { reactive, readonly, watch } from "@vue/composition-api";
 
 const state = reactive<IEthereum>({
   accounts: [],

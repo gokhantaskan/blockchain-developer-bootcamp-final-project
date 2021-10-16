@@ -1,67 +1,27 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-
     <div v-if="ethereum">
-      <el-button
-        :disabled="!!ethereum.accounts[0]"
-        @click="ethereum.requestAccounts"
-      >
-        {{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}
-      </el-button>
       <!-- <OnboardButton /> -->
-
       <div v-if="ethereum.isMetaMask">
         <pre><code>{{ ethereum }}</code></pre>
 
-        <div>
-          <el-button
-            type="primary"
-            @click="getBalance"
-          >
-            Get ETH Balance
-          </el-button>
-
-          <el-input
-            class="inline ml-4px"
-            :readonly="true"
-            :model-value="ethBalance"
-          />
+        <div class="row">
+          <div class="col-6">
+            <div class="d-flex">
+              <el-button
+                type="primary"
+                @click="getBalance"
+              >
+                Get ETH Balance
+              </el-button>
+              <el-input
+                v-model="ethBalance"
+                class="ms-2"
+                :readonly="true"
+              />
+            </div>
+          </div>
         </div>
-
-        <el-form
-          class="padded"
-          label-width="100px"
-          label-position="left"
-        >
-          <el-form-item label="Address">
-            <el-input
-              id="to"
-              v-model="address"
-              type="text"
-            />
-          </el-form-item>
-
-          <el-form-item label="Amount">
-            <el-input
-              id="amount"
-              v-model.number="sendAmount"
-              type="number"
-            />
-          </el-form-item>
-
-          <el-form-item label=" ">
-            <el-button
-              type="primary"
-              :disabled="!address.length"
-              @click="sendEth"
-            >
-              Send ETH
-            </el-button>
-          </el-form-item>
-        </el-form>
-
-        <pre><code>{{ receipt }}</code></pre>
       </div>
 
       <div v-else>
@@ -71,79 +31,41 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, withDefaults, defineProps } from "vue";
+<script lang="ts">
+import { defineComponent, ref } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
-import { ElMessage } from "element-plus";
 import { web3 } from "@/lib/web3";
+import { Message } from "element-ui";
 // import OnboardButton from "./OnboardButton.vue";
 
-interface Props {
-  msg?: string
-}
+export default defineComponent({
+  name: "HelloWorld",
+  props: {
+    msg: {
+      type: String,
+      default: "",
+    },
+  },
+  setup() {
+    const { state: ethereum } = useEthereum();
 
-withDefaults(defineProps<Props>(), {
-  msg: "Web3.js",
+    const ethBalance = ref("");
+
+    const getBalance = async () => {
+      try {
+        web3.eth.getBalance(ethereum.accounts[0] || ethereum.selectedAddress || "", (_error, balance) => {
+          ethBalance.value = (web3.utils.fromWei(balance, "ether"));
+        });
+      } catch (error: any) {
+        Message({
+          type: "error",
+          message: error.message,
+          duration: 5000,
+        });
+      }
+    };
+
+    return { ethereum, ethBalance, getBalance };
+  },
 });
-
-const { state: ethereum } = useEthereum();
-
-const address = ref("");
-const sendAmount = ref(0);
-const ethBalance = ref("");
-const receipt = ref({});
-
-const getBalance = async () => {
-  try {
-    web3.eth.getBalance(ethereum.accounts[0] || ethereum.selectedAddress || "", (_error, balance) => {
-      ethBalance.value = (web3.utils.fromWei(balance, "ether"));
-    });
-  } catch (error: any) {
-    ElMessage({
-      showClose: true,
-      message: error,
-      type: "error",
-      duration: 5000,
-    });
-  }
-};
-
-const sendEth = async () => {
-  try {
-    web3.eth.sendTransaction({
-      from: ethereum.accounts[0] || ethereum.selectedAddress || undefined,
-      to: address.value,
-      value: (sendAmount.value) * 10e17,
-    })
-      .then(tx => {
-        receipt.value = tx;
-      });
-  } catch (error: any) {
-    ElMessage({
-      showClose: true,
-      message: error,
-      type: "error",
-      duration: 5000,
-    });
-  }
-};
 </script>
-
-<style scoped lang="scss">
-.hello {
-  max-width: 960px;
-  margin: auto;
-}
-
-h3 {
-  margin: 40px 0 0;
-}
-
-div:nth-child(2) {
-  margin-top: 1rem;
-}
-
-label {
-  display: block;
-}
-</style>
