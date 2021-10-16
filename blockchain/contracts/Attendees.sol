@@ -23,22 +23,33 @@ contract Attendees {
     _;
   }
 
-  function isAttendee(address _address)
-    internal
-    view
-    returns (bool)
-  {
-    if (
+  modifier isAttendee(address _address) {
+    require(
       // TODO: nationalId must be unique!
-      bytes(attendeesList[_address].firstName).length != 0 &&
-      bytes(attendeesList[_address].lastName).length != 0 &&
-      bytes(attendeesList[_address].nationalId).length != 0
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+      bytes(attendeesList[_address].firstName).length == 0 &&
+        bytes(attendeesList[_address].lastName).length == 0 &&
+        bytes(attendeesList[_address].nationalId).length == 0,
+      "You have already attended!"
+    );
+    _;
   }
+
+  // function isAttendee(address _address)
+  //   internal
+  //   view
+  //   returns (bool)
+  // {
+  //   if (
+  //     // TODO: nationalId must be unique!
+  //     bytes(attendeesList[_address].firstName).length != 0 &&
+  //     bytes(attendeesList[_address].lastName).length != 0 &&
+  //     bytes(attendeesList[_address].nationalId).length != 0
+  //   ) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 
   function createAttendee(
     string memory _firstName,
@@ -46,9 +57,9 @@ contract Attendees {
     string memory _nationalId,
     string memory _email,
     string memory _phone
-  ) public {
-    if (isAttendee(msg.sender))
-      revert("You can only attend once!");
+  ) public isAttendee(msg.sender) {
+    // if (isAttendee(msg.sender))
+    // revert("You can only attend once!");
 
     attendeesList[msg.sender] = Attendee({
       firstName: _firstName,

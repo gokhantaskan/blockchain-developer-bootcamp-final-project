@@ -1,6 +1,6 @@
 import { _window } from "@/lib/globals";
 import { IEthereum, IProviderMessage, IRequestArguments } from "@/lib/types/ethereum";
-import { onMounted, onUnmounted, reactive, readonly, watch } from "vue";
+import { reactive, readonly, watch } from "vue";
 
 const state = reactive<IEthereum>({
   accounts: [],
@@ -19,7 +19,6 @@ const state = reactive<IEthereum>({
       state.networkVersion = (_window.ethereum !== undefined) ? _window.ethereum.networkVersion : "";
       state.chainId = (_window.ethereum !== undefined) ? _window.ethereum.chainId : "";
       state.setChainName();
-      state.setListeners();
       /*  */
     } catch (error: any) {
       alert(error.message);
@@ -75,8 +74,8 @@ watch(
     if (JSON.stringify(newAccounts) !== JSON.stringify(oldAccounts)) {
       state.initialize();
 
-      console.log(`Selected Account: ${newAccounts[0].slice(0, 4)}...`);
-      if (oldAccounts[0]) console.log(`Switched Account: ${oldAccounts[0].slice(0, 4)}...`);
+      console.log(`Selected Account: ${newAccounts[0].slice(0, 8)}...`);
+      if (oldAccounts[0]) console.log(`Switched Account: ${oldAccounts[0].slice(0, 8)}...`);
     }
   }
 );
