@@ -93,16 +93,14 @@ export default defineComponent({
   name: "CreateAttendeeForm",
   setup() {
     const { state: ethereum } = useEthereum();
-
-    const form = reactive({
-      firstName: null,
-      lastName: null,
-      nationalId: null,
-      email: null,
-      phone: null,
-    });
-
     const transaction = ref({});
+    const form = reactive({
+      firstName: "",
+      lastName: "",
+      nationalId: "",
+      email: "",
+      phone: "",
+    });
 
     const createAttendee = () => {
       attendeeContract.methods

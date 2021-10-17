@@ -1,17 +1,21 @@
 <template>
-  <div class="home">
-    <div
-      class="container"
-      v-loading="loading"
-    >
+  <div
+    class="home"
+    v-loading="loading"
+  >
+    <div class="container">
       <PageHeader title="Home" />
       <HelloWorld />
 
-      <template v-if="$store.state.attendee.detailsLoaded">
-        <AttendeeDetails class="mt-4" />
-      </template>
-      <template v-else>
-        <CreateAttendeeForm class="mt-4" />
+      <template v-if="!loading">
+        <AttendeeDetails
+          class="mt-4"
+          v-if="$store.state.attendee.detailsLoaded"
+        />
+        <CreateAttendeeForm
+          class="mt-4"
+          v-else
+        />
       </template>
     </div>
   </div>

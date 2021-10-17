@@ -33,8 +33,11 @@
           </table>
         </div>
 
-        <div class="col-12 col-md-3 mt-4 mt-md-0 d-flex align-items-center justify-content-center justify-content-xl-end">
-          <div class="qr-code" ref="qrCodeRef"></div>
+        <div class="col-12 col-md-3 mt-4 mt-md-0 d-flex align-items-center justify-content-center">
+          <div
+            class="qr-code"
+            ref="qrCodeRef"
+          ></div>
         </div>
       </div>
     </el-card>
@@ -42,7 +45,7 @@
 </template>
 
 <script>
-import { useEthereum } from '@/composables/ethereum';
+import { useEthereum } from "@/composables/ethereum";
 export default {
   name: "AttendeeDetails",
   data() {
