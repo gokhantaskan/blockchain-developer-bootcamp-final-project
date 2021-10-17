@@ -1,0 +1,39 @@
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  border-collapse: collapse;
+
+  tbody {
+
+    tr {
+
+      th,
+      td {
+        padding: 0.5rem;
+        border-bottom: 1px solid #DCDFE6;
+      }
+
+      th {
+        text-align: left;
+      }
+
+      &:last-child {
+
+        th,
+        td {
+          border-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &--details {
+
+    tbody {
+      th {
+        width: 25%;
+      }
+    }
+  }
+}

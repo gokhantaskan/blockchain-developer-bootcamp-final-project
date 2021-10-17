@@ -17,6 +17,7 @@
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted } from "@vue/composition-api";
 import { useEthereum } from "./composables/ethereum";
+import { vm } from "./lib/globals";
 
 export default defineComponent({
   name: "App",
@@ -24,8 +25,10 @@ export default defineComponent({
     const { state: ethereum } = useEthereum();
 
     onMounted(async () => {
-      await ethereum.initialize();
-      ethereum.setListeners();
+      vm().root.proxy.$nextTick(async () => {
+        await ethereum.requestAccounts();
+        ethereum.setListeners();
+      });
     });
 
     onUnmounted(async () => {

@@ -52,8 +52,7 @@
                 id="email"
                 label="E-mail"
                 vv-name="E-mail"
-                vv-rules="required|email"
-                required
+                vv-rules="email"
               />
             </div>
 
@@ -63,8 +62,6 @@
                 id="phone"
                 label="Phone"
                 vv-name="Phone"
-                vv-rules="required"
-                required
               />
             </div>
 
@@ -87,11 +84,10 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "@vue/composition-api";
-import { IContractAbi } from "@/lib/types/web3";
-import { web3 } from "@/lib/web3";
-import abi from "@/abi/attendee.js";
 import { useEthereum } from "@/composables/ethereum";
 import { Message } from "element-ui";
+import { vm } from "@/lib/globals";
+import { attendeeContract } from "@/contracts";
 
 export default defineComponent({
   name: "CreateAttendeeForm",
@@ -106,19 +102,22 @@ export default defineComponent({
       phone: null,
     });
 
-    const contract = new web3.eth.Contract(abi as IContractAbi, "0x8dBD06ba12cFb1AE34951Ec4658ff516f7563399");
     const transaction = ref({});
 
     const createAttendee = () => {
-      contract.methods
+      attendeeContract.methods
         .createAttendee(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
-          .then((res: any) => { transaction.value = res })
-          .catch((error: any) => Message({
+        .then((res: any) => { transaction.value = res })
+        .catch((error: any) => {
+          Message({
             type: "error",
             message: error.message,
             duration: 5000,
-          }));
+          });
+
+          console.log(error.message);
+        });
     };
 
     return { form, transaction, createAttendee };

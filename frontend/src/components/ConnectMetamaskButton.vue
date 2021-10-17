@@ -1,9 +1,9 @@
 <template>
   <el-button
-    :disabled="!!ethereum.accounts[0]"
+    :disabled="!!ethereum.accounts[0] || !!ethereum.selectedAddress"
     @click="ethereum.requestAccounts"
   >
-    {{ ethereum.accounts.length ? "Connected to Metamask" : "Connect to Metamask" }}
+    {{ ethereum.accounts.length || ethereum.selectedAddress ? "Connected to Metamask" : "Connect to Metamask" }}
   </el-button>
 </template>
 

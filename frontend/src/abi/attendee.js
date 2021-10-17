@@ -16,6 +16,26 @@ export default [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "isAttendee",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+    constant: true,
+  },
+  {
+    inputs: [
+      {
         internalType: "string",
         name: "_firstName",
         type: "string",

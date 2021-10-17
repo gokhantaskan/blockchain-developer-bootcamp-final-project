@@ -5,6 +5,7 @@
 
   .el-message__content {
     line-height: 1.5;
+    word-break: break-word;
   }
 
   &.is-closable #{&}__content {

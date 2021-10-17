@@ -14,7 +14,7 @@
 
   &.not-valid {
     .el-input__inner {
-      border-color: red;
+      border-color: #F56C6C;
     }
   }
 
@@ -32,10 +32,10 @@
   }
 
   &__error {
-    color: red;
+    color: #F56C6C;
   }
 
   &__message {
-    color: gray;
+    color: #c5c8cf;
   }
 }

@@ -13,11 +13,13 @@ const state = reactive<IEthereum>({
   request: (args: IRequestArguments) => _window.ethereum.request(args),
   initialize: async (): Promise<void> => {
     try {
-      state.isMetaMask = Boolean(_window.ethereum && _window.ethereum.isMetaMask);
-      state.isConnected = Boolean(_window.ethereum && _window.ethereum.isConnected);
-      state.selectedAddress = (_window.ethereum !== undefined) ? _window.ethereum.selectedAddress : "";
-      state.networkVersion = (_window.ethereum !== undefined) ? _window.ethereum.networkVersion : "";
-      state.chainId = (_window.ethereum !== undefined) ? _window.ethereum.chainId : "";
+      const ethereum = await _window.ethereum;
+
+      state.isMetaMask = Boolean(ethereum && ethereum.isMetaMask);
+      state.isConnected = Boolean(ethereum && ethereum.isConnected);
+      state.selectedAddress = (ethereum !== undefined) ? ethereum.selectedAddress : "";
+      state.networkVersion = (ethereum !== undefined) ? ethereum.networkVersion : "";
+      state.chainId = (ethereum !== undefined) ? ethereum.chainId : "";
       state.setChainName();
       /*  */
     } catch (error: any) {
@@ -28,6 +30,7 @@ const state = reactive<IEthereum>({
     try {
       state.accounts = await _window.ethereum.request({ method: "eth_requestAccounts" });
       state.initialize();
+      /*  */
     } catch (error: any) {
       if (error.code === 4001) {
         // EIP-1193 userRejectedRequest error
@@ -51,7 +54,10 @@ const state = reactive<IEthereum>({
   },
   setListeners: (): void => {
     if (_window.ethereum !== undefined) {
-      _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
+      _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => {
+        console.log("Connection attempt!");
+        state.requestAccounts();
+      });
       _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
       _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
       _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
