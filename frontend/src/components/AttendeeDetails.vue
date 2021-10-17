@@ -1,12 +1,52 @@
 <template>
   <div class="attendee-details">
-    <el-card>
+    <el-card shadow="never">
       <template #header>
-        Attendee Details
+        <div class="d-flex align-items-center justify-content-between">
+          <h2 class="m-0">
+            Attendee Details
+          </h2>
+
+          <div>
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              @click="editModalVisible = true"
+            >
+            </el-button>
+            <el-dialog
+              title="Edit Attendee Details"
+              :visible.sync="editModalVisible"
+              destroy-on-close
+            >
+              <EditAttendeeForm @updated="afterUpdate" />
+              <template
+                slot="footer"
+                class="dialog-footer"
+              >
+                <el-button
+                  form="edit-attendee-form"
+                  type="primary"
+                  native-type="submit"
+                >
+                  Confirm
+                </el-button>
+              </template>
+            </el-dialog>
+
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              class="ms-2"
+              @click="removeAttendee"
+            >
+            </el-button>
+          </div>
+        </div>
       </template>
 
       <div class="row">
-        <div class="col-12 col-md-9">
+        <div class="col-12 col-lg-9">
           <table class="table table--details">
             <tbody>
               <tr>
@@ -33,7 +73,7 @@
           </table>
         </div>
 
-        <div class="col-12 col-md-3 mt-4 mt-md-0 d-flex align-items-center justify-content-center">
+        <div class="col-12 col-lg-3 mt-4 mt-lg-0 d-flex align-items-center justify-content-center justify-content-lg-end">
           <div
             class="qr-code"
             ref="qrCodeRef"
@@ -46,11 +86,16 @@
 
 <script>
 import { useEthereum } from "@/composables/ethereum";
+
 export default {
   name: "AttendeeDetails",
+  components: {
+    EditAttendeeForm: () => import("@/components/forms/attendees/EditAttendeeForm.vue"),
+  },
   data() {
     return {
       qrCode: null,
+      editModalVisible: false,
     };
   },
   mounted() {
@@ -58,9 +103,35 @@ export default {
 
     this.qrCode = new QRCode(this.$refs.qrCodeRef, {
       text: useEthereum().state.selectedAddress,
-      width: 160,
-      height: 160,
+      width: 214,
+      height: 214,
     });
+  },
+  methods: {
+    afterUpdate(e) {
+      this.editModalVisible = false;
+      this.$store.dispatch("attendee/getAttendeeDetails", useEthereum().state.selectedAddress);
+    },
+    removeAttendee() {
+      this.$confirm(
+        "This will permanently delete the user. Later, you can create your profile again. Continue?",
+        "Attention!",
+        {
+          confirmButtonText: "Delete Permanently",
+          cancelButtonText: "Cancel",
+          type: "warning",
+        }
+      )
+        .then(async () => {
+          await this.$store.dispatch("attendee/removeAttendee", useEthereum().state.selectedAddress);
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete canceled",
+          });
+        });
+    },
   },
 };
 </script>

@@ -10,8 +10,8 @@
 
       th,
       td {
-        padding: 0.5rem;
-        border-bottom: 1px solid #DCDFE6;
+        padding: 0.75rem;
+        border-bottom: 1px solid #EBEEF5;
       }
 
       th {
@@ -29,6 +29,7 @@
   }
 
   &--details {
+    margin: 0;
 
     tbody {
       th {

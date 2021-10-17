@@ -5,17 +5,23 @@
   >
     <div class="container">
       <PageHeader title="Home" />
-      <HelloWorld />
+      <!-- <HelloWorld /> -->
 
       <template v-if="!loading">
         <AttendeeDetails
           class="mt-4"
           v-if="$store.state.attendee.detailsLoaded"
         />
-        <CreateAttendeeForm
-          class="mt-4"
-          v-else
-        />
+
+        <el-card shadow="never" v-else>
+          <template #header>
+            <h2 class="m-0">Create Attendee Profile</h2>
+          </template>
+
+          <CreateAttendeeForm
+            class="mt-4"
+          />
+        </el-card>
       </template>
     </div>
   </div>

@@ -57,6 +57,19 @@ export const attendeeModule = {
           dispatch("resetAttendeeState");
         });
     },
+    async removeAttendee({ dispatch }: any, address: string): Promise<void> {
+      await attendeeContract.methods.removeAttendee().send({ from: address })
+        .then(() => {
+          dispatch("resetAttendeeState");
+        })
+        .catch((err: any) => {
+          Message({
+            message: err.message,
+            type: "error",
+            duration: 5000,
+          });
+        });
+    },
     async resetAttendeeState({ commit }: any): Promise<void> {
       commit("RESET_ATTENDEE_STATE");
     },

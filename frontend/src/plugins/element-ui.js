@@ -3,6 +3,7 @@ import Vue from "vue";
 import {
   Card,
   Button,
+  Dialog,
   Form,
   FormItem,
   Input,
@@ -15,6 +16,7 @@ import {
 
 Vue.use(Card);
 Vue.use(Button);
+Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
