@@ -19,8 +19,18 @@
   }
 
   &__label {
-    display: block;
+    display: inline-block;
     line-height: 1.5;
+    font-weight: 500;
+    position: relative;
+
+    .required & {
+
+      &::after {
+        content: "*";
+        color: #F56C6C;
+      }
+    }
   }
 
   &__error,

@@ -11,7 +11,8 @@ import {
   Loading,
   MessageBox,
   Message,
-  Notification
+  Notification,
+  Tooltip
 } from "element-ui";
 
 Vue.use(Card);
@@ -21,6 +22,7 @@ Vue.use(Form);
 Vue.use(FormItem);
 Vue.use(Input);
 Vue.use(InputNumber);
+Vue.use(Tooltip);
 
 Vue.use(Loading.directive);
 

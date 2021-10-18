@@ -78,12 +78,11 @@
 import { defineComponent, reactive, ref } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
 import { Message } from "element-ui";
-import { vm } from "@/lib/globals";
 import { attendeeContract } from "@/contracts";
 
 export default defineComponent({
   name: "CreateAttendeeForm",
-  setup() {
+  setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
     const transaction = ref({});
     const form = reactive({
@@ -98,15 +97,16 @@ export default defineComponent({
       attendeeContract.methods
         .createAttendee(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
-        .then((res: any) => { transaction.value = res })
+        .then((res: any) => {
+          transaction.value = res;
+          emit("created", true);
+        })
         .catch((error: any) => {
           Message({
             type: "error",
             message: error.message,
             duration: 5000,
           });
-
-          console.log(error.message);
         });
     };
 
