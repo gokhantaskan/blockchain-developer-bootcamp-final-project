@@ -86,6 +86,7 @@ export default defineComponent({
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
     const loading = ref(false);
+    const tx_hash = ref("");
     const form = reactive({
       firstName: "",
       lastName: "",
@@ -101,9 +102,11 @@ export default defineComponent({
         .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {
+          tx_hash.value = txHash;
+
           Notification.info({
             position: "bottom-left",
-            duration: 0,
+            duration: 5000,
             message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
             title: "Transaction submitted!",
           });
@@ -121,8 +124,15 @@ export default defineComponent({
         .catch((error: any) => {
           Message({
             type: "error",
-            message: error.message,
+            message: error.message.split(":")[0],
             duration: 5000,
+          });
+
+          Notification.error({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${tx_hash.value.slice(0, 10) + "..." + tx_hash.value.slice(-10)}`,
+            title: "Transaction reverted!",
           });
         })
         .finally(() => {

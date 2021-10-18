@@ -12,6 +12,10 @@
 .form-item {
   padding: 0.5rem 0;
 
+  .el-input__inner {
+    background-color: $color-lighter;
+  }
+
   &.not-valid {
     .el-input__inner {
       border-color: #F56C6C;

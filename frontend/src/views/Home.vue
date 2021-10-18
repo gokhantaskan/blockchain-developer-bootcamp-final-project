@@ -4,15 +4,16 @@
     v-loading="loading"
   >
     <div class="container">
-      <PageHeader title="Home" />
+      <PageHeader title="Sertifie.me" />
 
       <transition
         name="fade"
         mode="out-in"
       >
         <el-card
-          shadow="never"
           v-if="$store.state.user.detailsLoaded"
+          key="1"
+          shadow="never"
         >
           <template #header>
             <div class="d-flex align-items-center justify-content-between">
@@ -77,8 +78,9 @@
         </el-card>
 
         <el-card
-          shadow="never"
           v-else
+          key="2"
+          shadow="never"
         >
           <template #header>
             <h2 class="m-0">

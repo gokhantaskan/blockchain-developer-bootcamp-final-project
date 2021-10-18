@@ -77,7 +77,7 @@ export default defineComponent({
   name: "UpdateUserForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
-    const transaction = ref({});
+    const tx_hash = ref("");
     const form = reactive({
       firstName: "",
       lastName: "",
@@ -95,7 +95,7 @@ export default defineComponent({
         .once("transactionHash", (txHash: string) => {
           Notification.info({
             position: "bottom-left",
-            duration: 0,
+            duration: 5000,
             message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
             title: "Transaction submitted!",
           });
@@ -113,11 +113,16 @@ export default defineComponent({
         .catch((error: any) => {
           Message({
             type: "error",
-            message: error.message,
+            message: error.message.split(":")[0],
             duration: 5000,
           });
 
-          console.log(error.message);
+          Notification.error({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${tx_hash.value.slice(0, 10) + "..." + tx_hash.value.slice(-10)}`,
+            title: "Transaction reverted!",
+          });
         })
         .finally(() => {
           emit("updating", false);

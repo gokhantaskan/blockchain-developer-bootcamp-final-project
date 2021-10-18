@@ -55,9 +55,8 @@ export const userModule = {
           .catch((err: any) => {
             reject(err);
 
-            Message({
+            Message.error({
               message: err.message,
-              type: "error",
               duration: 5000,
             });
 
@@ -67,13 +66,17 @@ export const userModule = {
     },
     removeUser({ dispatch }: any, address: string) {
       return new Promise<void>((resolve, reject) => {
+        let tx_hash = "";
+
         userContract.methods
           .removeUser()
           .send({ from: address }, (_: unknown, txHash: string) => console.log(_, txHash))
           .once("transactionHash", (txHash: string) => {
+            tx_hash = txHash;
+
             Notification.info({
               position: "bottom-left",
-              duration: 0,
+              duration: 5000,
               message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
               title: "Transaction submitted!",
             });
@@ -91,9 +94,16 @@ export const userModule = {
           })
           .catch((err: any) => {
             Message({
-              message: err.message,
+              message: err.message.split(":"),
               type: "error",
               duration: 5000,
+            });
+
+            Notification.error({
+              position: "bottom-left",
+              duration: 0,
+              message: `Tx Hash: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+              title: "Transaction reverted!",
             });
 
             reject(err);
