@@ -6,11 +6,10 @@
     <div class="container">
       <PageHeader title="Home" />
 
-      <!-- <div class="mb-2">
-        <strong>Selected Address:</strong> {{ selectedAddress.slice(0, 6) + "..." + selectedAddress.slice(-4) }}
-      </div> -->
-
-      <template>
+      <transition
+        name="fade"
+        mode="out-in"
+      >
         <el-card
           shadow="never"
           v-if="$store.state.user.detailsLoaded"
@@ -20,7 +19,6 @@
               <h2 class="m-0">
                 User Details
               </h2>
-
               <div>
                 <el-tooltip
                   class="item"
@@ -39,7 +37,10 @@
                   title="Edit User Details"
                   :visible.sync="editModalVisible"
                 >
-                  <EditUserForm @updated="afterUpdate" />
+                  <UpdateUserForm
+                    @updating="updating"
+                    @updated="afterUpdate"
+                  />
                   <template
                     slot="footer"
                     class="dialog-footer"
@@ -48,12 +49,12 @@
                       form="edit-user-form"
                       type="primary"
                       native-type="submit"
+                      :loading="editing"
                     >
                       Confirm
                     </el-button>
                   </template>
                 </el-dialog>
-
                 <el-tooltip
                   class="item"
                   effect="dark"
@@ -66,6 +67,7 @@
                     icon="el-icon-delete"
                     class="ms-2"
                     @click="removeUser"
+                    :loading="deleting"
                   ></el-button>
                 </el-tooltip>
               </div>
@@ -83,10 +85,9 @@
               Create User Profile
             </h2>
           </template>
-
           <CreateUserForm @created="afterCreate" />
         </el-card>
-      </template>
+      </transition>
     </div>
   </div>
 </template>
@@ -103,13 +104,15 @@ export default defineComponent({
     PageHeader: () => import("@/components/PageHeader.vue"),
     UserDetails: () => import("@/components/UserDetails.vue"),
     CreateUserForm: () => import("@/components/forms/users/CreateUserForm.vue"),
-    EditUserForm: () => import("@/components/forms/users/EditUserForm.vue"),
+    UpdateUserForm: () => import("@/components/forms/users/UpdateUserForm.vue"),
   },
   data() {
     return {
       selectedAddress: "",
       loading: false,
       editModalVisible: false,
+      deleting: false,
+      editing: false,
     };
   },
   async mounted() {
@@ -123,7 +126,9 @@ export default defineComponent({
           this.loading = true;
 
           // Check if the account is registered before
-          userContract.methods.isUser(newVal).call()
+          userContract.methods
+            .isUser(newVal)
+            .call({ from: newVal })
             .then((res: boolean) => {
               if (res) { // If registered, get the details
                 this.$store.dispatch("user/getUserDetails", newVal);
@@ -140,7 +145,9 @@ export default defineComponent({
                 duration: 5000,
               });
             })
-            .finally(() => { this.loading = false });
+            .finally(() => {
+              this.loading = false;
+            });
         }
       }
     );
@@ -165,7 +172,12 @@ export default defineComponent({
         duration: 5000,
       });
     },
+    updating(e: boolean) {
+      this.editing = e;
+    },
     removeUser() {
+      this.deleting = true;
+
       this.$confirm(
         "This will permanently delete the user. Later, you can create your profile again. Continue?",
         "Attention!",
@@ -177,19 +189,17 @@ export default defineComponent({
       )
         .then(async () => {
           await this.$store.dispatch("user/removeUser", useEthereum().state.selectedAddress);
+          // .then(transaction => console.log("tx", transaction));
 
           Message({
             message: "Profile deleted successfully!",
             type: "success",
             duration: 5000,
           });
+        })
+        .finally(() => {
+          this.deleting = false;
         });
-      // .catch(() => {
-      //   this.$message({
-      //     type: "info",
-      //     message: "Delete canceled",
-      //   });
-      // });
     },
   },
 });

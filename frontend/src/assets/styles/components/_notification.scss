@@ -1,0 +1,14 @@
+.el-notification {
+
+  &__title {
+    font-weight: 500;
+    font-size: 1rem;
+    color: inherit;
+  }
+
+  &__content {
+    color: inherit;
+    text-align: left;
+    word-break: break-word;
+  }
+}

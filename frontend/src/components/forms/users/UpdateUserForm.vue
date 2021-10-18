@@ -69,12 +69,12 @@
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
-import { Message } from "element-ui";
+import { Message, Notification } from "element-ui";
 import { userContract } from "@/contracts";
 import { vm } from "@/lib/globals";
 
 export default defineComponent({
-  name: "updateUserForm",
+  name: "UpdateUserForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
     const transaction = ref({});
@@ -87,11 +87,27 @@ export default defineComponent({
     });
 
     const updateUser = () => {
+      emit("updating", true);
+
       userContract.methods
         .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
+        .once("transactionHash", (txHash: string) => {
+          Notification.info({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            title: "Transaction submitted!",
+          });
+        })
         .then((res: any) => {
-          transaction.value = res;
+          Notification.success({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+            title: "Transaction accepted!",
+          });
+
           emit("updated", true);
         })
         .catch((error: any) => {
@@ -102,6 +118,9 @@ export default defineComponent({
           });
 
           console.log(error.message);
+        })
+        .finally(() => {
+          emit("updating", false);
         });
     };
 

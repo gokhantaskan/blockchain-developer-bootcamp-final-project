@@ -64,6 +64,7 @@
             <el-button
               type="primary"
               native-type="submit"
+              :loading="loading"
             >
               Submit
             </el-button>
@@ -77,14 +78,14 @@
 <script lang="ts">
 import { defineComponent, reactive, ref } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
-import { Message } from "element-ui";
+import { Message, Notification } from "element-ui";
 import { userContract } from "@/contracts";
 
 export default defineComponent({
   name: "CreateUserForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
-    const transaction = ref({});
+    const loading = ref(false);
     const form = reactive({
       firstName: "",
       lastName: "",
@@ -93,12 +94,28 @@ export default defineComponent({
       phone: "",
     });
 
-    const createUser = () => {
-      userContract.methods
+    const createUser = async () => {
+      loading.value = true;
+
+      await userContract.methods
         .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
+        .once("transactionHash", (txHash: string) => {
+          Notification.info({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            title: "Transaction submitted!",
+          });
+        })
         .then((res: any) => {
-          transaction.value = res;
+          Notification.success({
+            position: "bottom-left",
+            duration: 0,
+            message: `Tx Hash: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+            title: "Transaction accepted!",
+          });
+
           emit("created", true);
         })
         .catch((error: any) => {
@@ -107,10 +124,13 @@ export default defineComponent({
             message: error.message,
             duration: 5000,
           });
+        })
+        .finally(() => {
+          loading.value = false;
         });
     };
 
-    return { form, transaction, createUser };
+    return { form, loading, createUser };
   },
 });
 </script>
