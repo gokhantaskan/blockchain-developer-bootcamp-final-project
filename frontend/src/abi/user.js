@@ -1,7 +1,7 @@
 export default [
   {
     inputs: [],
-    name: "attendeeCount",
+    name: "userCount",
     outputs: [
       {
         internalType: "uint256",
@@ -21,7 +21,7 @@ export default [
         type: "address",
       },
     ],
-    name: "isAttendee",
+    name: "isUser",
     outputs: [
       {
         internalType: "bool",
@@ -61,14 +61,14 @@ export default [
         type: "string",
       },
     ],
-    name: "createAttendee",
+    name: "createUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "getAttendeeDetails",
+    name: "getUserDetails",
     outputs: [
       {
         internalType: "string",
@@ -128,14 +128,14 @@ export default [
         type: "string",
       },
     ],
-    name: "updateAttendeeDetails",
+    name: "updateUserDetails",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "removeAttendee",
+    name: "removeUser",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

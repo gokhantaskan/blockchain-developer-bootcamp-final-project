@@ -6,15 +6,19 @@
     <div class="container">
       <PageHeader title="Home" />
 
+      <!-- <div class="mb-2">
+        <strong>Selected Address:</strong> {{ selectedAddress.slice(0, 6) + "..." + selectedAddress.slice(-4) }}
+      </div> -->
+
       <template>
         <el-card
           shadow="never"
-          v-if="$store.state.attendee.detailsLoaded"
+          v-if="$store.state.user.detailsLoaded"
         >
           <template #header>
             <div class="d-flex align-items-center justify-content-between">
               <h2 class="m-0">
-                Attendee Details
+                User Details
               </h2>
 
               <div>
@@ -32,17 +36,16 @@
                   ></el-button>
                 </el-tooltip>
                 <el-dialog
-                  title="Edit Attendee Details"
+                  title="Edit User Details"
                   :visible.sync="editModalVisible"
-                  destroy-on-close
                 >
-                  <EditAttendeeForm @updated="afterUpdate" />
+                  <EditUserForm @updated="afterUpdate" />
                   <template
                     slot="footer"
                     class="dialog-footer"
                   >
                     <el-button
-                      form="edit-attendee-form"
+                      form="edit-user-form"
                       type="primary"
                       native-type="submit"
                     >
@@ -62,13 +65,13 @@
                     type="danger"
                     icon="el-icon-delete"
                     class="ms-2"
-                    @click="removeAttendee"
+                    @click="removeUser"
                   ></el-button>
                 </el-tooltip>
               </div>
             </div>
           </template>
-          <AttendeeDetails />
+          <UserDetails />
         </el-card>
 
         <el-card
@@ -77,11 +80,11 @@
         >
           <template #header>
             <h2 class="m-0">
-              Create Attendee Profile
+              Create User Profile
             </h2>
           </template>
 
-          <CreateAttendeeForm @created="afterCreate" />
+          <CreateUserForm @created="afterCreate" />
         </el-card>
       </template>
     </div>
@@ -90,7 +93,7 @@
 
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
-import { attendeeContract } from "@/contracts";
+import { userContract } from "@/contracts";
 import { defineComponent } from "@vue/composition-api";
 import { Message } from "element-ui";
 
@@ -98,18 +101,20 @@ export default defineComponent({
   name: "Home",
   components: {
     PageHeader: () => import("@/components/PageHeader.vue"),
-    AttendeeDetails: () => import("@/components/AttendeeDetails.vue"),
-    CreateAttendeeForm: () => import("@/components/forms/attendees/CreateAttendeeForm.vue"),
-    EditAttendeeForm: () => import("@/components/forms/attendees/EditAttendeeForm.vue"),
+    UserDetails: () => import("@/components/UserDetails.vue"),
+    CreateUserForm: () => import("@/components/forms/users/CreateUserForm.vue"),
+    EditUserForm: () => import("@/components/forms/users/EditUserForm.vue"),
   },
   data() {
     return {
+      selectedAddress: "",
       loading: false,
       editModalVisible: false,
     };
   },
   async mounted() {
     const { state: ethereum } = useEthereum();
+    if (ethereum.selectedAddress !== null) this.selectedAddress = ethereum.selectedAddress;
 
     this.$watch(
       () => ethereum.selectedAddress,
@@ -118,16 +123,16 @@ export default defineComponent({
           this.loading = true;
 
           // Check if the account is registered before
-          attendeeContract.methods.isAttendee(newVal).call()
+          userContract.methods.isUser(newVal).call()
             .then((res: boolean) => {
               if (res) { // If registered, get the details
-                this.$store.dispatch("attendee/getAttendeeDetails", newVal);
+                this.$store.dispatch("user/getUserDetails", newVal);
               } else { // Else, clear the previous details
-                this.$store.dispatch("attendee/resetAttendeeState");
+                this.$store.dispatch("user/resetUserState");
               }
             })
             .catch((err: any) => {
-              this.$store.dispatch("attendee/resetAttendeeState");
+              this.$store.dispatch("user/resetUserState");
 
               Message({
                 message: err.message,
@@ -143,7 +148,7 @@ export default defineComponent({
   methods: {
     afterUpdate() {
       this.editModalVisible = false;
-      this.$store.dispatch("attendee/getAttendeeDetails", useEthereum().state.selectedAddress);
+      this.$store.dispatch("user/getUserDetails", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile updated successfully!",
@@ -152,7 +157,7 @@ export default defineComponent({
       });
     },
     afterCreate() {
-      this.$store.dispatch("attendee/getAttendeeDetails", useEthereum().state.selectedAddress);
+      this.$store.dispatch("user/getUserDetails", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile created successfully!",
@@ -160,7 +165,7 @@ export default defineComponent({
         duration: 5000,
       });
     },
-    removeAttendee() {
+    removeUser() {
       this.$confirm(
         "This will permanently delete the user. Later, you can create your profile again. Continue?",
         "Attention!",
@@ -171,7 +176,7 @@ export default defineComponent({
         }
       )
         .then(async () => {
-          await this.$store.dispatch("attendee/removeAttendee", useEthereum().state.selectedAddress);
+          await this.$store.dispatch("user/removeUser", useEthereum().state.selectedAddress);
 
           Message({
             message: "Profile deleted successfully!",

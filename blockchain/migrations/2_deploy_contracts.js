@@ -1,7 +1,5 @@
-var Storage = artifacts.require("./Storage.sol");
-var Attendees = artifacts.require("./Attendees.sol");
+var Users = artifacts.require("./Users.sol");
 
 module.exports = function (deployer) {
-  deployer.deploy(Storage);
-  deployer.deploy(Attendees);
+  deployer.deploy(Users);
 };

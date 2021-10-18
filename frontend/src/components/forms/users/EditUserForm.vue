@@ -1,12 +1,13 @@
 <template>
-  <div class="create-attendee-form">
+  <div class="edit-user-form">
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
-        @submit.prevent="handleSubmit(createAttendee)"
+        id="edit-user-form"
+        @submit.prevent="handleSubmit(updateUser)"
         novalidate
       >
         <div class="row">
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.firstName"
               id="firstName"
@@ -18,7 +19,7 @@
             />
           </div>
 
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.lastName"
               id="lastName"
@@ -30,7 +31,7 @@
             />
           </div>
 
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.nationalId"
               id="nationalId"
@@ -41,7 +42,7 @@
             />
           </div>
 
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.email"
               id="email"
@@ -51,22 +52,13 @@
             />
           </div>
 
-          <div class="col-12 col-md-6">
+          <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.phone"
               id="phone"
               label="Phone"
               vv-name="Phone"
             />
-          </div>
-
-          <div class="col-12 pt-3">
-            <el-button
-              type="primary"
-              native-type="submit"
-            >
-              Submit
-            </el-button>
           </div>
         </div>
       </form>
@@ -75,13 +67,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "@vue/composition-api";
+import { defineComponent, onMounted, reactive, ref } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
 import { Message } from "element-ui";
-import { attendeeContract } from "@/contracts";
+import { userContract } from "@/contracts";
+import { vm } from "@/lib/globals";
 
 export default defineComponent({
-  name: "CreateAttendeeForm",
+  name: "updateUserForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
     const transaction = ref({});
@@ -93,13 +86,13 @@ export default defineComponent({
       phone: "",
     });
 
-    const createAttendee = () => {
-      attendeeContract.methods
-        .createAttendee(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
+    const updateUser = () => {
+      userContract.methods
+        .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
         .then((res: any) => {
           transaction.value = res;
-          emit("created", true);
+          emit("updated", true);
         })
         .catch((error: any) => {
           Message({
@@ -107,10 +100,22 @@ export default defineComponent({
             message: error.message,
             duration: 5000,
           });
+
+          console.log(error.message);
         });
     };
 
-    return { form, transaction, createAttendee };
+    onMounted(() => {
+      const userDetails = vm().root.proxy.$store.state.user.details;
+
+      form.firstName = userDetails.firstName;
+      form.lastName = userDetails.lastName;
+      form.nationalId = userDetails.nationalId;
+      form.email = userDetails.email;
+      form.phone = userDetails.phone;
+    });
+
+    return { form, updateUser };
   },
 });
 </script>

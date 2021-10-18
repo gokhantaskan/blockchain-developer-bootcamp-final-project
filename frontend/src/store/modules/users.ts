@@ -1,9 +1,9 @@
 import Vue from "vue";
 import { readonly } from "@vue/composition-api";
-import { attendeeContract } from "../../contracts";
+import { userContract } from "../../contracts";
 import { Message } from "element-ui";
 
-interface IAttendee {
+interface IUser {
   firstName: string;
   lastName: string;
   nationalId: string;
@@ -22,11 +22,11 @@ const INITIAL_STATE = readonly({
   detailsLoaded: false,
 });
 
-export const attendeeModule = {
+export const userModule = {
   namespaced: true,
   state: { ...INITIAL_STATE },
   mutations: {
-    SET_ATTENDEE_DETAILS(state: typeof INITIAL_STATE, payload: IAttendee) {
+    SET_USER_DETAILS(state: typeof INITIAL_STATE, payload: IUser) {
       Vue.set(state, "details", {
         firstName: payload.firstName,
         lastName: payload.lastName,
@@ -36,16 +36,16 @@ export const attendeeModule = {
       });
       Vue.set(state, "detailsLoaded", true);
     },
-    RESET_ATTENDEE_STATE(state: typeof INITIAL_STATE) {
+    RESET_USER_STATE(state: typeof INITIAL_STATE) {
       Vue.set(state, "details", INITIAL_STATE.details);
       Vue.set(state, "detailsLoaded", false);
     },
   },
   actions: {
-    async getAttendeeDetails({ commit, dispatch }: any, address: string): Promise<void> {
-      await attendeeContract.methods.getAttendeeDetails().call({ from: address })
+    async getUserDetails({ commit, dispatch }: any, address: string): Promise<void> {
+      await userContract.methods.getUserDetails().call({ from: address })
         .then((res: any) => {
-          commit("SET_ATTENDEE_DETAILS", res);
+          commit("SET_USER_DETAILS", res);
         })
         .catch((err: any) => {
           Message({
@@ -54,13 +54,13 @@ export const attendeeModule = {
             duration: 5000,
           });
 
-          dispatch("resetAttendeeState");
+          dispatch("resetUserState");
         });
     },
-    async removeAttendee({ dispatch }: any, address: string): Promise<void> {
-      await attendeeContract.methods.removeAttendee().send({ from: address })
+    async removeUser({ dispatch }: any, address: string): Promise<void> {
+      await userContract.methods.removeUser().send({ from: address })
         .then(() => {
-          dispatch("resetAttendeeState");
+          dispatch("resetUserState");
         })
         .catch((err: any) => {
           Message({
@@ -70,8 +70,8 @@ export const attendeeModule = {
           });
         });
     },
-    async resetAttendeeState({ commit }: any): Promise<void> {
-      commit("RESET_ATTENDEE_STATE");
+    async resetUserState({ commit }: any): Promise<void> {
+      commit("RESET_USER_STATE");
     },
   },
 };

@@ -1,4 +1,6 @@
 .el-dialog {
+  width: 75%;
+  max-width: 800px;
 
   &__body {
     color: inherit;
