@@ -2,12 +2,19 @@
 pragma solidity 0.8.9;
 
 contract Users {
+
+  enum Gender {
+    Male,
+    Female,
+    Transgender
+  }
   struct User {
     string firstName;
     string lastName;
     string nationalId;
     string email;
     string phone;
+    Gender gender;
     address bcAddress;
   }
 
@@ -52,7 +59,8 @@ contract Users {
     string memory _lastName,
     string memory _nationalId,
     string memory _email,
-    string memory _phone /* isUser(msg.sender) */
+    string memory _phone,
+    Gender _gender
   ) public {
     if (isUser(msg.sender)) revert("You can only attend once!");
 
@@ -62,6 +70,7 @@ contract Users {
       nationalId: _nationalId,
       email: _email,
       phone: _phone,
+      gender: _gender,
       bcAddress: msg.sender
     });
 
@@ -77,7 +86,8 @@ contract Users {
       string memory lastName,
       string memory nationalId,
       string memory email,
-      string memory phone
+      string memory phone,
+      Gender gender
     )
   {
     return (
@@ -85,7 +95,8 @@ contract Users {
       usersList[msg.sender].lastName,
       usersList[msg.sender].nationalId,
       usersList[msg.sender].email,
-      usersList[msg.sender].phone
+      usersList[msg.sender].phone,
+      usersList[msg.sender].gender
     );
   }
 
@@ -94,13 +105,21 @@ contract Users {
     string memory _lastName,
     string memory _nationalId,
     string memory _email,
-    string memory _phone
+    string memory _phone,
+    Gender _gender
   ) public onlyUser(msg.sender) {
-    usersList[msg.sender].firstName = _firstName;
-    usersList[msg.sender].lastName = _lastName;
-    usersList[msg.sender].nationalId = _nationalId;
+    if (bytes(_firstName).length != 0)
+      usersList[msg.sender].firstName = _firstName;
+
+    if (bytes(_lastName).length != 0)
+      usersList[msg.sender].lastName = _lastName;
+
+    if (bytes(_nationalId).length != 0)
+      usersList[msg.sender].nationalId = _nationalId;
+
     usersList[msg.sender].email = _email;
     usersList[msg.sender].phone = _phone;
+    usersList[msg.sender].gender = _gender;
   }
 
   function removeUser() public onlyUser(msg.sender) {

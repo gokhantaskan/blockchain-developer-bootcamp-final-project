@@ -1,6 +1,9 @@
 <template>
   <div class="page-header d-flex align-items-center justify-content-between">
-    <component :is="'h' + level">
+    <component
+      :is="'h' + level"
+      @click="clickFn"
+    >
       {{ title }}
     </component>
 
@@ -24,6 +27,16 @@ export default {
       type: String,
       default: "",
       required: true,
+    },
+    to: {
+      type: [String, Object],
+      default: "/",
+      required: false,
+    },
+  },
+  methods: {
+    clickFn() {
+      this.$router.push(this.$props.to);
     },
   },
 };

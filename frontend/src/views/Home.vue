@@ -4,8 +4,6 @@
     v-loading="loading"
   >
     <div class="container">
-      <PageHeader title="Sertifie.me" />
-
       <transition
         name="fade"
         mode="out-in"
@@ -77,18 +75,18 @@
           <UserDetails />
         </el-card>
 
-        <el-card
-          v-else
+        <div
           key="2"
-          shadow="never"
+          v-else
         >
-          <template #header>
-            <h2 class="m-0">
-              Create User Profile
-            </h2>
-          </template>
-          <CreateUserForm @created="afterCreate" />
-        </el-card>
+          <el-button @click="$router.push({ name: 'CreateUser' })">
+            Create User
+          </el-button>
+
+          <el-button>
+            Create Organization
+          </el-button>
+        </div>
       </transition>
     </div>
   </div>
@@ -161,15 +159,6 @@ export default defineComponent({
 
       Message({
         message: "Profile updated successfully!",
-        type: "success",
-        duration: 5000,
-      });
-    },
-    afterCreate() {
-      this.$store.dispatch("user/getUserDetails", useEthereum().state.selectedAddress);
-
-      Message({
-        message: "Profile created successfully!",
         type: "success",
         duration: 5000,
       });

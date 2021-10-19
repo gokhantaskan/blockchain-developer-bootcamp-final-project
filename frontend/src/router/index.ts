@@ -11,6 +11,18 @@ const routes: Array<RouteConfig> = [
     component: Home,
   },
   {
+    path: "/create",
+    component: () => import("../views/Create.vue"),
+    redirect: { name: "Home" },
+    children: [
+      {
+        path: "user",
+        name: "CreateUser",
+        component: () => import("../views/create/CreateUser.vue"),
+      },
+    ],
+  },
+  {
     path: "/about",
     name: "About",
     component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),

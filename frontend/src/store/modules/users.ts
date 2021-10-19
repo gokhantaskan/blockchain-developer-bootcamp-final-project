@@ -7,15 +7,20 @@ interface IUserDetails {
   firstName: string;
   lastName: string;
   nationalId: string;
+  gender: number;
   email: string;
   phone: string;
 }
 
-const INITIAL_STATE = readonly({
+const INITIAL_STATE = readonly<{
+  details: IUserDetails;
+  detailsLoaded: boolean;
+}>({
   details: {
     firstName: "",
     lastName: "",
     nationalId: "",
+    gender: -1,
     email: "",
     phone: "",
   },
@@ -31,6 +36,7 @@ export const userModule = {
         firstName: payload.firstName,
         lastName: payload.lastName,
         nationalId: payload.nationalId,
+        gender: payload.gender,
         email: payload.email,
         phone: payload.phone,
       });
@@ -70,7 +76,7 @@ export const userModule = {
 
         userContract.methods
           .removeUser()
-          .send({ from: address }, (_: unknown, txHash: string) => console.log(_, txHash))
+          .send({ from: address })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 

@@ -60,6 +60,10 @@
               vv-name="Phone"
             />
           </div>
+
+          <div class="col-12 col-md-6">
+            <GenderInput />
+          </div>
         </div>
       </form>
     </ValidationObserver>
@@ -67,32 +71,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from "@vue/composition-api";
+import { defineComponent, onMounted, reactive } from "@vue/composition-api";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
 import { userContract } from "@/contracts";
 import { vm } from "@/lib/globals";
+import { Gender } from "@/lib/types";
 
 export default defineComponent({
   name: "UpdateUserForm",
+  components: {
+    GenderInput: () => import("../../GenderInput.vue"),
+  },
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
-    const tx_hash = ref("");
+    // const tx_hash = ref("");
     const form = reactive({
       firstName: "",
       lastName: "",
       nationalId: "",
       email: "",
       phone: "",
+      gender: 0,
     });
 
     const updateUser = () => {
       emit("updating", true);
+      let tx_hash = "";
 
       userContract.methods
-        .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone)
+        .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {
+          tx_hash = txHash;
+
           Notification.info({
             position: "bottom-left",
             duration: 5000,
@@ -120,7 +132,7 @@ export default defineComponent({
           Notification.error({
             position: "bottom-left",
             duration: 0,
-            message: `Tx Hash: ${tx_hash.value.slice(0, 10) + "..." + tx_hash.value.slice(-10)}`,
+            message: `Tx Hash: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
             title: "Transaction reverted!",
           });
         })
@@ -135,11 +147,12 @@ export default defineComponent({
       form.firstName = userDetails.firstName;
       form.lastName = userDetails.lastName;
       form.nationalId = userDetails.nationalId;
+      form.gender = userDetails.gender;
       form.email = userDetails.email;
       form.phone = userDetails.phone;
     });
 
-    return { form, updateUser };
+    return { form, updateUser, Gender };
   },
 });
 </script>

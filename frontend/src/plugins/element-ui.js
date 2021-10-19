@@ -6,6 +6,9 @@ import {
   Dialog,
   Form,
   FormItem,
+  Radio,
+  RadioButton,
+  RadioGroup,
   Input,
   InputNumber,
   Loading,
@@ -20,6 +23,9 @@ Vue.use(Button);
 Vue.use(Dialog);
 Vue.use(Form);
 Vue.use(FormItem);
+Vue.use(Radio);
+Vue.use(RadioButton);
+Vue.use(RadioGroup);
 Vue.use(Input);
 Vue.use(InputNumber);
 Vue.use(Tooltip);

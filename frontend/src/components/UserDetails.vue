@@ -17,6 +17,10 @@
               <td>{{ $store.state.user.details.nationalId }}</td>
             </tr>
             <tr>
+              <th>Gender</th>
+              <td>{{ convertGender($store.state.user.details.gender) }}</td>
+            </tr>
+            <tr>
               <th>E-mail</th>
               <td>{{ $store.state.user.details.email }}</td>
             </tr>
@@ -29,15 +33,15 @@
       </div>
 
       <div
-        class="col-12 col-lg-3 mt-4 mt-lg-0 d-flex flex-column align-items-center justify-content-center justify-content-lg-end"
+        class="col-12 col-lg-3 mt-4 mt-lg-0 d-flex flex-column align-items-center align-items-lg-end justify-content-center"
       >
         <div
           class="qr-code"
           ref="qrCodeRef"
         ></div>
         <div
-          class="d-flex align-items-center"
-          style="line-height: 40px"
+          class="d-flex align-items-center justify-content-center"
+          style="line-height: 48px; width: 194px;"
         >
           {{ selectedAddress.slice(0, 6) + "..." + selectedAddress.slice(-4) }}
           <el-tooltip
@@ -63,13 +67,14 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
+import { convertGender } from "@/helpers/utils";
 import { useClipboard } from "@vueuse/core";
 import { Message } from "element-ui";
-import { watch } from "vue-demi";
+import { defineComponent, watch } from "vue-demi";
 
-export default {
+export default defineComponent({
   name: "UserDetails",
   data() {
     return {
@@ -78,7 +83,7 @@ export default {
     };
   },
   mounted() {
-    const QRCode = window.QRCode;
+    const QRCode = (window as any).QRCode;
 
     this.qrCode = new QRCode(this.$refs.qrCodeRef, {
       text: useEthereum().state.selectedAddress,
@@ -89,7 +94,7 @@ export default {
   setup() {
     const { state: ethereum } = useEthereum();
     const { copy, copied } = useClipboard();
-    const selectedAddress = ethereum.selectedAddress;
+    const selectedAddress = ethereum.selectedAddress || "";
 
     watch(copied, newVal => {
       if (newVal) {
@@ -99,9 +104,9 @@ export default {
       }
     });
 
-    return { selectedAddress, copy, copied };
+    return { selectedAddress, copy, copied, convertGender };
   },
-};
+});
 </script>
 
 <style module lang="scss">
@@ -112,6 +117,6 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 0;
-  margin-left: 0.25rem;
+  margin-left: 0.5rem;
 }
 </style>
