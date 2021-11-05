@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from "@vue/composition-api";
+import { defineComponent, onMounted, onUnmounted } from "vue-demi";
 import { useEthereum } from "./composables/ethereum";
 import { vm } from "./lib/globals";
 

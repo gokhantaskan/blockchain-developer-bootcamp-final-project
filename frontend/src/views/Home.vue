@@ -95,7 +95,7 @@
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
 import { userContract } from "@/contracts";
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
 export default defineComponent({
@@ -142,7 +142,7 @@ export default defineComponent({
               Message({
                 message: err.message,
                 type: "error",
-                duration: 5000,
+                duration: 0,
               });
             })
             .finally(() => {

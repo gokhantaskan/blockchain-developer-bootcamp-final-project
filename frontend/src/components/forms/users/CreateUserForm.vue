@@ -80,7 +80,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "@vue/composition-api";
+import { defineComponent, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
 import { userContract } from "@/contracts";
@@ -116,8 +116,8 @@ export default defineComponent({
 
           Notification.info({
             position: "bottom-left",
-            duration: 5000,
-            message: `Tx Hash: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            duration: 0,
+            message: `Create User: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
             title: "Transaction submitted!",
           });
         })
@@ -125,8 +125,8 @@ export default defineComponent({
           Notification.success({
             position: "bottom-left",
             duration: 0,
-            message: `Tx Hash: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
-            title: "Transaction accepted!",
+            message: `Create User: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+            title: "Transaction confirmed!",
           });
 
           emit("created", true);
@@ -134,14 +134,14 @@ export default defineComponent({
         .catch((error: any) => {
           Message({
             type: "error",
-            message: error.message.split(":")[0],
-            duration: 5000,
+            message: error.message,
+            duration: 0,
           });
 
           Notification.error({
             position: "bottom-left",
             duration: 0,
-            message: `Tx Hash: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+            message: `Create User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
             title: "Transaction reverted!",
           });
         })

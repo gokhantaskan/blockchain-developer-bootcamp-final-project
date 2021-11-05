@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
-import { defineComponent } from "@vue/composition-api";
+import { defineComponent } from "vue-demi";
 
 export default defineComponent({
   name: "ConnectMetamaskButton",

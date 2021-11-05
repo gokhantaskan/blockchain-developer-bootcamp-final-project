@@ -2,17 +2,17 @@
   <div class="form-item">
     <label class="form-item__label">Gender</label>
     <el-radio-group
-      :value="value"
+      :value="Number(value)"
       @input="handleChange"
       class="d-block"
     >
-      <el-radio-button :label="Gender.Male">
+      <el-radio-button :label="Number(Gender.Male)">
         Male
       </el-radio-button>
-      <el-radio-button :label="Gender.Female">
+      <el-radio-button :label="Number(Gender.Female)">
         Female
       </el-radio-button>
-      <el-radio-button :label="Gender.Transgender">
+      <el-radio-button :label="Number(Gender.Transgender)">
         Transgender
       </el-radio-button>
     </el-radio-group>
@@ -26,7 +26,7 @@ export default {
   name: "GenderInput",
   props: {
     value: {
-      type: Number,
+      type: [Number, String],
       default: 0,
     },
   },

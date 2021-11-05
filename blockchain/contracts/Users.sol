@@ -2,29 +2,31 @@
 pragma solidity 0.8.9;
 
 contract Users {
-
   enum Gender {
     Male,
     Female,
     Transgender
   }
+
   struct User {
+    address ownerAddress;
     string firstName;
     string lastName;
     string nationalId;
     string email;
     string phone;
     Gender gender;
-    address bcAddress;
   }
 
   mapping(address => User) usersList;
+
+  User[] public usersArray;
 
   uint public userCount;
 
   modifier onlyUser(address _address) {
     require(
-      usersList[_address].bcAddress == msg.sender,
+      usersList[_address].ownerAddress == msg.sender,
       "You have not attended yet!"
     );
     _;
@@ -64,15 +66,18 @@ contract Users {
   ) public {
     if (isUser(msg.sender)) revert("You can only attend once!");
 
-    usersList[msg.sender] = User({
+    User memory user = User({
       firstName: _firstName,
       lastName: _lastName,
       nationalId: _nationalId,
       email: _email,
       phone: _phone,
       gender: _gender,
-      bcAddress: msg.sender
+      ownerAddress: msg.sender
     });
+
+    usersList[msg.sender] = user;
+    usersArray.push(user);
 
     userCount += 1;
   }

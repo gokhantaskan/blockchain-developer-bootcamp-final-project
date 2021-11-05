@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { web3 } from "@/lib/web3";
 import { Message } from "element-ui";
@@ -60,7 +60,7 @@ export default defineComponent({
         Message({
           type: "error",
           message: error.message,
-          duration: 5000,
+          duration: 0,
         });
       }
     };

@@ -1,8 +1,15 @@
 .table {
   width: 100%;
+  display: table;
   margin-bottom: 1rem;
   background-color: transparent;
   border-collapse: collapse;
+  vertical-align: top;
+
+  &-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 
   tbody {
 
@@ -10,8 +17,9 @@
 
       th,
       td {
-        padding: 0.75rem;
+        padding: 0.5rem;
         border-bottom: 1px solid #EBEEF5;
+        line-height: 2rem;
       }
 
       th {

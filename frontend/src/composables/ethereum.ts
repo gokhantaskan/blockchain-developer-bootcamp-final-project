@@ -1,6 +1,6 @@
 import { _window } from "@/lib/globals";
 import { IEthereum, IProviderMessage, IRequestArguments } from "@/lib/types/ethereum";
-import { reactive, readonly, watch } from "@vue/composition-api";
+import { reactive, readonly, watch } from "vue-demi";
 
 const state = reactive<IEthereum>({
   accounts: [],
@@ -70,6 +70,7 @@ const state = reactive<IEthereum>({
       _window.ethereum.removeListener("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
       _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
       _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
+      _window.ethereum.removeListener("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
     }
   },
 });

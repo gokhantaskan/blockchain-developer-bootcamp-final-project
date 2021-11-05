@@ -1,4 +1,4 @@
-import { getCurrentInstance } from "@vue/composition-api";
+import { getCurrentInstance } from "vue-demi";
 
 interface IWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
