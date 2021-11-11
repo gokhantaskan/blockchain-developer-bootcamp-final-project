@@ -29,12 +29,12 @@ export default defineComponent({
     onMounted(async () => {
       vm().root.proxy.$nextTick(async () => {
         await ethereum.requestAccounts();
-        ethereum.setListeners();
+        // ethereum.setListeners();
       });
     });
 
     onUnmounted(async () => {
-      ethereum.removeListeners();
+      // ethereum.removeListeners();
     });
   },
 });

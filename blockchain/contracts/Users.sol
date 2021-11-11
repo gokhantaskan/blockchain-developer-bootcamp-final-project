@@ -20,8 +20,6 @@ contract Users {
 
   mapping(address => User) usersList;
 
-  User[] public usersArray;
-
   uint public userCount;
 
   modifier onlyUser(address _address) {
@@ -31,17 +29,6 @@ contract Users {
     );
     _;
   }
-
-  // modifier isUser(address _address) {
-  //   require(
-  //     // TODO: nationalId must be unique!
-  //     bytes(usersList[_address].firstName).length == 0 &&
-  //       bytes(usersList[_address].lastName).length == 0 &&
-  //       bytes(usersList[_address].nationalId).length == 0,
-  //     "You have already attended!"
-  //   );
-  //   _;
-  // }
 
   function isUser(address _address) public view returns (bool) {
     if (
@@ -77,7 +64,6 @@ contract Users {
     });
 
     usersList[msg.sender] = user;
-    usersArray.push(user);
 
     userCount += 1;
   }

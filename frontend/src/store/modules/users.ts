@@ -99,18 +99,22 @@ export const userModule = {
             resolve(res);
           })
           .catch((err: any) => {
-            Message({
-              message: err.message,
-              type: "error",
-              duration: 0,
-            });
-
-            Notification.error({
-              position: "bottom-left",
-              duration: 0,
-              message: `Remove User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
-              title: "Transaction reverted!",
-            });
+            if ([4001].includes(err.code)) {
+              Message({
+                message: err.message,
+                type: "error",
+                duration: 5000,
+              });
+            } else {
+              if (tx_hash.length) {
+                Notification.error({
+                  position: "bottom-left",
+                  duration: 0,
+                  message: `Remove User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+                  title: "Transaction reverted!",
+                });
+              }
+            }
 
             reject(err);
           });

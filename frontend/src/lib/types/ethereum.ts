@@ -20,6 +20,6 @@ export interface IEthereum {
   initialize: () => Promise<void>;
   requestAccounts: () => Promise<void>;
   setChainName: () => void;
-  setListeners: () => void;
-  removeListeners: () => void;
+  setListeners?: () => void;
+  removeListeners?: () => void;
 }

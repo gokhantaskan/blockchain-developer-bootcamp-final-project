@@ -121,6 +121,11 @@ export default defineComponent({
             title: "Transaction submitted!",
           });
         })
+        /* confNumber is a dynamic number increasing over time */
+        .on("confirmation", (confNumber: number, _receipt: any, latestBlockHash: any) => {
+          console.log("conf. number: ", confNumber);
+          console.log("latest block hash: ", latestBlockHash);
+        })
         .then((res: any) => {
           Notification.success({
             position: "bottom-left",
@@ -132,18 +137,22 @@ export default defineComponent({
           emit("created", true);
         })
         .catch((error: any) => {
+          // error.code, ie. 4001
+
           Message({
             type: "error",
             message: error.message,
-            duration: 0,
+            duration: 5000,
           });
 
-          Notification.error({
-            position: "bottom-left",
-            duration: 0,
-            message: `Create User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
-            title: "Transaction reverted!",
-          });
+          if (tx_hash.length) {
+            Notification.error({
+              position: "bottom-left",
+              duration: 0,
+              message: `Create User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+              title: "Transaction reverted!",
+            });
+          }
         })
         .finally(() => {
           loading.value = false;

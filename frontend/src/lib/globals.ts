@@ -8,7 +8,7 @@ interface IWindow extends Window {
 export const _window: IWindow = window;
 
 export const vm = () => {
-  // eslint-disable @typescript-eslint/no-non-null-assertion
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const instance = getCurrentInstance()!;
   return instance.root;
 };
