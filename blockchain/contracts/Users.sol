@@ -22,6 +22,10 @@ contract Users {
 
   uint public userCount;
 
+  event LogUserCreated(address addr, string firstName, string lastName);
+  event LogUserUpdated(address addr, string firstName, string lastName);
+  event LogUserDeleted(address addr);
+
   modifier onlyUser(address _address) {
     require(
       usersList[_address].ownerAddress == msg.sender,
@@ -66,6 +70,8 @@ contract Users {
     usersList[msg.sender] = user;
 
     userCount += 1;
+
+    emit LogUserCreated(msg.sender, _firstName, _lastName);
   }
 
   function getUserDetails()
@@ -111,10 +117,14 @@ contract Users {
     usersList[msg.sender].email = _email;
     usersList[msg.sender].phone = _phone;
     usersList[msg.sender].gender = _gender;
+
+    emit LogUserUpdated(msg.sender, _firstName, _lastName);
   }
 
   function removeUser() public onlyUser(msg.sender) {
     delete usersList[msg.sender];
     userCount -= 1;
+
+    emit LogUserDeleted(msg.sender);
   }
 }

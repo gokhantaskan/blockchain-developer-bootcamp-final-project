@@ -1,158 +1,221 @@
 export default [
   {
-    inputs: [],
-    name: "userCount",
-    outputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
+        "indexed": false,
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
       },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "firstName",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "lastName",
+        "type": "string"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
-    constant: true,
+    "name": "LogUserCreated",
+    "type": "event"
   },
   {
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        internalType: "address",
-        name: "_address",
-        type: "address",
-      },
+        "indexed": false,
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      }
     ],
-    name: "isUser",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-    constant: true,
+    "name": "LogUserDeleted",
+    "type": "event"
   },
   {
-    inputs: [
+    "anonymous": false,
+    "inputs": [
       {
-        internalType: "string",
-        name: "_firstName",
-        type: "string",
+        "indexed": false,
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
       },
       {
-        internalType: "string",
-        name: "_lastName",
-        type: "string",
+        "indexed": false,
+        "internalType": "string",
+        "name": "firstName",
+        "type": "string"
       },
       {
-        internalType: "string",
-        name: "_nationalId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_email",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_phone",
-        type: "string",
-      },
-      {
-        internalType: "enum Users.Gender",
-        name: "_gender",
-        type: "uint8",
-      },
+        "indexed": false,
+        "internalType": "string",
+        "name": "lastName",
+        "type": "string"
+      }
     ],
-    name: "createUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "name": "LogUserUpdated",
+    "type": "event"
   },
   {
-    inputs: [],
-    name: "getUserDetails",
-    outputs: [
+    "inputs": [],
+    "name": "userCount",
+    "outputs": [
       {
-        internalType: "string",
-        name: "firstName",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "lastName",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "nationalId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "email",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "phone",
-        type: "string",
-      },
-      {
-        internalType: "enum Users.Gender",
-        name: "gender",
-        type: "uint8",
-      },
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
     ],
-    stateMutability: "view",
-    type: "function",
-    constant: true,
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
-    inputs: [
+    "inputs": [
       {
-        internalType: "string",
-        name: "_firstName",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_lastName",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_nationalId",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_email",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "_phone",
-        type: "string",
-      },
-      {
-        internalType: "enum Users.Gender",
-        name: "_gender",
-        type: "uint8",
-      },
+        "internalType": "address",
+        "name": "_address",
+        "type": "address"
+      }
     ],
-    name: "updateUserDetails",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "name": "isUser",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
   },
   {
-    inputs: [],
-    name: "removeUser",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_firstName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_lastName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_nationalId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_phone",
+        "type": "string"
+      },
+      {
+        "internalType": "enum Users.Gender",
+        "name": "_gender",
+        "type": "uint8"
+      }
+    ],
+    "name": "createUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   },
+  {
+    "inputs": [],
+    "name": "getUserDetails",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "firstName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "lastName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "nationalId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "phone",
+        "type": "string"
+      },
+      {
+        "internalType": "enum Users.Gender",
+        "name": "gender",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_firstName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_lastName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_nationalId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_email",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_phone",
+        "type": "string"
+      },
+      {
+        "internalType": "enum Users.Gender",
+        "name": "_gender",
+        "type": "uint8"
+      }
+    ],
+    "name": "updateUserDetails",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "removeUser",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
 ];
