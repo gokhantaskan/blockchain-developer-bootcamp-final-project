@@ -1,5 +1,17 @@
 body {
- background-color: $color-lighter;
+  background-color: $color-lighter;
+}
+
+pre {
+  display: inline-block;
+  box-sizing: border-box;
+  text-align: left;
+  background: $color-lighter;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+  padding: 1rem;
+  width: 100%;
+  overflow: auto;
 }
 
 #nav {
@@ -27,14 +39,15 @@ body {
   opacity: 0
 }
 
-pre {
-  display: inline-block;
-  box-sizing: border-box;
-  text-align: left;
-  background: $color-lighter;
-  border: 1px solid #e5e5e5;
-  border-radius: 4px;
-  padding: 1rem;
-  width: 100%;
-  overflow: auto;
+.page-header {
+
+  span.d-block {
+    line-height: 32px;
+  }
+}
+
+.cover-whole {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }

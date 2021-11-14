@@ -1,45 +1,38 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-contract Organizations {
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract Organizations is Ownable, AccessControl {
   struct Organization {
     string name;
     string registrationId;
     string email;
     string phone;
     address[] admins;
-    address ownerAddress;
+    address organizationOwner;
   }
 
-  mapping(address => Organization) organizationsList;
+  mapping(address => Organization) private organizationsList;
 
+  bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
   uint public organizationCount;
 
   modifier onlyOrganization(address _address) {
     require(
-      organizationsList[_address].ownerAddress == msg.sender,
-      "You are not an organization!"
+      organizationsList[_address].organizationOwner == msg.sender,
+      "You are not the owner of the organization!"
     );
     _;
   }
-
-  // modifier isOrganization(address _address) {
-  //   require(
-  //     // TODO: registrationId must be unique!
-  //     bytes(organizationsList[_address].name).length == 0 &&
-  //       bytes(organizationsList[_address].lastName).length == 0 &&
-  //       bytes(organizationsList[_address].registrationId).length == 0,
-  //     "You have already attended!"
-  //   );
-  //   _;
-  // }
 
   function isOrganization(address _address) public view returns (bool) {
     if (
       // TODO: registrationId must be unique!
       bytes(organizationsList[_address].name).length != 0 &&
       bytes(organizationsList[_address].registrationId).length != 0 &&
-      organizationsList[_address].ownerAddress != address(0)
+      organizationsList[_address].organizationOwner != address(0)
     ) {
       return true;
     } else {
@@ -54,7 +47,8 @@ contract Organizations {
     string memory _phone,
     address[] memory _admins
   ) public {
-    if (isOrganization(msg.sender)) revert("You have already created an organization!");
+    if (isOrganization(msg.sender))
+      revert("You have already created an organization!");
 
     organizationsList[msg.sender] = Organization({
       name: _name,
@@ -62,7 +56,7 @@ contract Organizations {
       email: _email,
       phone: _phone,
       admins: _admins,
-      ownerAddress: msg.sender
+      organizationOwner: msg.sender
     });
 
     organizationCount += 1;
@@ -93,8 +87,7 @@ contract Organizations {
     string memory _email,
     string memory _phone
   ) public onlyOrganization(msg.sender) {
-    if (bytes(_name).length != 0)
-      organizationsList[msg.sender].name = _name;
+    if (bytes(_name).length != 0) organizationsList[msg.sender].name = _name;
 
     if (bytes(_registrationId).length != 0)
       organizationsList[msg.sender].registrationId = _registrationId;

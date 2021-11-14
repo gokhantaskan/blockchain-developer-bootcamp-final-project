@@ -66,7 +66,7 @@
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
 import { convertGender } from "@/helpers/utils";
-import { defineComponent } from "vue-demi";
+import { computed, defineComponent } from "vue-demi";
 
 export default defineComponent({
   name: "UserDetails",
@@ -90,7 +90,7 @@ export default defineComponent({
   },
   setup() {
     const { state: ethereum } = useEthereum();
-    const selectedAddress = ethereum.selectedAddress || "";
+    const selectedAddress = computed(() => ethereum.selectedAddress);
 
     return { selectedAddress, convertGender };
   },

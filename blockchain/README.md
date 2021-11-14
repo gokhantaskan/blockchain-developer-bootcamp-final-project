@@ -14,8 +14,17 @@ INFURA_PROJECT_ID=YOUR_INFURA_PROJECT_ID
 `npm install` \
 Install dependencies.
 
+```
+npm install -g solhint
+
+# verify that it was installed correctly
+solhint --version
+```
+Install `solhint` globally.
+
 `npm run lint` \
 Lint and fix with Prettier and Solhint.
+
 
 Related: \
 https://www.trufflesuite.com/docs/truffle/quickstart \

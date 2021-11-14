@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
+/// @title Users Contract
+/// @author Gokhan Taskan
+/// @notice You can use this contract to create, update and delete a user profile
 contract Users {
   enum Gender {
     Male,
@@ -18,7 +21,7 @@ contract Users {
     Gender gender;
   }
 
-  mapping(address => User) usersList;
+  mapping(address => User) private usersList;
 
   uint public userCount;
 
@@ -34,6 +37,9 @@ contract Users {
     _;
   }
 
+  /// @notice Checks if the given address is bound to a user, can be used in the front-end applications
+  /// @param _address The address to check
+  /// @return bool - true or false
   function isUser(address _address) public view returns (bool) {
     if (
       // TODO: nationalId must be unique!

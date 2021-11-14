@@ -121,8 +121,8 @@ export default defineComponent({
 
     this.$watch(
       () => ethereum.selectedAddress,
-      async (newVal, oldVal) => {
-        if (newVal !== oldVal) {
+      async newVal => {
+        if (newVal) {
           this.loading = true;
 
           // Check if the account is registered before
@@ -132,7 +132,7 @@ export default defineComponent({
             .then((res: boolean) => {
               if (res) { // If registered, get the details
                 this.$store.dispatch("user/getUserDetails", newVal);
-              } else { // Else, clear the previous details
+              } else {
                 this.$store.dispatch("user/resetUserState");
               }
             })

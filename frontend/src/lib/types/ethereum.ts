@@ -9,17 +9,19 @@ export interface IProviderMessage {
 }
 
 export interface IEthereum {
+  chains: Record<string, string>[];
   accounts: string[] | [];
   selectedAddress: string | null;
   networkVersion: string | null;
   chainId: string | null;
-  chainName: string;
+  chainName: string | undefined;
   isMetaMask: boolean;
   isConnected: boolean;
+  allowedChains: string[];
   request: (args: IRequestArguments) => Promise<unknown>;
   initialize: () => Promise<void>;
   requestAccounts: () => Promise<void>;
-  setChainName: () => void;
+  setAllowedChains: (arg: string[]) => void;
   setListeners?: () => void;
   removeListeners?: () => void;
 }
