@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { readonly } from "vue-demi";
-import { userContract } from "@/lib/web3";
+import { web3UserContract } from "@/lib/web3";
 import { Message, Notification } from "element-ui";
 
 interface IUserDetails {
@@ -50,7 +50,7 @@ export const userModule = {
   actions: {
     getUserDetails({ commit, dispatch }: any, address: string): Promise<void> {
       return new Promise<void>((resolve, reject) => {
-        userContract.methods
+        web3UserContract.methods
           .getUserDetails()
           .call({ from: address })
           .then((res: any) => {
@@ -74,7 +74,7 @@ export const userModule = {
       return new Promise<void>((resolve, reject) => {
         let tx_hash = "";
 
-        userContract.methods
+        web3UserContract.methods
           .removeUser()
           .send({ from: address })
           .once("transactionHash", (txHash: string) => {

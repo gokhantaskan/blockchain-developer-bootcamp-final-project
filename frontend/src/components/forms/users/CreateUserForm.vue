@@ -84,7 +84,7 @@
 import { defineComponent, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
-import { userContract } from "@/lib/web3";
+import { web3UserContract } from "@/lib/web3";
 import { Gender } from "@/lib/types";
 
 export default defineComponent({
@@ -111,7 +111,7 @@ export default defineComponent({
       let tx_hash = "";
       let receipt: any = null;
 
-      await userContract.methods
+      await web3UserContract.methods
         .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {
@@ -137,7 +137,7 @@ export default defineComponent({
           emit("created", true);
         })
         .catch((error: any) => {
-          console.error(typeof error);
+          console.error(typeof error, error);
 
           Message({
             type: "error",

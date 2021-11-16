@@ -75,7 +75,7 @@
 import { defineComponent, onMounted, reactive } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
-import { userContract } from "@/lib/web3";
+import { web3UserContract } from "@/lib/web3";
 import { vm } from "@/lib/globals";
 import { Gender } from "@/lib/types";
 
@@ -100,7 +100,7 @@ export default defineComponent({
       emit("updating", true);
       let tx_hash = "";
 
-      userContract.methods
+      web3UserContract.methods
         .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {

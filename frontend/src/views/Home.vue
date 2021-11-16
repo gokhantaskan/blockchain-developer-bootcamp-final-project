@@ -95,7 +95,7 @@
 
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
-import { userContract } from "@/lib/web3";
+import { web3UserContract } from "@/lib/web3";
 import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
@@ -125,7 +125,7 @@ export default defineComponent({
           this.loading = true;
 
           // Check if the account is registered before
-          userContract.methods
+          web3UserContract.methods
             .isUser(newVal)
             .call({ from: newVal })
             .then((res: boolean) => {

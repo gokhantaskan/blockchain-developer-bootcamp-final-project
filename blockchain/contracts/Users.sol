@@ -15,10 +15,6 @@ contract Users {
     Gender gender;
   }
 
-  struct Unnamed {
-    address taker;
-  }
-
   enum Gender {
     Male,
     Female,
@@ -156,7 +152,16 @@ contract Users {
   }
 
   function removeUser() public onlyUser(msg.sender) {
+    string memory id = usersList[msg.sender].nationalId;
+    string memory email = usersList[msg.sender].email;
+    string memory phone = usersList[msg.sender].phone;
+
+    ids[id] = address(0);
+    emails[email] = address(0);
+    phones[phone] = address(0);
+
     delete usersList[msg.sender];
+
     userCount -= 1;
 
     emit LogUserDeleted(msg.sender);
