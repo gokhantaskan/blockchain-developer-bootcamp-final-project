@@ -5,12 +5,6 @@ pragma solidity 0.8.9;
 /// @author Gokhan Taskan
 /// @notice You can use this contract to create, update and delete a user profile
 contract Users {
-  enum Gender {
-    Male,
-    Female,
-    Transgender
-  }
-
   struct User {
     address ownerAddress;
     string firstName;
@@ -21,12 +15,35 @@ contract Users {
     Gender gender;
   }
 
+  struct Unnamed {
+    address taker;
+  }
+
+  enum Gender {
+    Male,
+    Female,
+    Transgender
+  }
+
   mapping(address => User) private usersList;
+  mapping(string => address) public ids;
+  mapping(string => address) private emails;
+  mapping(string => address) private phones;
 
   uint public userCount;
 
-  event LogUserCreated(address addr, string firstName, string lastName);
-  event LogUserUpdated(address addr, string firstName, string lastName);
+  event LogUserCreated(
+    address addr,
+    string firstName,
+    string lastName,
+    string id
+  );
+  event LogUserUpdated(
+    address addr,
+    string firstName,
+    string lastName,
+    string id
+  );
   event LogUserDeleted(address addr);
 
   modifier onlyUser(address _address) {
@@ -63,6 +80,10 @@ contract Users {
   ) public {
     if (isUser(msg.sender)) revert("You can only attend once!");
 
+    if (ids[_nationalId] != address(0)) revert("This ID is used before!");
+    if (emails[_email] != address(0)) revert("This e-mail is used before!");
+    if (phones[_phone] != address(0)) revert("This phone is used before!");
+
     User memory user = User({
       firstName: _firstName,
       lastName: _lastName,
@@ -73,11 +94,14 @@ contract Users {
       ownerAddress: msg.sender
     });
 
-    usersList[msg.sender] = user;
+    ids[_nationalId] = msg.sender;
+    emails[_email] = msg.sender;
+    phones[_phone] = msg.sender;
 
+    usersList[msg.sender] = user;
     userCount += 1;
 
-    emit LogUserCreated(msg.sender, _firstName, _lastName);
+    emit LogUserCreated(msg.sender, _firstName, _lastName, _nationalId);
   }
 
   function getUserDetails()
@@ -111,6 +135,10 @@ contract Users {
     string memory _phone,
     Gender _gender
   ) public onlyUser(msg.sender) {
+    if (ids[_nationalId] != address(0)) revert("This ID is used before!");
+    if (emails[_email] != address(0)) revert("This e-mail is used before!");
+    if (phones[_phone] != address(0)) revert("This phone is used before!");
+
     if (bytes(_firstName).length != 0)
       usersList[msg.sender].firstName = _firstName;
 
@@ -124,7 +152,7 @@ contract Users {
     usersList[msg.sender].phone = _phone;
     usersList[msg.sender].gender = _gender;
 
-    emit LogUserUpdated(msg.sender, _firstName, _lastName);
+    emit LogUserUpdated(msg.sender, _firstName, _lastName, _nationalId);
   }
 
   function removeUser() public onlyUser(msg.sender) {

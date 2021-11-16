@@ -1,6 +1,6 @@
 import Vue from "vue";
 import { readonly } from "vue-demi";
-import { userContract } from "../../contracts";
+import { userContract } from "@/lib/web3";
 import { Message, Notification } from "element-ui";
 
 interface IUserDetails {

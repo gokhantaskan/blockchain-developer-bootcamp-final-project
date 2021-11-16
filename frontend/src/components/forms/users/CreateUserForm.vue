@@ -37,6 +37,7 @@
               label="National ID"
               vv-name="National ID"
               vv-rules="required"
+              show-password
               required
             />
           </div>
@@ -83,7 +84,7 @@
 import { defineComponent, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
-import { userContract } from "@/contracts";
+import { userContract } from "@/lib/web3";
 import { Gender } from "@/lib/types";
 
 export default defineComponent({
@@ -93,8 +94,9 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
+
     const loading = ref(false);
-    // const tx_hash = ref("");
+
     const form = reactive({
       firstName: "",
       lastName: "",
@@ -107,6 +109,7 @@ export default defineComponent({
     const createUser = async () => {
       loading.value = true;
       let tx_hash = "";
+      let receipt: any = null;
 
       await userContract.methods
         .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
@@ -121,23 +124,20 @@ export default defineComponent({
             title: "Transaction submitted!",
           });
         })
-        /* confNumber is a dynamic number increasing over time */
-        .on("confirmation", (confNumber: number, _receipt: any, latestBlockHash: any) => {
-          console.log("conf. number: ", confNumber);
-          console.log("latest block hash: ", latestBlockHash);
-        })
         .then((res: any) => {
+          receipt = res;
+
           Notification.success({
             position: "bottom-left",
             duration: 0,
-            message: `Create User: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+            message: `Create User: ${receipt.transactionHash.slice(0, 10) + "..." + receipt.transactionHash.slice(-10)}`,
             title: "Transaction confirmed!",
           });
 
           emit("created", true);
         })
         .catch((error: any) => {
-          // error.code, ie. 4001
+          console.error(typeof error);
 
           Message({
             type: "error",

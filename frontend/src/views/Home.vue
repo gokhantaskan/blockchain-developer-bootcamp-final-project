@@ -8,72 +8,77 @@
         name="fade"
         mode="out-in"
       >
-        <el-card
-          v-if="$store.state.user.detailsLoaded"
-          key="1"
-          shadow="never"
-        >
-          <template #header>
-            <div class="d-flex align-items-center justify-content-between">
-              <h2 class="m-0">
-                User Details
-              </h2>
-              <div>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="Edit"
-                  placement="bottom"
-                  :visible-arrow="false"
-                >
-                  <el-button
-                    type="primary"
-                    icon="el-icon-edit"
-                    @click="editModalVisible = true"
-                  ></el-button>
-                </el-tooltip>
-                <el-dialog
-                  title="Edit User Details"
-                  :visible.sync="editModalVisible"
-                >
-                  <UpdateUserForm
-                    @updating="updating"
-                    @updated="afterUpdate"
-                  />
-                  <template
-                    slot="footer"
-                    class="dialog-footer"
+        <div v-if="$store.state.user.detailsLoaded">
+          <el-card
+            key="1"
+            shadow="never"
+          >
+            <template #header>
+              <div class="d-flex align-items-center justify-content-between">
+                <h2 class="m-0">
+                  User Details
+                </h2>
+                <div>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="Edit"
+                    placement="bottom"
+                    :visible-arrow="false"
                   >
                     <el-button
-                      form="edit-user-form"
                       type="primary"
-                      native-type="submit"
-                      :loading="editing"
+                      icon="el-icon-edit"
+                      @click="editModalVisible = true"
+                    ></el-button>
+                  </el-tooltip>
+                  <el-dialog
+                    title="Edit User Details"
+                    :visible.sync="editModalVisible"
+                  >
+                    <UpdateUserForm
+                      @updating="updating"
+                      @updated="afterUpdate"
+                    />
+                    <template
+                      slot="footer"
+                      class="dialog-footer"
                     >
-                      Confirm
-                    </el-button>
-                  </template>
-                </el-dialog>
-                <el-tooltip
-                  class="item"
-                  effect="dark"
-                  content="Delete"
-                  placement="bottom"
-                  :visible-arrow="false"
-                >
-                  <el-button
-                    type="danger"
-                    icon="el-icon-delete"
-                    class="ms-2"
-                    @click="removeUser"
-                    :loading="deleting"
-                  ></el-button>
-                </el-tooltip>
+                      <el-button
+                        form="edit-user-form"
+                        type="primary"
+                        native-type="submit"
+                        :loading="editing"
+                      >
+                        Confirm
+                      </el-button>
+                    </template>
+                  </el-dialog>
+                  <el-tooltip
+                    class="item"
+                    effect="dark"
+                    content="Delete"
+                    placement="bottom"
+                    :visible-arrow="false"
+                  >
+                    <el-button
+                      type="danger"
+                      icon="el-icon-delete"
+                      class="ms-2"
+                      @click="removeUser"
+                      :loading="deleting"
+                    ></el-button>
+                  </el-tooltip>
+                </div>
               </div>
-            </div>
-          </template>
-          <UserDetails />
-        </el-card>
+            </template>
+            <UserDetails />
+          </el-card>
+
+          <div class="mt-4">
+            <el-button>Create Organization</el-button>
+          </div>
+        </div>
 
         <div
           key="2"
@@ -81,10 +86,6 @@
         >
           <el-button @click="$router.push({ name: 'CreateUser' })">
             Create User
-          </el-button>
-
-          <el-button>
-            Create Organization
           </el-button>
         </div>
       </transition>
@@ -94,7 +95,7 @@
 
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
-import { userContract } from "@/contracts";
+import { userContract } from "@/lib/web3";
 import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
@@ -108,16 +109,14 @@ export default defineComponent({
   },
   data() {
     return {
-      selectedAddress: "",
       loading: false,
       editModalVisible: false,
       deleting: false,
       editing: false,
     };
   },
-  async mounted() {
+  async beforeMount() {
     const { state: ethereum } = useEthereum();
-    if (ethereum.selectedAddress !== null) this.selectedAddress = ethereum.selectedAddress;
 
     this.$watch(
       () => ethereum.selectedAddress,
@@ -149,6 +148,9 @@ export default defineComponent({
               this.loading = false;
             });
         }
+      },
+      {
+        immediate: true,
       }
     );
   },

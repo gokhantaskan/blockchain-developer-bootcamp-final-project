@@ -1,5 +1,5 @@
 import { _window } from "@/lib/globals";
-import { IEthereum, IProviderMessage, IRequestArguments } from "@/lib/types/ethereum";
+import { IEthereum, IRequestArguments } from "@/lib/types/ethereum";
 import { reactive, readonly, watch } from "vue-demi";
 
 const state = reactive<IEthereum>({
@@ -9,6 +9,7 @@ const state = reactive<IEthereum>({
     { id: "0x4", name: "Rinkeby Test Network" },
     { id: "0x5", name: "Goerli Test Network" },
     { id: "0x2a", name: "Kovan Test Network" },
+    { id: "0x539", name: "Localhost" },
   ],
   accounts: [],
   isMetaMask: false,
@@ -58,16 +59,16 @@ const state = reactive<IEthereum>({
       _window.ethereum.on("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
       _window.ethereum.on("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
       _window.ethereum.on("accountsChanged", (accs: string[]): void => { state.accounts = accs });
-      _window.ethereum.on("chainChanged", (_chainId: string): void => { location.reload() });
+      _window.ethereum.on("chainChanged", (): void => { location.reload() });
       // _window.ethereum.on("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
     }
   },
   removeListeners: () => {
     if (_window.ethereum !== undefined) {
-      // _window.ethereum.removeListener("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
+      _window.ethereum.removeListener("connect", (_connectInfo: { chainId: string }): void => { console.log("Connection attempt!") });
       _window.ethereum.removeListener("disconnect", (_error: any): void => { console.log("Disconnection attempt!") });
       _window.ethereum.removeListener("accountsChanged", (accs: string[]) => (state.accounts = accs));
-      _window.ethereum.removeListener("chainChanged", (_chainId: string | number) => (location.reload()));
+      _window.ethereum.removeListener("chainChanged", () => (location.reload()));
       // _window.ethereum.removeListener("message", (message: IProviderMessage): void => { console.log(message.data, message.type) });
     }
   },

@@ -75,7 +75,7 @@
 import { defineComponent, onMounted, reactive } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
-import { userContract } from "@/contracts";
+import { userContract } from "@/lib/web3";
 import { vm } from "@/lib/globals";
 import { Gender } from "@/lib/types";
 
