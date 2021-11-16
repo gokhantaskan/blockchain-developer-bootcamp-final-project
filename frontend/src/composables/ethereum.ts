@@ -19,6 +19,7 @@ const state = reactive<IEthereum>({
   chainId: "",
   chainName: "",
   allowedChains: [],
+  addressRegex: /^0x[a-fA-F0-9]{40}$/,
   request: (args: IRequestArguments) => _window.ethereum.request(args),
   initialize: async (): Promise<void> => {
     try {
@@ -43,8 +44,8 @@ const state = reactive<IEthereum>({
       /*  */
     } catch (error: any) {
       if ([4001, -32002].includes(error.code)) {
-        // ! EIP-1193 userRejectedRequest error - If this happens, the user rejected the connection request.
-        // ! Error -32002 - If this happens, the user requested the connection and MetaMask is waiting for confirmation.
+        // * EIP-1193 userRejectedRequest error - If this happens, the user rejected the connection request.
+        // * Error -32002 - If this happens, the user requested the connection and MetaMask is waiting for confirmation.
         throw new Error(error.message);
       } else {
         throw new Error(error);

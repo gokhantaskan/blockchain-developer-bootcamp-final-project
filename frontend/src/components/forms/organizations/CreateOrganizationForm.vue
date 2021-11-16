@@ -57,7 +57,7 @@
             :class="$style.spec"
           >
             <FormItem
-              v-model.trim="form.admins"
+              v-model.trim="adminsRef"
               id="admins"
               label="Admins"
               vv-name="Admins"
@@ -70,14 +70,17 @@
 
           <div
             class="col-12"
-            v-if="form.adminsArr.length"
+            v-if="form.admins.length"
           >
             <ul>
               <li
-                v-for="(admin, i) in form.adminsArr"
+                v-for="(admin, i) in form.admins"
                 :key="i"
               >
-                <span class="cursor-pointer click-to-remove" @click.prevent="removeAdmin(i)">{{ admin }}</span>
+                <span
+                  class="cursor-pointer click-to-remove"
+                  @click.prevent="removeAdmin(i)"
+                >{{ admin }}</span>
               </li>
             </ul>
           </div>
@@ -109,25 +112,33 @@ export default defineComponent({
     const { state: ethereum } = useEthereum();
 
     const loading = ref(false);
+    const adminsRef = ref("");
 
     const form = reactive({
       name: "",
       registrationId: "",
       email: "",
       phone: "",
-      admins: "",
-      adminsArr: [] as string[],
+      admins: [] as string[],
     });
 
     const addAdmin = () => {
-      if (form.admins.length && form.adminsArr.indexOf(form.admins) === -1) {
-        form.adminsArr.push(form.admins);
-        form.admins = "";
+      if (adminsRef.value.toLowerCase() === ethereum.selectedAddress) {
+        alert("You will be the owner of this organization and cannot be an admin!");
+      } else {
+        if (
+          adminsRef.value.length &&
+          ethereum.addressRegex.test(adminsRef.value) &&
+          form.admins.indexOf(adminsRef.value) === -1
+        ) {
+          form.admins.push(adminsRef.value);
+          adminsRef.value = "";
+        }
       }
     };
 
     const removeAdmin = (i: number) => {
-      form.adminsArr.splice(i, 1);
+      form.admins.splice(i, 1);
     };
 
     const createOrganization = async () => {
@@ -183,7 +194,7 @@ export default defineComponent({
         });
     };
 
-    return { form, loading, createOrganization, addAdmin, removeAdmin };
+    return { form, loading, createOrganization, adminsRef, addAdmin, removeAdmin };
   },
 });
 </script>
