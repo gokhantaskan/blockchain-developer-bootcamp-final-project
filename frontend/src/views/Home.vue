@@ -76,7 +76,9 @@
           </el-card>
 
           <div class="mt-4">
-            <el-button>Create Organization</el-button>
+            <el-button @click="$router.push({ name: 'CreateOrganization' })">
+              Create Organization
+            </el-button>
           </div>
         </div>
 

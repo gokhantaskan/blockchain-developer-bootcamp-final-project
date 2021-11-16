@@ -3,8 +3,8 @@ ConsenSys Blockchain Developer Bootcamp 2021
 
 ## Sertifie.me - Verifiable Credentials For Your Events
 
-- Both organizations and attendees can create a decentralized identity with their information initially.
-  - Organizations can create sub-identities (admins) for later signs on certificates.
+- Users can create profiles with their information.
+- Organizations can be created by users and can create sub-identities (admins) for validating attendees.
 - Organizations can create events.
   - Event data is stored for certifications.
 - Attendees can attend events via an application (Inıtially scanning a QR code).

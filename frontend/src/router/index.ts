@@ -20,6 +20,11 @@ const routes: Array<RouteConfig> = [
         name: "CreateUser",
         component: () => import("../views/create/CreateUser.vue"),
       },
+      {
+        path: "organization",
+        name: "CreateOrganization",
+        component: () => import("../views/create/CreateOrganization.vue"),
+      },
     ],
   },
   {

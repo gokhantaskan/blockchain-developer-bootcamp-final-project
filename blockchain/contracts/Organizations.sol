@@ -1,10 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+// import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "./Users.sol";
 
-contract Organizations is Ownable, AccessControl {
+contract Organizations is AccessControl {
   struct Organization {
     string name;
     string registrationId;
@@ -16,7 +17,9 @@ contract Organizations is Ownable, AccessControl {
 
   mapping(address => Organization) private organizationsList;
 
+  bytes32 public constant OWNER_ROLE = keccak256("OWNER_ROLE");
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+
   uint public organizationCount;
 
   modifier onlyOrganization(address _address) {
@@ -29,9 +32,10 @@ contract Organizations is Ownable, AccessControl {
 
   function isOrganization(address _address) public view returns (bool) {
     if (
-      // TODO: registrationId must be unique!
       bytes(organizationsList[_address].name).length != 0 &&
       bytes(organizationsList[_address].registrationId).length != 0 &&
+      bytes(organizationsList[_address].email).length != 0 &&
+      bytes(organizationsList[_address].phone).length != 0 &&
       organizationsList[_address].organizationOwner != address(0)
     ) {
       return true;
@@ -47,8 +51,8 @@ contract Organizations is Ownable, AccessControl {
     string memory _phone,
     address[] memory _admins
   ) public {
-    if (isOrganization(msg.sender))
-      revert("You have already created an organization!");
+    // if (isUser(msg.sender)) revert("You have to create a user profile first!");
+    if (isOrganization(msg.sender)) revert("You can only attend once!");
 
     organizationsList[msg.sender] = Organization({
       name: _name,
@@ -70,14 +74,16 @@ contract Organizations is Ownable, AccessControl {
       string memory name,
       string memory registrationId,
       string memory email,
-      string memory phone
+      string memory phone,
+      address[] memory admins
     )
   {
     return (
       organizationsList[msg.sender].name,
       organizationsList[msg.sender].registrationId,
       organizationsList[msg.sender].email,
-      organizationsList[msg.sender].phone
+      organizationsList[msg.sender].phone,
+      organizationsList[msg.sender].admins
     );
   }
 

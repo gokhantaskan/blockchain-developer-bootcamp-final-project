@@ -31,7 +31,9 @@
         :required="required"
         :placeholder="placeholder"
         v-bind="$attrs"
-      />
+      >
+        <slot />
+      </el-input>
 
       <span
         class="form-item__error"
