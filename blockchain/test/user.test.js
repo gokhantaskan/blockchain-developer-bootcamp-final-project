@@ -8,7 +8,6 @@ contract("Users", accounts => {
   it("should have 0 users when it is deployed", async () => {
     const instance = await Users.deployed();
     const userCount = await instance.userCount.call({ from: accounts[0] });
-    console.log(userCount);
 
     assert.equal(userCount.toNumber(), 0);
   });

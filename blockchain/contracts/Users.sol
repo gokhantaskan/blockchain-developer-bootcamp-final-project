@@ -23,8 +23,8 @@ contract Users {
 
   mapping(address => User) private usersList;
   mapping(string => address) public ids;
-  mapping(string => address) private emails;
-  mapping(string => address) private phones;
+  mapping(string => address) public emails;
+  mapping(string => address) public phones;
 
   uint public userCount;
 
@@ -32,14 +32,11 @@ contract Users {
     address addr,
     string firstName,
     string lastName,
-    string id
+    string id,
+    string email,
+    string phone
   );
-  event LogUserUpdated(
-    address addr,
-    string firstName,
-    string lastName,
-    string id
-  );
+  event LogUserUpdated(address addr, string email, string phone);
   event LogUserDeleted(address addr);
 
   modifier onlyUser(address _address) {
@@ -75,6 +72,12 @@ contract Users {
   ) public {
     if (isUser(msg.sender)) revert("You can only attend once!");
 
+    // Check required fields
+    if (bytes(_firstName).length == 0) revert("First name is required!");
+    if (bytes(_lastName).length == 0) revert("Last name is required!");
+    if (bytes(_nationalId).length == 0) revert("National ID is required!");
+
+    // Check uniqueness
     if (ids[_nationalId] != address(0)) revert("This ID is used before!");
     if (emails[_email] != address(0)) revert("This e-mail is used before!");
     if (phones[_phone] != address(0)) revert("This phone is used before!");
@@ -89,14 +92,21 @@ contract Users {
       ownerAddress: msg.sender
     });
 
-    ids[_nationalId] = msg.sender;
-    emails[_email] = msg.sender;
-    phones[_phone] = msg.sender;
+    if (bytes(_nationalId).length != 0) ids[_nationalId] = msg.sender;
+    if (bytes(_email).length != 0) emails[_email] = msg.sender;
+    if (bytes(_phone).length != 0) phones[_phone] = msg.sender;
 
     usersList[msg.sender] = user;
     userCount += 1;
 
-    emit LogUserCreated(msg.sender, _firstName, _lastName, _nationalId);
+    emit LogUserCreated(
+      msg.sender,
+      _firstName,
+      _lastName,
+      _nationalId,
+      _email,
+      _phone
+    );
   }
 
   function getUserDetails()
@@ -122,32 +132,30 @@ contract Users {
     );
   }
 
-  function updateUserDetails(
-    string memory _firstName,
-    string memory _lastName,
-    string memory _nationalId,
-    string memory _email,
-    string memory _phone,
-    Gender _gender
-  ) public onlyUser(msg.sender) {
-    if (ids[_nationalId] != address(0)) revert("This ID is used before!");
-    if (emails[_email] != address(0)) revert("This e-mail is used before!");
-    if (phones[_phone] != address(0)) revert("This phone is used before!");
+  function updateUserDetails(string memory _email, string memory _phone)
+    public
+    onlyUser(msg.sender)
+  {
+    string memory currentEmail = usersList[msg.sender].email;
+    string memory currentPhone = usersList[msg.sender].phone;
 
-    if (bytes(_firstName).length != 0)
-      usersList[msg.sender].firstName = _firstName;
+    if (emails[_email] != address(0) && emails[_email] != msg.sender)
+      revert("This e-mail is used before!");
 
-    if (bytes(_lastName).length != 0)
-      usersList[msg.sender].lastName = _lastName;
-
-    if (bytes(_nationalId).length != 0)
-      usersList[msg.sender].nationalId = _nationalId;
+    if (phones[_phone] != address(0) && phones[_phone] != msg.sender)
+      revert("This phone is used before!");
 
     usersList[msg.sender].email = _email;
     usersList[msg.sender].phone = _phone;
-    usersList[msg.sender].gender = _gender;
 
-    emit LogUserUpdated(msg.sender, _firstName, _lastName, _nationalId);
+    emails[currentEmail] = address(0);
+    phones[currentPhone] = address(0);
+    if (bytes(_email).length != 0) emails[_email] = msg.sender;
+    if (bytes(_phone).length != 0) phones[_phone] = msg.sender;
+    // if (bytes(abi.encodePacked(ids[_email])).length != 0) emails[_email] = msg.sender;
+    // if (bytes(abi.encodePacked(ids[_phone])).length != 0) phones[_phone] = msg.sender;
+
+    emit LogUserUpdated(msg.sender, _email, _phone);
   }
 
   function removeUser() public onlyUser(msg.sender) {

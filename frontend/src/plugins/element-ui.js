@@ -1,6 +1,7 @@
 import Vue from "vue";
 
 import {
+  Alert,
   Card,
   Button,
   Dialog,
@@ -18,6 +19,7 @@ import {
   Tooltip
 } from "element-ui";
 
+Vue.use(Alert);
 Vue.use(Card);
 Vue.use(Button);
 Vue.use(Dialog);

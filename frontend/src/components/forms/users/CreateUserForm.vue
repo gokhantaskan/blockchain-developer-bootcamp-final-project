@@ -6,7 +6,17 @@
         novalidate
       >
         <div class="row">
-          <div class="col-12 col-md-6">
+          <div class="col-12">
+            <el-alert
+              type="info"
+              show-icon
+            >
+              <strong>First name, last name, and national ID cannot be updated.</strong>
+              However, e-mail and phone number can be updated after you create your profile.
+            </el-alert>
+          </div>
+
+          <div class="col-12 col-md-6 mt-2">
             <FormItem
               v-model="form.firstName"
               id="firstName"

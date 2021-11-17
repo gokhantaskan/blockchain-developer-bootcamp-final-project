@@ -1,0 +1,9 @@
+.el-alert {
+  padding: 1rem 2rem;
+
+  &__description {
+    font-size: 0.875rem !important;
+    margin: 0 !important;
+    line-height: 1.5;
+  }
+}

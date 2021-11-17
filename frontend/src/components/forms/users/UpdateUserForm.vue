@@ -7,41 +7,40 @@
         novalidate
       >
         <div class="row">
-          <div class="col-12 col-lg-6">
+          <!-- <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.firstName"
               id="firstName"
               label="First Name"
-              vv-name="First Name"
-              vv-rules="required|min:2|alpha_spaces"
-              message="At least 2 characters"
-              required
+              readonly
             />
-          </div>
+          </div> -->
 
-          <div class="col-12 col-lg-6">
+          <!-- <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.lastName"
               id="lastName"
               label="Last Name"
-              vv-name="Last Name"
-              vv-rules="required|min:2|alpha"
-              message="At least 2 characters"
-              required
+              readonly
             />
-          </div>
+          </div> -->
 
-          <div class="col-12 col-lg-6">
+          <!-- <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.nationalId"
               id="nationalId"
               label="National ID"
-              vv-name="National ID"
-              vv-rules="required"
               show-password
-              required
+              readonly
             />
-          </div>
+          </div> -->
+
+          <!-- <div class="col-12 col-md-6">
+            <GenderInput
+              v-model="form.gender"
+              disable-all
+            />
+          </div> -->
 
           <div class="col-12 col-lg-6">
             <FormItem
@@ -60,10 +59,6 @@
               label="Phone"
               vv-name="Phone"
             />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <GenderInput v-model="form.gender" />
           </div>
         </div>
       </form>
@@ -88,12 +83,23 @@ export default defineComponent({
     const { state: ethereum } = useEthereum();
     // const tx_hash = ref("");
     const form = reactive({
-      firstName: "",
-      lastName: "",
-      nationalId: "",
+      // firstName: "",
+      // lastName: "",
+      // nationalId: "",
+      // gender: 0,
       email: "",
       phone: "",
-      gender: 0,
+    });
+
+    onMounted(() => {
+      const userDetails = vm().root.proxy.$store.state.user.details;
+
+      // form.firstName = userDetails.firstName;
+      // form.lastName = userDetails.lastName;
+      // form.nationalId = userDetails.nationalId;
+      // form.gender = userDetails.gender;
+      form.email = userDetails.email;
+      form.phone = userDetails.phone;
     });
 
     const updateUser = () => {
@@ -101,7 +107,7 @@ export default defineComponent({
       let tx_hash = "";
 
       web3UserContract.methods
-        .updateUserDetails(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
+        .updateUserDetails(form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {
           tx_hash = txHash;
@@ -114,10 +120,10 @@ export default defineComponent({
           });
         })
         /* confNumber is a dynamic number increasing over time */
-        .on("confirmation", (confNumber: number, _receipt: any, latestBlockHash: any) => {
-          console.log("conf. number: ", confNumber);
-          console.log("latest block hash: ", latestBlockHash);
-        })
+        // .on("confirmation", (confNumber: number, _receipt: any, latestBlockHash: any) => {
+        //   console.log("conf. number: ", confNumber);
+        //   console.log("latest block hash: ", latestBlockHash);
+        // })
         .then((res: any) => {
           Notification.success({
             position: "bottom-left",
@@ -148,17 +154,6 @@ export default defineComponent({
           emit("updating", false);
         });
     };
-
-    onMounted(() => {
-      const userDetails = vm().root.proxy.$store.state.user.details;
-
-      form.firstName = userDetails.firstName;
-      form.lastName = userDetails.lastName;
-      form.nationalId = userDetails.nationalId;
-      form.gender = userDetails.gender;
-      form.email = userDetails.email;
-      form.phone = userDetails.phone;
-    });
 
     return { form, updateUser, Gender };
   },
