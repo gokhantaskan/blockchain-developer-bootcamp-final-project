@@ -1,5 +1,5 @@
 var Users = artifacts.require("./Users.sol");
-// var Organizations = artifacts.require("./Organizations.sol");
+// var Organization = artifacts.require("./Organization.sol");
 
 module.exports = function (deployer) {
   deployer.deploy(Users);

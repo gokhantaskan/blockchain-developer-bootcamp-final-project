@@ -55,7 +55,6 @@ contract Users {
   /// @return bool - true or false
   function isUser(address _address) public view returns (bool) {
     if (
-      // TODO: nationalId must be unique!
       bytes(usersList[_address].firstName).length != 0 &&
       bytes(usersList[_address].lastName).length != 0 &&
       bytes(usersList[_address].nationalId).length != 0
