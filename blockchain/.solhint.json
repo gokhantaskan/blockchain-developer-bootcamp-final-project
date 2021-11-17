@@ -2,6 +2,12 @@
   "extends": "solhint:recommended",
   "plugins": [],
   "rules": {
+    "func-visibility": [
+      "warn",
+      {
+        "ignoreConstructors": true
+      }
+    ],
     "compiler-version": [
       "warn",
       "0.8.9"

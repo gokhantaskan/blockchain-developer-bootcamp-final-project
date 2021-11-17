@@ -18,7 +18,7 @@
 
   &.not-valid {
     .el-input__inner {
-      border-color: #F56C6C;
+      border-color: $color-error;
     }
   }
 

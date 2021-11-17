@@ -1,7 +1,12 @@
 <template>
   <div v-if="!ethereum.isMetaMask">
     <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
-      <p class="mt-0">
+      <img
+        src="https://raw.githubusercontent.com/MetaMask/brand-resources/c3c894bb8c460a2e9f47c07f6ef32e234190a7aa/SVG/metamask-fox.svg"
+        alt="Just a fox"
+        width="120"
+      >
+      <p>
         Please install MetaMask in order to continue!
       </p>
       <a

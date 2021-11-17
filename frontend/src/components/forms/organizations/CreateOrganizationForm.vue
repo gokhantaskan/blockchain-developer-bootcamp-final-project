@@ -77,10 +77,21 @@
                 v-for="(admin, i) in form.admins"
                 :key="i"
               >
-                <span
-                  class="cursor-pointer click-to-remove"
-                  @click.prevent="removeAdmin(i)"
-                >{{ admin }}</span>
+                <div class="d-flex align-items-center py-2">
+                  <span
+                    class="d-inline-block"
+                    style="line-height: 24px"
+                  >{{ admin }}</span>
+                  <el-button
+                    class="ms-2"
+                    icon="el-icon-close"
+                    size="small"
+                    type="danger"
+                    round
+                    @click="removeAdmin(i)"
+                  >
+                  </el-button>
+                </div>
               </li>
             </ul>
           </div>
