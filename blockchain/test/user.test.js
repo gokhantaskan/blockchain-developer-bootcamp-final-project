@@ -1,7 +1,7 @@
 const Users = artifacts.require("Users");
 
 let BN = web3.utils.BN;
-let { catchRevert } = require("./exceptionsHelpers.js");
+// let { catchRevert } = require("./exceptionsHelpers.js");
 // const { items: ItemStruct, isDefined, isPayable, isType } = require("./ast-helper");
 
 const emptyMock = {
@@ -26,13 +26,33 @@ const mockUser2 = {
   firstName: "Yasemin",
   lastName: "Taşkan",
   nationalId: "12345",
-  email: "",
-  phone: "",
+  email: "gokhan@gmail.com",
+  phone: "+905420000000",
   gender: 1,
 };
 
 const bnToString = (arg) => {
   arg.toString(10);
+};
+
+const createMockUser = (data, instance, accounts, accountIndex = 0) => {
+  const copy = { ...data };
+
+  return new Promise(async (resolve, reject) => {
+    await instance.createUser(
+      copy.firstName,
+      copy.lastName,
+      copy.nationalId,
+      copy.email,
+      copy.phone,
+      copy.gender,
+      { from: accounts[accountIndex] }
+    );
+
+    await instance.getUserDetails.call({ from: accounts[accountIndex] })
+      .then(res => resolve(res))
+      .catch(err => reject(Error(err)));
+  });
 };
 
 contract("Users", accounts => {
@@ -50,7 +70,7 @@ contract("Users", accounts => {
     it("should revert if the required fields are not set", async () => {
       const copy = { ...emptyMock };
 
-      instance.createUser(
+      await instance.createUser(
         copy.firstName,
         copy.lastName,
         copy.nationalId,
@@ -58,11 +78,11 @@ contract("Users", accounts => {
         copy.phone,
         copy.gender,
         { from: accounts[0] }
-      ).catch(err => console.log(err.reason));
+      ).catch(err => console.log(`\t\t${err.reason}`));
 
       copy.firstName = "Gökhan";
 
-      instance.createUser(
+      await instance.createUser(
         copy.firstName,
         copy.lastName,
         copy.nationalId,
@@ -70,11 +90,11 @@ contract("Users", accounts => {
         copy.phone,
         copy.gender,
         { from: accounts[0] }
-      ).catch(err => console.log(err.reason));
+      ).catch(err => console.log(`\t\t${err.reason}`));
 
       copy.lastName = "Taşkan";
 
-      instance.createUser(
+      await instance.createUser(
         copy.firstName,
         copy.lastName,
         copy.nationalId,
@@ -82,21 +102,11 @@ contract("Users", accounts => {
         copy.phone,
         copy.gender,
         { from: accounts[0] }
-      ).catch(err => console.log(err.reason));
+      ).catch(err => console.log(`\t\t${err.reason}`));
     });
 
     it("should create a basic profile", async () => {
-      await instance.createUser(
-        mockUser1.firstName,
-        mockUser1.lastName,
-        mockUser1.nationalId,
-        mockUser1.email,
-        mockUser1.phone,
-        mockUser1.gender,
-        { from: accounts[0] }
-      );
-
-      const user1 = await instance.getUserDetails.call({ from: accounts[0] });
+      const user1 = await createMockUser({ ...mockUser1 }, instance, accounts);
 
       assert.equal(
         user1[0],
@@ -133,22 +143,73 @@ contract("Users", accounts => {
         Users.Gender.Male,
         "the gender of the last added item does not match the expected value",
       );
+    });
 
-      // const tx2 = await instance.createUser(
-      //   mockUser2.firstName,
-      //   mockUser2.lastName,
-      //   mockUser2.nationalId,
-      //   mockUser2.email,
-      //   mockUser2.phone,
-      //   mockUser2.gender,
-      //   { from: accounts[1] }
-      // );
+    it("should prevent using taken national ID, e-mail, and password", async () => {
+      await createMockUser({ ...mockUser1 }, instance, accounts);
+      const copy = { ...mockUser2 };
 
-      // const user2 = await instance.getUserDetails.call({ from: accounts[1] });
+      await instance.createUser(
+        copy.firstName,
+        copy.lastName,
+        copy.nationalId,
+        copy.email,
+        copy.phone,
+        copy.gender,
+        { from: accounts[1] }
+      ).catch(err => console.log(`\t\t${err.reason}`));
 
-      // console.log(user2);
+      copy.nationalId = "23456";
 
-      // assert.equal(userCount.toNumber(), 0);
+      await instance.createUser(
+        copy.firstName,
+        copy.lastName,
+        copy.nationalId,
+        copy.email,
+        copy.phone,
+        copy.gender,
+        { from: accounts[1] }
+      ).catch(err => console.log(`\t\t${err.reason}`));
+
+      copy.email = "yasemin@gmail.com";
+
+      await instance.createUser(
+        copy.firstName,
+        copy.lastName,
+        copy.nationalId,
+        copy.email,
+        copy.phone,
+        copy.gender,
+        { from: accounts[1] }
+      ).catch(err => console.log(`\t\t${err.reason}`));
+    });
+
+    it("should update e-mail and password", async () => {
+      const copy = { ...mockUser1 };
+      const user1 = await createMockUser(copy, instance, accounts);
+
+      copy.email = "taskan@gmail.com";
+      copy.phone = "+905550000000";
+
+      await instance.updateUserDetails(
+        copy.email,
+        copy.phone,
+        { from: accounts[0] }
+      )
+        .then(() => { })
+        .catch(err => console.log(`\t\t${err.reason}`));
+
+      const updatedUser1 = await instance.getUserDetails.call({ from: accounts[0] });
+
+      assert(
+        user1[3] !== updatedUser1[3],
+        "the e-mail field is not updated",
+      );
+
+      assert(
+        user1[4] !== updatedUser1[4],
+        "the phone fields is not updated",
+      );
     });
   });
 });

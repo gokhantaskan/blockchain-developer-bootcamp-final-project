@@ -97,7 +97,7 @@ import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
 import { web3, web3UserContract } from "@/lib/web3";
 import { Gender } from "@/lib/types";
-import { Transaction, TransactionReceipt } from "@/lib/types/web3";
+import { ITransactionReceipt } from "@/lib/types/web3";
 
 export default defineComponent({
   name: "CreateUserForm",
@@ -120,7 +120,7 @@ export default defineComponent({
 
     const createUser = async () => {
       loading.value = true;
-      let receipt: TransactionReceipt;
+      let receipt: ITransactionReceipt;
       let tx_hash = "";
       let infoNot: any = null;
 
@@ -134,7 +134,7 @@ export default defineComponent({
             position: "bottom-left",
             duration: 0,
             dangerouslyUseHTMLString: true,
-            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
             title: "Transaction submitted!",
           });
         })
@@ -149,7 +149,7 @@ export default defineComponent({
             position: "bottom-left",
             duration: 0,
             dangerouslyUseHTMLString: true,
-            message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+            message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
             title: "Transaction confirmed!",
           });
 
@@ -158,7 +158,7 @@ export default defineComponent({
         .catch(async (error: any) => {
           await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
             if (error) console.error(error);
-            receipt = transactionReceipt;
+            receipt = transactionReceipt as ITransactionReceipt;
           });
 
           console.log(receipt);
@@ -176,7 +176,7 @@ export default defineComponent({
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction reverted!",
             });
           }

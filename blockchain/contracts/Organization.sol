@@ -64,7 +64,7 @@ contract Organizations is Ownable, AccessControl {
     string memory _registrationId,
     string memory _email,
     string memory _phone
-  ) public onlyOwner {
+  ) public {
     require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin!");
 
     if (bytes(_name).length != 0) name = _name;
@@ -73,7 +73,7 @@ contract Organizations is Ownable, AccessControl {
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function updateOrganizationAdmins(address[] memory _admins) public onlyOwner {
+  function updateOrganizationAdmins(address[] memory _admins) public {
     require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin!");
 
     admins = _admins;

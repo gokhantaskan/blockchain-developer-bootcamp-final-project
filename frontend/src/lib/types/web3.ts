@@ -31,7 +31,7 @@ export interface IAbiOutput {
 
 export type IContractAbi = IAbiItem[] | IAbiItem;
 
-export interface Transaction {
+export interface ITransaction {
   hash: string;
   nonce: number;
   blockHash: string | null;
@@ -45,7 +45,7 @@ export interface Transaction {
   input: string;
 }
 
-export interface Log {
+export interface ILog {
   address: string;
   blockHash: string;
   blockNumber: number;
@@ -56,7 +56,7 @@ export interface Log {
   transactionIndex: number;
 }
 
-export interface EventLog {
+export interface IEventLog {
   address: string;
   blockHash: string;
   blockNumber: number;
@@ -71,15 +71,15 @@ export interface EventLog {
   type: string;
 }
 
-export interface TransactionReceipt {
+export interface ITransactionReceipt {
   blockHash: string;
   blockNumber: number;
   contractAddress: string | null;
   cumulativeGasUsed: number;
-  events?: { [eventName: string]: EventLog };
+  events?: { [eventName: string]: IEventLog };
   from: string;
   gasUsed: number;
-  logs?: Log[];
+  logs?: ILog[];
   logsBloom: string;
   status: boolean;
   to: string;

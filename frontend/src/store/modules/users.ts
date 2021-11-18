@@ -1,7 +1,8 @@
 import Vue from "vue";
 import { readonly } from "vue-demi";
-import { web3UserContract } from "@/lib/web3";
+import { web3, web3UserContract } from "@/lib/web3";
 import { Message, Notification } from "element-ui";
+import { ITransactionReceipt } from "@/lib/types/web3";
 
 interface IUserDetails {
   firstName: string;
@@ -72,6 +73,7 @@ export const userModule = {
     },
     removeUser({ dispatch }: any, address: string) {
       return new Promise<void>((resolve, reject) => {
+        let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
 
@@ -89,6 +91,10 @@ export const userModule = {
               title: "Transaction submitted!",
             });
           })
+          .once("receipt", (res: any) => {
+            receipt = res;
+            console.log(receipt);
+          })
           .then((res: any) => {
             infoNot.close();
 
@@ -103,7 +109,12 @@ export const userModule = {
             dispatch("resetUserState");
             resolve(res);
           })
-          .catch((err: any) => {
+          .catch(async (err: any) => {
+            await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+              if (error) console.error(error);
+              receipt = transactionReceipt as ITransactionReceipt;
+            });
+
             if ([4001].includes(err.code)) {
               Message({
                 message: err.message,
