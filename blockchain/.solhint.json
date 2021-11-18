@@ -1,7 +1,10 @@
 {
   "extends": "solhint:recommended",
-  "plugins": [],
+  "plugins": [
+    "prettier"
+  ],
   "rules": {
+    "prettier/prettier": "error",
     "func-visibility": [
       "warn",
       {
