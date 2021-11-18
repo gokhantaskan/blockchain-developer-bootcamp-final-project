@@ -7,7 +7,7 @@ import UserDist from "../../../blockchain/build/contracts/Users.json";
 
 export const web3 = new Web3(_window.ethereum || "http://localhost:7545");
 export const web3UserContract = new web3.eth.Contract(UserDist.abi as IContractAbi, process.env.VUE_APP_USERS_CONTRACT_ADDRESS);
-web3UserContract.handleRevert = true;
+// web3UserContract.handleRevert = true;
 
 /**
  * ! Ethers START

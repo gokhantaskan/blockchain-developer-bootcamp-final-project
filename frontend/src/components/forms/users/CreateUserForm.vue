@@ -95,8 +95,9 @@
 import { defineComponent, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
-import { web3UserContract } from "@/lib/web3";
+import { web3, web3UserContract } from "@/lib/web3";
 import { Gender } from "@/lib/types";
+import { Transaction, TransactionReceipt } from "@/lib/types/web3";
 
 export default defineComponent({
   name: "CreateUserForm",
@@ -119,9 +120,9 @@ export default defineComponent({
 
     const createUser = async () => {
       loading.value = true;
-      let infoNot: any = null;
+      let receipt: TransactionReceipt;
       let tx_hash = "";
-      let receipt: any = null;
+      let infoNot: any = null;
 
       await web3UserContract.methods
         .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
@@ -137,9 +138,11 @@ export default defineComponent({
             title: "Transaction submitted!",
           });
         })
-        .then((res: any) => {
+        .once("receipt", (res: any) => {
           receipt = res;
-
+          console.log(receipt);
+        })
+        .then(() => {
           infoNot.close();
 
           Notification.success({
@@ -152,19 +155,24 @@ export default defineComponent({
 
           emit("created", true);
         })
-        .catch((error: any) => {
-          console.error(typeof error, error);
+        .catch(async (error: any) => {
+          await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+            if (error) console.error(error);
+            receipt = transactionReceipt;
+          });
+
+          console.log(receipt);
 
           Message({
             type: "error",
-            message: error.message,
+            message: error.reason,
             duration: 5000,
           });
 
           if (tx_hash.length) {
             infoNot.close();
 
-            Notification({
+            Notification.error({
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
