@@ -38,7 +38,7 @@ Open a terminal in the root folder:\
 
 `$ truffle migrate --network development`
 
-Copy the deployed `Storage` contract address and use it as `storageContractAddress` variable under `frontend/src/lib/web3.ts`.
+Copy the deployed `Users` contract address and use it as `VUE_APP_USERS_CONTRACT_ADDRESS` variable under `.env`.
 
 Open a new terminal in the root folder:\
 `$ cd frontend`

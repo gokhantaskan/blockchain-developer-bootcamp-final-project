@@ -22,7 +22,7 @@ contract Users {
   }
 
   mapping(address => User) private usersList;
-  mapping(string => address) public ids;
+  mapping(string => address) private ids;
   mapping(string => address) public emails;
   mapping(string => address) public phones;
 

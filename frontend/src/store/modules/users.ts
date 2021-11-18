@@ -73,6 +73,7 @@ export const userModule = {
     removeUser({ dispatch }: any, address: string) {
       return new Promise<void>((resolve, reject) => {
         let tx_hash = "";
+        let infoNot: any;
 
         web3UserContract.methods
           .removeUser()
@@ -80,18 +81,22 @@ export const userModule = {
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
-            Notification.info({
+            infoNot = Notification.info({
               position: "bottom-left",
               duration: 0,
-              message: `Remove User: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+              dangerouslyUseHTMLString: true,
+              message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
           .then((res: any) => {
+            infoNot.close();
+
             Notification.success({
               position: "bottom-left",
               duration: 0,
-              message: `Remove User: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+              dangerouslyUseHTMLString: true,
+              message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
@@ -107,10 +112,13 @@ export const userModule = {
               });
             } else {
               if (tx_hash.length) {
+                infoNot.close();
+
                 Notification.error({
                   position: "bottom-left",
                   duration: 0,
-                  message: `Remove User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+                  dangerouslyUseHTMLString: true,
+                  message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                   title: "Transaction reverted!",
                 });
               }

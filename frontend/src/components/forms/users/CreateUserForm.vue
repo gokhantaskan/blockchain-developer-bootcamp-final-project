@@ -6,17 +6,18 @@
         novalidate
       >
         <div class="row">
-          <div class="col-12">
+          <div class="col-12 mb-4">
             <el-alert
               type="info"
               show-icon
+              :closable="false"
             >
-              <strong>First name, last name, and national ID cannot be updated.</strong>
-              However, e-mail and phone number can be updated after you create your profile.
+              Only <strong>e-mail</strong> and <strong>phone number</strong> can be updated later.
+              Please submit your form carefully.
             </el-alert>
           </div>
 
-          <div class="col-12 col-md-6 mt-2">
+          <div class="col-12 col-md-6">
             <FormItem
               v-model="form.firstName"
               id="firstName"
@@ -53,6 +54,10 @@
           </div>
 
           <div class="col-12 col-md-6">
+            <GenderInput v-model="form.gender" />
+          </div>
+
+          <div class="col-12 col-md-6">
             <FormItem
               v-model="form.email"
               id="email"
@@ -69,10 +74,6 @@
               label="Phone"
               vv-name="Phone"
             />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <GenderInput v-model="form.gender" />
           </div>
 
           <div class="col-12 pt-3">
@@ -118,6 +119,7 @@ export default defineComponent({
 
     const createUser = async () => {
       loading.value = true;
+      let infoNot: any = null;
       let tx_hash = "";
       let receipt: any = null;
 
@@ -127,20 +129,24 @@ export default defineComponent({
         .once("transactionHash", (txHash: string) => {
           tx_hash = txHash;
 
-          Notification.info({
+          infoNot = Notification.info({
             position: "bottom-left",
             duration: 0,
-            message: `Create User: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
             title: "Transaction submitted!",
           });
         })
         .then((res: any) => {
           receipt = res;
 
+          infoNot.close();
+
           Notification.success({
             position: "bottom-left",
             duration: 0,
-            message: `Create User: ${receipt.transactionHash.slice(0, 10) + "..." + receipt.transactionHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
             title: "Transaction confirmed!",
           });
 
@@ -156,10 +162,13 @@ export default defineComponent({
           });
 
           if (tx_hash.length) {
-            Notification.error({
+            infoNot.close();
+
+            Notification({
               position: "bottom-left",
               duration: 0,
-              message: `Create User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+              dangerouslyUseHTMLString: true,
+              message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction reverted!",
             });
           }

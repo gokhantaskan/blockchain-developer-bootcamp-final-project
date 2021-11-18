@@ -105,6 +105,7 @@ export default defineComponent({
     const updateUser = () => {
       emit("updating", true);
       let tx_hash = "";
+      let infoNot: any;
 
       web3UserContract.methods
         .updateUserDetails(form.email, form.phone)
@@ -112,10 +113,11 @@ export default defineComponent({
         .once("transactionHash", (txHash: string) => {
           tx_hash = txHash;
 
-          Notification.info({
+          infoNot = Notification.info({
             position: "bottom-left",
             duration: 0,
-            message: `Update User: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Update User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
             title: "Transaction submitted!",
           });
         })
@@ -125,10 +127,13 @@ export default defineComponent({
         //   console.log("latest block hash: ", latestBlockHash);
         // })
         .then((res: any) => {
+          infoNot.close();
+
           Notification.success({
             position: "bottom-left",
             duration: 0,
-            message: `Update user: ${res.transactionHash.slice(0, 10) + "..." + res.transactionHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
             title: "Transaction confirmed!",
           });
 
@@ -142,10 +147,13 @@ export default defineComponent({
           });
 
           if (tx_hash.length) {
+            infoNot.close();
+
             Notification.error({
               position: "bottom-left",
               duration: 0,
-              message: `Update user: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+              dangerouslyUseHTMLString: true,
+              message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction reverted!",
             });
           }

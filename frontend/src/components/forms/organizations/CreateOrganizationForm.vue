@@ -166,7 +166,8 @@ export default defineComponent({
           Notification.info({
             position: "bottom-left",
             duration: 0,
-            message: `Create User: ${txHash.slice(0, 10) + "..." + txHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
             title: "Transaction submitted!",
           });
         })
@@ -176,7 +177,8 @@ export default defineComponent({
           Notification.success({
             position: "bottom-left",
             duration: 0,
-            message: `Create User: ${receipt.transactionHash.slice(0, 10) + "..." + receipt.transactionHash.slice(-10)}`,
+            dangerouslyUseHTMLString: true,
+            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
             title: "Transaction confirmed!",
           });
 
@@ -195,7 +197,8 @@ export default defineComponent({
             Notification.error({
               position: "bottom-left",
               duration: 0,
-              message: `Create User: ${tx_hash.slice(0, 10) + "..." + tx_hash.slice(-10)}`,
+              dangerouslyUseHTMLString: true,
+              message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction reverted!",
             });
           }
