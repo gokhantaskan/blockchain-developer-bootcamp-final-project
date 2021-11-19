@@ -1,24 +1,5 @@
 <template>
-  <div v-if="!ethereum.isMetaMask">
-    <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
-      <img
-        src="https://raw.githubusercontent.com/MetaMask/brand-resources/c3c894bb8c460a2e9f47c07f6ef32e234190a7aa/SVG/metamask-fox.svg"
-        alt="Just a fox"
-        width="120"
-      >
-      <p>
-        Please install MetaMask in order to continue!
-      </p>
-      <a
-        class="el-button el-button--primary is-round"
-        href="https://metamask.io/download.html"
-      >
-        Download MetaMask
-      </a>
-    </div>
-  </div>
-
-  <div v-else-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
+  <div v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
     <div class="navigation">
       <div class="container">
         <PageHeader title="Sertifie.me">
@@ -41,6 +22,25 @@
     >
       <router-view />
     </transition>
+  </div>
+
+  <div v-else-if="!ethereum.isMetaMask">
+    <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
+      <img
+        src="https://raw.githubusercontent.com/MetaMask/brand-resources/c3c894bb8c460a2e9f47c07f6ef32e234190a7aa/SVG/metamask-fox.svg"
+        alt="Just a fox"
+        width="120"
+      >
+      <p>
+        Please install MetaMask in order to continue!
+      </p>
+      <a
+        class="el-button el-button--primary is-round"
+        href="https://metamask.io/download.html"
+      >
+        Download MetaMask
+      </a>
+    </div>
   </div>
 
   <div v-else>
