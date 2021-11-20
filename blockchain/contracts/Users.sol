@@ -6,7 +6,6 @@ pragma solidity 0.8.9;
 /// @notice You can use this contract to create, update and delete a user profile
 contract Users {
   struct User {
-    address ownerAddress;
     string firstName;
     string lastName;
     string nationalId;
@@ -29,22 +28,14 @@ contract Users {
   uint public userCount;
 
   event LogUserCreated(
-    string firstName,
-    string lastName,
+    bytes32 firstName,
+    bytes32 lastName,
     bytes32 id,
     bytes32 email,
     bytes32 phone
   );
   event LogUserUpdated(bytes32 email, bytes32 phone);
   event LogUserDeleted(address indexed addr);
-
-  modifier onlyUser(address _address) {
-    require(
-      usersList[_address].ownerAddress == msg.sender,
-      "You have not attended yet!"
-    );
-    _;
-  }
 
   function stringToBytes32(string memory str) internal pure returns (bytes32) {
     return (keccak256(abi.encode(str)));
@@ -96,8 +87,7 @@ contract Users {
       nationalId: _nationalId,
       email: _email,
       phone: _phone,
-      gender: _gender,
-      ownerAddress: msg.sender
+      gender: _gender
     });
 
     if (bytes(_nationalId).length != 0)
@@ -110,8 +100,8 @@ contract Users {
     userCount += 1;
 
     emit LogUserCreated(
-      _firstName,
-      _lastName,
+      stringToBytes32(_firstName),
+      stringToBytes32(_lastName),
       stringToBytes32(_nationalId),
       stringToBytes32(_email),
       stringToBytes32(_phone)
@@ -121,7 +111,6 @@ contract Users {
   function getUserDetails()
     public
     view
-    onlyUser(msg.sender)
     returns (
       string memory firstName,
       string memory lastName,
@@ -143,7 +132,6 @@ contract Users {
 
   function updateUserDetails(string memory _email, string memory _phone)
     public
-    onlyUser(msg.sender)
   {
     string memory currentEmail = usersList[msg.sender].email;
     string memory currentPhone = usersList[msg.sender].phone;
@@ -166,13 +154,11 @@ contract Users {
 
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
-    // if (bytes(abi.encodePacked(ids[_email])).length != 0) emails[_email] = msg.sender;
-    // if (bytes(abi.encodePacked(ids[_phone])).length != 0) phones[_phone] = msg.sender;
 
     emit LogUserUpdated(stringToBytes32(_email), stringToBytes32(_phone));
   }
 
-  function removeUser() public onlyUser(msg.sender) {
+  function removeUser() public {
     string memory id = usersList[msg.sender].nationalId;
     string memory email = usersList[msg.sender].email;
     string memory phone = usersList[msg.sender].phone;
