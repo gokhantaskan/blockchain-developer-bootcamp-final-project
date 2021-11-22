@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-// TODO: It will be the factory contract
+// TODO: It will be the factory (or abstract?) contract
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract Organizations is Ownable, AccessControl {
-  string public name;
-  string public registrationId;
-  string public email;
-  string public phone;
-  address[] public admins;
+contract Organization is Ownable, AccessControl {
+  string private name;
+  string private registrationId;
+  string private email;
+  string private phone;
+  address[] private admins;
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -52,11 +52,14 @@ contract Organizations is Ownable, AccessControl {
       string memory,
       string memory,
       string memory,
-      string memory,
-      address[] memory
+      string memory
     )
   {
-    return (name, registrationId, email, phone, admins);
+    return (name, registrationId, email, phone);
+  }
+
+  function getOrganizationAdmins() public view returns (address[] memory) {
+    return admins;
   }
 
   function updateOrganizationDetails(
@@ -64,20 +67,20 @@ contract Organizations is Ownable, AccessControl {
     string memory _registrationId,
     string memory _email,
     string memory _phone
-  ) public {
-    require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin!");
-
+  ) public onlyRole(ADMIN_ROLE) {
     if (bytes(_name).length != 0) name = _name;
     if (bytes(_registrationId).length != 0) registrationId = _registrationId;
     if (bytes(_email).length != 0) email = _email;
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function updateOrganizationAdmins(address[] memory _admins) public {
-    require(hasRole(ADMIN_ROLE, msg.sender), "Caller is not an admin!");
-
+  function updateOrganizationAdmins(address[] memory _admins) public onlyOwner {
     admins = _admins;
+
+    for (uint i = 0; i < _admins.length; i++) {
+      _setupRole(ADMIN_ROLE, _admins[i]);
+    }
   }
 
-  // TODO: Destruct the contract
+  // TODO: Destroy the contract
 }

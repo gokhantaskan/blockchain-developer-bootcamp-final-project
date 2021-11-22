@@ -6,7 +6,6 @@ pragma solidity 0.8.9;
 /// @notice You can use this contract to create, update and delete a user profile
 contract Users {
   struct User {
-    address ownerAddress;
     string firstName;
     string lastName;
     string nationalId;
@@ -22,29 +21,24 @@ contract Users {
   }
 
   mapping(address => User) private usersList;
-  mapping(string => address) private ids;
-  mapping(string => address) public emails;
-  mapping(string => address) public phones;
+  mapping(bytes32 => address) private ids;
+  mapping(bytes32 => address) private emails;
+  mapping(bytes32 => address) private phones;
 
   uint public userCount;
 
   event LogUserCreated(
-    address addr,
-    string firstName,
-    string lastName,
-    string id,
-    string email,
-    string phone
+    bytes32 firstName,
+    bytes32 lastName,
+    bytes32 id,
+    bytes32 email,
+    bytes32 phone
   );
-  event LogUserUpdated(address addr, string email, string phone);
-  event LogUserDeleted(address addr);
+  event LogUserUpdated(bytes32 email, bytes32 phone);
+  event LogUserDeleted(address indexed addr);
 
-  modifier onlyUser(address _address) {
-    require(
-      usersList[_address].ownerAddress == msg.sender,
-      "You have not attended yet!"
-    );
-    _;
+  function stringToBytes32(string memory str) internal pure returns (bytes32) {
+    return (keccak256(abi.encode(str)));
   }
 
   /// @notice Checks if the given address is bound to a user, can be used in the front-end applications
@@ -78,9 +72,14 @@ contract Users {
     if (bytes(_nationalId).length == 0) revert("National ID is required!");
 
     // Check uniqueness
-    if (ids[_nationalId] != address(0)) revert("This ID is used before!");
-    if (emails[_email] != address(0)) revert("This e-mail is used before!");
-    if (phones[_phone] != address(0)) revert("This phone is used before!");
+    if (ids[stringToBytes32(_nationalId)] != address(0))
+      revert("This ID is used before!");
+
+    if (emails[stringToBytes32(_email)] != address(0))
+      revert("This e-mail is used before!");
+
+    if (phones[stringToBytes32(_phone)] != address(0))
+      revert("This phone is used before!");
 
     User memory user = User({
       firstName: _firstName,
@@ -88,31 +87,30 @@ contract Users {
       nationalId: _nationalId,
       email: _email,
       phone: _phone,
-      gender: _gender,
-      ownerAddress: msg.sender
+      gender: _gender
     });
 
-    if (bytes(_nationalId).length != 0) ids[_nationalId] = msg.sender;
-    if (bytes(_email).length != 0) emails[_email] = msg.sender;
-    if (bytes(_phone).length != 0) phones[_phone] = msg.sender;
+    if (bytes(_nationalId).length != 0)
+      ids[stringToBytes32(_nationalId)] = msg.sender;
+
+    if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
+    if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
 
     usersList[msg.sender] = user;
     userCount += 1;
 
     emit LogUserCreated(
-      msg.sender,
-      _firstName,
-      _lastName,
-      _nationalId,
-      _email,
-      _phone
+      stringToBytes32(_firstName),
+      stringToBytes32(_lastName),
+      stringToBytes32(_nationalId),
+      stringToBytes32(_email),
+      stringToBytes32(_phone)
     );
   }
 
   function getUserDetails()
     public
     view
-    onlyUser(msg.sender)
     returns (
       string memory firstName,
       string memory lastName,
@@ -134,38 +132,40 @@ contract Users {
 
   function updateUserDetails(string memory _email, string memory _phone)
     public
-    onlyUser(msg.sender)
   {
     string memory currentEmail = usersList[msg.sender].email;
     string memory currentPhone = usersList[msg.sender].phone;
 
-    if (emails[_email] != address(0) && emails[_email] != msg.sender)
-      revert("This e-mail is used before!");
+    if (
+      emails[stringToBytes32(_email)] != address(0) &&
+      emails[stringToBytes32(_email)] != msg.sender
+    ) revert("This e-mail is used before!");
 
-    if (phones[_phone] != address(0) && phones[_phone] != msg.sender)
-      revert("This phone is used before!");
+    if (
+      phones[stringToBytes32(_phone)] != address(0) &&
+      phones[stringToBytes32(_phone)] != msg.sender
+    ) revert("This phone is used before!");
 
     usersList[msg.sender].email = _email;
     usersList[msg.sender].phone = _phone;
 
-    emails[currentEmail] = address(0);
-    phones[currentPhone] = address(0);
-    if (bytes(_email).length != 0) emails[_email] = msg.sender;
-    if (bytes(_phone).length != 0) phones[_phone] = msg.sender;
-    // if (bytes(abi.encodePacked(ids[_email])).length != 0) emails[_email] = msg.sender;
-    // if (bytes(abi.encodePacked(ids[_phone])).length != 0) phones[_phone] = msg.sender;
+    emails[stringToBytes32(currentEmail)] = address(0);
+    phones[stringToBytes32(currentPhone)] = address(0);
 
-    emit LogUserUpdated(msg.sender, _email, _phone);
+    if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
+    if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
+
+    emit LogUserUpdated(stringToBytes32(_email), stringToBytes32(_phone));
   }
 
-  function removeUser() public onlyUser(msg.sender) {
+  function removeUser() public {
     string memory id = usersList[msg.sender].nationalId;
     string memory email = usersList[msg.sender].email;
     string memory phone = usersList[msg.sender].phone;
 
-    ids[id] = address(0);
-    emails[email] = address(0);
-    phones[phone] = address(0);
+    ids[stringToBytes32(id)] = address(0);
+    emails[stringToBytes32(email)] = address(0);
+    phones[stringToBytes32(phone)] = address(0);
 
     delete usersList[msg.sender];
 
