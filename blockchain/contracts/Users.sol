@@ -30,7 +30,7 @@ contract Users {
 
   uint public userCount;
 
-  // Organization orgCont = Organization(process.env.ORGANIZATION_CONTRACT_ADDRESS);
+  mapping(address => Organization) public organizationsList;
 
   event LogUserCreated(
     address indexed addr,
@@ -46,6 +46,8 @@ contract Users {
   function stringToBytes32(string memory str) internal pure returns (bytes32) {
     return (keccak256(abi.encode(str)));
   }
+
+  // ! USER FUNCTIONS START
 
   /// @notice Checks if the given address is bound to a user, can be used in the front-end applications
   /// @param _address The address to check
@@ -185,5 +187,26 @@ contract Users {
     userCount -= 1;
 
     emit LogUserDeleted(msg.sender);
+  }
+
+  // ! USER FUNCTIONS END
+
+  // ! ORGANIZATON FUNCTIONS START
+  function createOrganization(
+    string memory _name,
+    string memory _registrationId,
+    string memory _email,
+    string memory _phone,
+    address[] memory _admins
+  ) public {
+    Organization o = new Organization(
+      _name,
+      _registrationId,
+      _email,
+      _phone,
+      _admins
+    );
+
+    organizationsList[msg.sender] = o;
   }
 }

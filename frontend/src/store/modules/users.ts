@@ -60,14 +60,14 @@ export const userModule = {
             resolve(res);
           })
           .catch((err: any) => {
-            reject(err);
-
             Message.error({
               message: err.message,
               duration: 0,
             });
 
             dispatch("resetUserState");
+
+            reject(err);
           });
       });
     },
@@ -129,7 +129,7 @@ export const userModule = {
                   position: "bottom-left",
                   duration: 0,
                   dangerouslyUseHTMLString: true,
-                  message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                  message: `Remove User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                   title: "Transaction reverted!",
                 });
               }

@@ -127,42 +127,32 @@ export default defineComponent({
   async beforeMount() {
     const { state: ethereum } = useEthereum();
 
-    this.$watch(
-      () => ethereum.selectedAddress,
-      async newVal => {
-        if (newVal) {
-          this.loading = true;
+    this.loading = true;
 
-          // Check if the account is registered before
-          web3UserContract.methods
-            .isUser(newVal)
-            .call({ from: newVal })
-            .then((res: boolean) => {
-              if (res) { // If registered, get the details
-                this.$store.dispatch("user/getUser", newVal);
-              } else {
-                this.$store.dispatch("user/resetUserState");
-              }
-            })
-            .catch((err: any) => {
-              this.$store.dispatch("user/resetUserState");
-
-              Message({
-                message: err.message,
-                type: "error",
-                duration: 0,
-                showClose: true,
-              });
-            })
-            .finally(() => {
-              this.loading = false;
-            });
+    // Check if the account is registered before
+    web3UserContract.methods
+      .isUser(ethereum.selectedAddress)
+      .call({ from: ethereum.selectedAddress })
+      .then((res: boolean) => {
+        if (res) { // If registered, get the details
+          this.$store.dispatch("user/getUser", ethereum.selectedAddress);
+        } else {
+          this.$store.dispatch("user/resetUserState");
         }
-      },
-      {
-        immediate: true,
-      }
-    );
+      })
+      .catch((err: any) => {
+        this.$store.dispatch("user/resetUserState");
+
+        Message({
+          message: err.message,
+          type: "error",
+          duration: 0,
+          showClose: true,
+        });
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   methods: {
     afterUpdate() {

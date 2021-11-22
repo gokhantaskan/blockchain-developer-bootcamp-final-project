@@ -7,6 +7,10 @@
     line-height: 1.5;
   }
 
+  &__icon.el-icon-info.is-big {
+    color: #607D8B;
+  }
+
   &--info.is-light {
     background-color: $--border-color-lighter;
     color: $--border-color-base;

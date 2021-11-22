@@ -1,5 +1,8 @@
 <template>
-  <div v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
+  <div
+    v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)"
+    :key="appKey"
+  >
     <div class="navigation">
       <div class="container">
         <PageHeader title="Sertifie.me">
@@ -10,7 +13,7 @@
                 address
                 toggle
               /></span>
-            <span class="d-block">Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]</span>
+            <span class="d-block">Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}] {{ appKey }}</span>
           </template>
         </PageHeader>
       </div>
@@ -56,7 +59,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted } from "vue-demi";
+import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue-demi";
 import { useEthereum } from "./composables/ethereum";
 import { vm } from "./lib/globals";
 
@@ -68,6 +71,7 @@ export default defineComponent({
   },
   setup() {
     const { state: ethereum } = useEthereum();
+    const appKey = ref(0);
 
     onMounted(async () => {
       vm().root.proxy.$nextTick(async () => {
@@ -75,13 +79,20 @@ export default defineComponent({
         await ethereum.requestAccounts();
         if (ethereum.setListeners !== undefined) ethereum.setListeners();
       });
+
+      watch(
+        () => ethereum.selectedAddress,
+        () => {
+          appKey.value++;
+        }
+      );
     });
 
     onUnmounted(async () => {
       if (ethereum.removeListeners !== undefined) ethereum.removeListeners();
     });
 
-    return { ethereum };
+    return { ethereum, appKey };
   },
 });
 </script>

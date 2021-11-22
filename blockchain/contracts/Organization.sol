@@ -14,6 +14,15 @@ contract Organization is Ownable, AccessControl {
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
+  event LogOrganizationCreated(
+    address indexed addr,
+    string name,
+    string registrationId,
+    string email,
+    string phone,
+    address[] admins
+  );
+
   constructor(
     string memory _name,
     string memory _registrationId,
@@ -38,6 +47,15 @@ contract Organization is Ownable, AccessControl {
       for (uint i = 0; i < admins.length; i++) {
         _setupRole(ADMIN_ROLE, _admins[i]);
       }
+
+      emit LogOrganizationCreated(
+        address(this),
+        _name,
+        _registrationId,
+        _email,
+        _phone,
+        _admins
+      );
     } else {
       revert("Fill all the fields!");
     }

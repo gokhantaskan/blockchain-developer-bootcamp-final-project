@@ -7,41 +7,6 @@
         novalidate
       >
         <div class="row">
-          <!-- <div class="col-12 col-lg-6">
-            <FormItem
-              v-model="form.firstName"
-              id="firstName"
-              label="First Name"
-              readonly
-            />
-          </div> -->
-
-          <!-- <div class="col-12 col-lg-6">
-            <FormItem
-              v-model="form.lastName"
-              id="lastName"
-              label="Last Name"
-              readonly
-            />
-          </div> -->
-
-          <!-- <div class="col-12 col-lg-6">
-            <FormItem
-              v-model="form.nationalId"
-              id="nationalId"
-              label="National ID"
-              show-password
-              readonly
-            />
-          </div> -->
-
-          <!-- <div class="col-12 col-md-6">
-            <GenderInput
-              v-model="form.gender"
-              disable-all
-            />
-          </div> -->
-
           <div class="col-12 col-lg-6">
             <FormItem
               v-model="form.email"
@@ -82,12 +47,8 @@ export default defineComponent({
   },
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
-    // const tx_hash = ref("");
+
     const form = reactive({
-      // firstName: "",
-      // lastName: "",
-      // nationalId: "",
-      // gender: 0,
       email: "",
       phone: "",
     });
@@ -95,10 +56,6 @@ export default defineComponent({
     onMounted(() => {
       const userDetails = vm().root.proxy.$store.state.user.details;
 
-      // form.firstName = userDetails.firstName;
-      // form.lastName = userDetails.lastName;
-      // form.nationalId = userDetails.nationalId;
-      // form.gender = userDetails.gender;
       form.email = userDetails.email;
       form.phone = userDetails.phone;
     });

@@ -2,6 +2,11 @@
   width: 75%;
   max-width: 800px;
 
+  &__title {
+    color: $--color-text-secondary;
+    font-weight: 500;
+  }
+
   &__body {
     color: inherit;
     font-size: initial !important;
