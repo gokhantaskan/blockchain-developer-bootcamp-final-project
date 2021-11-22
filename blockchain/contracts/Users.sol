@@ -21,20 +21,21 @@ contract Users {
   }
 
   mapping(address => User) private usersList;
-  mapping(bytes32 => address) private ids;
+  mapping(bytes32 => address) private nationalIds;
   mapping(bytes32 => address) private emails;
   mapping(bytes32 => address) private phones;
 
   uint public userCount;
 
   event LogUserCreated(
+    address indexed addr,
     bytes32 firstName,
     bytes32 lastName,
-    bytes32 id,
+    bytes32 nationalId,
     bytes32 email,
     bytes32 phone
   );
-  event LogUserUpdated(bytes32 email, bytes32 phone);
+  event LogUserUpdated(address indexed addr, bytes32 email, bytes32 phone);
   event LogUserDeleted(address indexed addr);
 
   function stringToBytes32(string memory str) internal pure returns (bytes32) {
@@ -72,7 +73,7 @@ contract Users {
     if (bytes(_nationalId).length == 0) revert("National ID is required!");
 
     // Check uniqueness
-    if (ids[stringToBytes32(_nationalId)] != address(0))
+    if (nationalIds[stringToBytes32(_nationalId)] != address(0))
       revert("This ID is used before!");
 
     if (emails[stringToBytes32(_email)] != address(0))
@@ -91,7 +92,7 @@ contract Users {
     });
 
     if (bytes(_nationalId).length != 0)
-      ids[stringToBytes32(_nationalId)] = msg.sender;
+      nationalIds[stringToBytes32(_nationalId)] = msg.sender;
 
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
@@ -100,6 +101,7 @@ contract Users {
     userCount += 1;
 
     emit LogUserCreated(
+      msg.sender,
       stringToBytes32(_firstName),
       stringToBytes32(_lastName),
       stringToBytes32(_nationalId),
@@ -155,7 +157,7 @@ contract Users {
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
 
-    emit LogUserUpdated(stringToBytes32(_email), stringToBytes32(_phone));
+    emit LogUserUpdated(msg.sender, stringToBytes32(_email), stringToBytes32(_phone));
   }
 
   function removeUser() public {
@@ -163,7 +165,7 @@ contract Users {
     string memory email = usersList[msg.sender].email;
     string memory phone = usersList[msg.sender].phone;
 
-    ids[stringToBytes32(id)] = address(0);
+    nationalIds[stringToBytes32(id)] = address(0);
     emails[stringToBytes32(email)] = address(0);
     phones[stringToBytes32(phone)] = address(0);
 
