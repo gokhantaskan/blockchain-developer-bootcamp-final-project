@@ -1,6 +1,14 @@
 <template>
-  <div class="form-item">
-    <label class="form-item__label">Gender</label>
+  <div
+    class="form-item required"
+    :class="[
+      errors.length ? 'not-valid' : ''
+    ]"
+  >
+    <label class="form-item__label">
+      Gender
+    </label>
+
     <el-radio-group
       :value="Number(value)"
       @input="handleChange"
@@ -25,6 +33,11 @@
         Transgender
       </el-radio-button>
     </el-radio-group>
+
+    <span
+      class="form-item__error mt-n-1"
+      v-if="errors.length"
+    >{{ errors[0] }}</span>
   </div>
 </template>
 
@@ -36,11 +49,15 @@ export default {
   props: {
     value: {
       type: [Number, String],
-      default: 0,
+      default: -1,
     },
     disableAll: {
       type: Boolean,
       default: false,
+    },
+    errors: {
+      type: Array,
+      default: () => [],
     },
   },
   methods: {

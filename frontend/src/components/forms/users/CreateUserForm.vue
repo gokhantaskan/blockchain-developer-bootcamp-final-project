@@ -12,7 +12,9 @@
               show-icon
               :closable="false"
             >
-              Only <strong>e-mail</strong> and <strong>phone number</strong> can be updated later.
+              Only
+              <strong>e-mail</strong> and
+              <strong>phone number</strong> can be updated later.
               Please submit your form carefully.
             </el-alert>
           </div>
@@ -54,7 +56,18 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <GenderInput v-model="form.gender" />
+            <ValidationProvider
+              rules="required"
+              name="Gender"
+              :bails="false"
+              skip-if-empty
+              v-slot="{ errors }"
+            >
+              <GenderInput
+                v-model="form.gender"
+                :errors="errors"
+              />
+            </ValidationProvider>
           </div>
 
           <div class="col-12 col-md-6">
@@ -115,7 +128,7 @@ export default defineComponent({
       nationalId: "",
       email: "",
       phone: "",
-      gender: Gender.Male,
+      gender: undefined,
     });
 
     const createUser = async () => {

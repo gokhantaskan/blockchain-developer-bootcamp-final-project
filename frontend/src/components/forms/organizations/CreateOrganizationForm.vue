@@ -72,7 +72,7 @@
             class="col-12"
             v-if="form.admins.length"
           >
-            <ul>
+            <ul class="ps-4">
               <li
                 v-for="(admin, i) in form.admins"
                 :key="i"
@@ -81,16 +81,17 @@
                   <span
                     class="d-inline-block"
                     style="line-height: 24px"
-                  >{{ admin }}</span>
-                  <el-button
-                    class="ms-2"
-                    icon="el-icon-close"
-                    size="small"
-                    type="danger"
-                    round
+                  >
+                    {{ admin }}
+                  </span>
+
+                  <span
+                    class="delete-button d-inline-flex align-items-center justify-content-center cursor-pointer ms-2"
+                    tabindex="0"
                     @click="removeAdmin(i)"
                   >
-                  </el-button>
+                    <i class="el-icon-close"></i>
+                  </span>
                 </div>
               </li>
             </ul>

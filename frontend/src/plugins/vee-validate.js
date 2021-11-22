@@ -3,6 +3,7 @@ import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
 
 import * as rules from "vee-validate/dist/rules";
 import { messages } from "vee-validate/dist/locale/en.json";
+import { Gender } from "@/lib/types";
 
 Object.keys(rules).forEach(rule => {
   extend(rule, {
@@ -18,6 +19,10 @@ extend("latitude", {
   },
   message: "Regex not fit",
   // message: "{_field_} must be a valid latitude value",
+});
+
+extend("gender", value => {
+  return value === Gender.Male || Gender.Female || Gender.Transgender;
 });
 
 // Register it globally

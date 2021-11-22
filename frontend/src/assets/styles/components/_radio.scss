@@ -1,17 +1,28 @@
 .el-radio-button {
 
   &__orig-radio:checked+#{&}__inner {
-    color: #409EFF !important;
+    color: $color-primary !important;
     background-color: #ecf5ff !important;
-    border-color: #409EFF !important;
+    border-color: $color-primary !important;
   }
 
   &.is-active.is-disabled {
 
     .el-radio-button__orig-radio:checked+#{&}__inner {
       color: inherit !important;
-      background-color: #fcfcfc!important;
+      background-color: #fcfcfc !important;
       border-color: darken(#fcfcfc, 5%) !important;
+    }
+  }
+
+  &__inner {
+    background: #fcfcfc;
+  }
+
+  .not-valid & {
+
+    &__inner {
+      border-color: $color-error !important;
     }
   }
 }

@@ -30,6 +30,7 @@
                       type="primary"
                       icon="el-icon-edit"
                       @click="editModalVisible = true"
+                      :loading="editModalVisible"
                     ></el-button>
                   </el-tooltip>
                   <el-dialog
@@ -144,6 +145,7 @@ export default defineComponent({
                 message: err.message,
                 type: "error",
                 duration: 0,
+                showClose: true,
               });
             })
             .finally(() => {
@@ -174,12 +176,16 @@ export default defineComponent({
       this.deleting = true;
 
       this.$confirm(
-        "This will permanently delete the user. Later, you can create your profile again. Continue?",
+        `
+          <p class='m-0'>This will permanently delete the current user data. Later on, you can create a new profile again.</p>
+          <p class="mt-1"><strong>Are you sure?</strong></p>
+        `,
         "Attention!",
         {
-          confirmButtonText: "Delete",
-          cancelButtonText: "Cancel",
+          confirmButtonText: "Yes",
+          cancelButtonText: "No",
           type: "warning",
+          dangerouslyUseHTMLString: true,
         }
       )
         .then(async () => {
