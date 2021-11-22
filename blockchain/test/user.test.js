@@ -1,6 +1,6 @@
 const Users = artifacts.require("Users");
 
-let BN = web3.utils.BN;
+// let BN = web3.utils.BN;
 // let { catchRevert } = require("./exceptionsHelpers.js");
 // const { items: ItemStruct, isDefined, isPayable, isType } = require("./ast-helper");
 
@@ -106,7 +106,14 @@ contract("Users", accounts => {
     });
 
     it("should create a basic profile", async () => {
+      const initialCount = await instance.userCount.call({ from: accounts[0] });
+
+      assert.equal(initialCount.toNumber(), 0);
+
       const user1 = await createMockUser({ ...mockUser1 }, instance, accounts);
+      const secondCount = await instance.userCount.call({ from: accounts[0] });
+
+      assert.equal(secondCount.toNumber(), initialCount.toNumber() + 1);
 
       assert.equal(
         user1[0],
@@ -143,6 +150,12 @@ contract("Users", accounts => {
         Users.Gender.Male,
         "the gender of the last added item does not match the expected value",
       );
+
+      it("should increase userCount by 1", async () => {
+        const userCount = await instance.userCount.call({ from: accounts[0] });
+
+        assert.equal(userCount.toNumber(), 1);
+      });
     });
 
     it("should prevent using taken national ID, e-mail, and password", async () => {
@@ -211,5 +224,19 @@ contract("Users", accounts => {
         "the phone fields is not updated",
       );
     });
+
+    // it("should remove user", async () => {
+    //   const copy = { ...mockUser1 };
+    //   const user1 = await createMockUser(copy, instance, accounts);
+
+    //   const isUser = await instance.isUser.call({ from: accounts[0] });
+
+    //   assert(
+    //     isUser === true,
+    //     "user has not created",
+    //   );
+
+    //   await instance.deleteUser(accounts[0]);
+    // });
   });
 });

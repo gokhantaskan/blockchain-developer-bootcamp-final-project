@@ -20,12 +20,12 @@
   padding: 0.5rem 0;
 
   .el-input__inner {
-    background-color: $color-lighter;
+    background-color: $--border-color-extra-light;
   }
 
   &.not-valid {
     .el-input__inner {
-      border-color: $color-error;
+      border-color: $--color-danger;
     }
   }
 
@@ -39,7 +39,7 @@
 
       &::after {
         content: "*";
-        color: #F56C6C;
+        color: $--color-danger;
       }
     }
   }
@@ -53,10 +53,10 @@
   }
 
   &__error {
-    color: #F56C6C;
+    color: $--color-danger;
   }
 
   &__message {
-    color: #C0C4CC;
+    color: $--border-color-base;
   }
 }

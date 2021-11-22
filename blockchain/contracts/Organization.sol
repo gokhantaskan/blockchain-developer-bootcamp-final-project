@@ -14,8 +14,6 @@ contract Organization is Ownable, AccessControl {
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
-  event Log(address owner);
-
   constructor(
     string memory _name,
     string memory _registrationId,

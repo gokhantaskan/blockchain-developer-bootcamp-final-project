@@ -6,4 +6,9 @@
     margin: 0 !important;
     line-height: 1.5;
   }
+
+  &--info.is-light {
+    background-color: $--border-color-lighter;
+    color: $--border-color-base;
+  }
 }

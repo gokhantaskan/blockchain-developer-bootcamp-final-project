@@ -1,11 +1,5 @@
 .el-radio-button {
 
-  &__orig-radio:checked+#{&}__inner {
-    color: $color-primary !important;
-    background-color: #ecf5ff !important;
-    border-color: $color-primary !important;
-  }
-
   &.is-active.is-disabled {
 
     .el-radio-button__orig-radio:checked+#{&}__inner {
@@ -16,13 +10,13 @@
   }
 
   &__inner {
-    background: #fcfcfc;
+    background: $--border-color-extra-light;
   }
 
   .not-valid & {
 
     &__inner {
-      border-color: $color-error !important;
+      border-color: $--color-danger !important;
     }
   }
 }

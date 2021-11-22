@@ -157,10 +157,14 @@ contract Users {
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
 
-    emit LogUserUpdated(msg.sender, stringToBytes32(_email), stringToBytes32(_phone));
+    emit LogUserUpdated(
+      msg.sender,
+      stringToBytes32(_email),
+      stringToBytes32(_phone)
+    );
   }
 
-  function removeUser() public {
+  function deleteUser() public {
     string memory id = usersList[msg.sender].nationalId;
     string memory email = usersList[msg.sender].email;
     string memory phone = usersList[msg.sender].phone;
