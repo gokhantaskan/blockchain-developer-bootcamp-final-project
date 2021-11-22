@@ -139,7 +139,7 @@ export default defineComponent({
             .call({ from: newVal })
             .then((res: boolean) => {
               if (res) { // If registered, get the details
-                this.$store.dispatch("user/getUserDetails", newVal);
+                this.$store.dispatch("user/getUser", newVal);
               } else {
                 this.$store.dispatch("user/resetUserState");
               }
@@ -167,7 +167,7 @@ export default defineComponent({
   methods: {
     afterUpdate() {
       this.editModalVisible = false;
-      this.$store.dispatch("user/getUserDetails", useEthereum().state.selectedAddress);
+      this.$store.dispatch("user/getUser", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile updated successfully!",

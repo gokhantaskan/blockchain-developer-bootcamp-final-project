@@ -110,7 +110,7 @@ export default defineComponent({
       let infoNot: any;
 
       web3UserContract.methods
-        .updateUserDetails(form.email, form.phone)
+        .updateUser(form.email, form.phone)
         .send({ from: ethereum.selectedAddress })
         .once("transactionHash", (txHash: string) => {
           tx_hash = txHash;

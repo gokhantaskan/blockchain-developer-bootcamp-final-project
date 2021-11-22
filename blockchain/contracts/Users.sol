@@ -4,6 +4,9 @@ pragma solidity 0.8.9;
 /// @title Users Contract
 /// @author Gokhan Taskan
 /// @notice You can use this contract to create, update and delete a user profile
+
+import "./Organization.sol";
+
 contract Users {
   struct User {
     string firstName;
@@ -26,6 +29,8 @@ contract Users {
   mapping(bytes32 => address) private phones;
 
   uint public userCount;
+
+  // Organization orgCont = Organization(process.env.ORGANIZATION_CONTRACT_ADDRESS);
 
   event LogUserCreated(
     address indexed addr,
@@ -110,7 +115,7 @@ contract Users {
     );
   }
 
-  function getUserDetails()
+  function getUser()
     public
     view
     returns (
@@ -132,21 +137,23 @@ contract Users {
     );
   }
 
-  function updateUserDetails(string memory _email, string memory _phone)
-    public
-  {
+  function updateUser(string memory _email, string memory _phone) public {
     string memory currentEmail = usersList[msg.sender].email;
     string memory currentPhone = usersList[msg.sender].phone;
 
     if (
       emails[stringToBytes32(_email)] != address(0) &&
       emails[stringToBytes32(_email)] != msg.sender
-    ) revert("This e-mail is used before!");
+    ) {
+      revert("This e-mail is used before!");
+    }
 
     if (
       phones[stringToBytes32(_phone)] != address(0) &&
       phones[stringToBytes32(_phone)] != msg.sender
-    ) revert("This phone is used before!");
+    ) {
+      revert("This phone is used before!");
+    }
 
     usersList[msg.sender].email = _email;
     usersList[msg.sender].phone = _phone;
@@ -165,11 +172,11 @@ contract Users {
   }
 
   function deleteUser() public {
-    string memory id = usersList[msg.sender].nationalId;
+    string memory nationalId = usersList[msg.sender].nationalId;
     string memory email = usersList[msg.sender].email;
     string memory phone = usersList[msg.sender].phone;
 
-    nationalIds[stringToBytes32(id)] = address(0);
+    nationalIds[stringToBytes32(nationalId)] = address(0);
     emails[stringToBytes32(email)] = address(0);
     phones[stringToBytes32(phone)] = address(0);
 
