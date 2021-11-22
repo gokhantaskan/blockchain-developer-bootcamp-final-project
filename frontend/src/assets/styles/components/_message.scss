@@ -22,6 +22,10 @@
     transform: translate(0);
   }
 
+  &-box__status {
+    top: 16px;
+  }
+
   &-box__content {
     padding: 20px 15px;
     color: #606266;

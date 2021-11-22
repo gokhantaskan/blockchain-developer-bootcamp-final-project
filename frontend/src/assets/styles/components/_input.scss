@@ -11,7 +11,7 @@
   &__inner {
 
     &:read-only {
-      border-color: darken(#fcfcfc, 5%);
+      border-color: darken($--border-color-extra-light, 5%);
     }
   }
 }
@@ -20,7 +20,8 @@
   padding: 0.5rem 0;
 
   .el-input__inner {
-    background-color: $--border-color-extra-light;
+    background-color: transparent;
+    // border-color: $--border-color-base;
   }
 
   &.not-valid {

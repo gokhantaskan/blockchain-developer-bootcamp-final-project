@@ -77,7 +77,10 @@
           </el-card>
 
           <div class="mt-4">
-            <el-button @click="$router.push({ name: 'CreateOrganization' })">
+            <el-button
+              type="primary"
+              @click="$router.push({ name: 'CreateOrganization' })"
+            >
               Create Organization
             </el-button>
           </div>
@@ -87,7 +90,10 @@
           key="2"
           v-else
         >
-          <el-button @click="$router.push({ name: 'CreateUser' })">
+          <el-button
+            type="primary"
+            @click="$router.push({ name: 'CreateUser' })"
+          >
             Create User
           </el-button>
         </div>
