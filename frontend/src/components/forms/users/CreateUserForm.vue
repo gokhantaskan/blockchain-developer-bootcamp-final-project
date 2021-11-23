@@ -178,12 +178,21 @@ export default defineComponent({
           });
 
           console.log(receipt);
+          console.log(error);
 
-          Message({
-            type: "error",
-            message: error.reason,
-            duration: 5000,
-          });
+          if (error.code === -32603) {
+            Message({
+              type: "error",
+              message: "MetaMask RPC Error [-32603]: The tx doesn't have the correct nonce!",
+              duration: 5000,
+            });
+          } else {
+            Message({
+              type: "error",
+              message: error.message,
+              duration: 5000,
+            });
+          }
 
           if (tx_hash.length) {
             infoNot.close();
