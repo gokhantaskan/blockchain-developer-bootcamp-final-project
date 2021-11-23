@@ -22,24 +22,24 @@
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="Edit"
+                    content="Update"
                     placement="bottom"
                     :visible-arrow="false"
                   >
                     <el-button
                       type="primary"
                       icon="el-icon-edit"
-                      @click="editModalVisible = true"
-                      :loading="editModalVisible"
+                      @click="updateModalVisible = true"
+                      :loading="updateModalVisible"
                     ></el-button>
                   </el-tooltip>
                   <el-dialog
-                    title="Edit User Details"
-                    :visible.sync="editModalVisible"
+                    title="Update User Details"
+                    :visible.sync="updateModalVisible"
                     destroy-on-close
                   >
                     <UpdateUserForm
-                      @updating="updating"
+                      @updating="_updating"
                       @updated="afterUpdate"
                     />
                     <template
@@ -47,10 +47,10 @@
                       class="dialog-footer"
                     >
                       <el-button
-                        form="edit-user-form"
+                        form="update-user-form"
                         type="primary"
                         native-type="submit"
-                        :loading="editing"
+                        :loading="updating"
                       >
                         Confirm
                       </el-button>
@@ -120,9 +120,9 @@ export default defineComponent({
   data() {
     return {
       loading: false,
-      editModalVisible: false,
+      updateModalVisible: false,
       deleting: false,
-      editing: false,
+      updating: false,
     };
   },
   async beforeMount() {
@@ -157,7 +157,7 @@ export default defineComponent({
   },
   methods: {
     afterUpdate() {
-      this.editModalVisible = false;
+      this.updateModalVisible = false;
       this.$store.dispatch("user/readUser", useEthereum().state.selectedAddress);
 
       Message({
@@ -166,8 +166,8 @@ export default defineComponent({
         duration: 5000,
       });
     },
-    updating(e: boolean) {
-      this.editing = e;
+    _updating(e: boolean) {
+      this.updating = e;
     },
     deleteUser() {
       this.deleting = true;

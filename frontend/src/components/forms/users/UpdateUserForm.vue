@@ -1,8 +1,8 @@
 <template>
-  <div class="edit-user-form">
+  <div class="update-user-form">
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
-        id="edit-user-form"
+        id="update-user-form"
         @submit.prevent="handleSubmit(updateUser)"
         novalidate
       >

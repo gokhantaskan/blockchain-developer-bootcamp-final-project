@@ -42,7 +42,7 @@ export const userModule = {
       Vue.set(state, "detailsLoaded", true);
     },
     RESET_USER_STATE(state: typeof INITIAL_STATE) {
-      Vue.set(state, "details", INITIAL_STATE.details);
+      Vue.set(state, "details", { ...INITIAL_STATE.details });
       Vue.set(state, "detailsLoaded", false);
     },
   },

@@ -22,13 +22,19 @@
     transform: translate(0);
   }
 
+  &-box__title {
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: $--color-info;
+  }
+
   &-box__status {
-    top: 16px;
+    top: 13px;
   }
 
   &-box__content {
-    padding: 20px 15px;
-    color: #606266;
-    font-size: 0.875rem;
+    padding: 1.25rem 1rem;
+    color: $--color-text-primary;
+    font-size: 1rem;
   }
 }

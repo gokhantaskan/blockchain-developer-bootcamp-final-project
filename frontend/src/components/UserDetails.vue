@@ -76,7 +76,6 @@ export default defineComponent({
   data() {
     return {
       qrCode: null,
-      editModalVisible: false,
     };
   },
   mounted() {
