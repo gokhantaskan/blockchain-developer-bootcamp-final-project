@@ -36,6 +36,7 @@
                   <el-dialog
                     title="Edit User Details"
                     :visible.sync="editModalVisible"
+                    destroy-on-close
                   >
                     <UpdateUserForm
                       @updating="updating"
@@ -66,7 +67,7 @@
                       type="danger"
                       icon="el-icon-delete"
                       class="ms-2"
-                      @click="removeUser"
+                      @click="deleteUser"
                       :loading="deleting"
                     ></el-button>
                   </el-tooltip>
@@ -168,7 +169,7 @@ export default defineComponent({
     updating(e: boolean) {
       this.editing = e;
     },
-    removeUser() {
+    deleteUser() {
       this.deleting = true;
 
       this.$confirm(
@@ -185,7 +186,7 @@ export default defineComponent({
         }
       )
         .then(async () => {
-          await this.$store.dispatch("user/removeUser", useEthereum().state.selectedAddress);
+          await this.$store.dispatch("user/deleteUser", useEthereum().state.selectedAddress);
           // .then(transaction => console.log("tx", transaction));
 
           Message({

@@ -55,7 +55,7 @@
         <Clipboard
           class="justify-content-center"
           style="line-height: 48px; width: 194px;"
-          :text="selectedAddress"
+          :text="ethereum.selectedAddress"
           address
         />
       </div>
@@ -90,9 +90,9 @@ export default defineComponent({
   },
   setup() {
     const { state: ethereum } = useEthereum();
-    const selectedAddress = computed(() => ethereum.selectedAddress);
+    // const selectedAddress = computed(() => ethereum.selectedAddress);
 
-    return { selectedAddress, convertGender };
+    return { ethereum, convertGender };
   },
 });
 </script>

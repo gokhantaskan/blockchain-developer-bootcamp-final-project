@@ -32,15 +32,13 @@ export const userModule = {
   namespaced: true,
   state: { ...INITIAL_STATE },
   mutations: {
-    SET_USER_DETAILS(state: typeof INITIAL_STATE, payload: IUserDetails) {
-      Vue.set(state, "details", {
-        firstName: payload.firstName,
-        lastName: payload.lastName,
-        nationalId: payload.nationalId,
-        gender: payload.gender,
-        email: payload.email,
-        phone: payload.phone,
-      });
+    SET_USER_DETAILS(state: typeof INITIAL_STATE, payload: Partial<IUserDetails>) {
+      if (payload.firstName) Vue.set(state.details, "firstName", payload.firstName);
+      if (payload.lastName) Vue.set(state.details, "lastName", payload.lastName);
+      if (payload.nationalId) Vue.set(state.details, "nationalId", payload.nationalId);
+      if (payload.gender) Vue.set(state.details, "gender", payload.gender);
+      if (payload.email) Vue.set(state.details, "email", payload.email);
+      if (payload.phone) Vue.set(state.details, "phone", payload.phone);
       Vue.set(state, "detailsLoaded", true);
     },
     RESET_USER_STATE(state: typeof INITIAL_STATE) {
@@ -71,14 +69,15 @@ export const userModule = {
           });
       });
     },
-    removeUser({ dispatch }: any, address: string) {
+
+    deleteUser({ dispatch }: any, address: string) {
       return new Promise<void>((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
 
         web3UserContract.methods
-          .removeUser()
+          .deleteUser()
           .send({ from: address })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
@@ -139,6 +138,7 @@ export const userModule = {
           });
       });
     },
+
     async resetUserState({ commit }: any): Promise<void> {
       commit("RESET_USER_STATE");
     },
