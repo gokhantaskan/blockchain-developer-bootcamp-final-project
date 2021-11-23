@@ -49,7 +49,7 @@ const createMockUser = (data, instance, accounts, accountIndex = 0) => {
       { from: accounts[accountIndex] }
     );
 
-    await instance.getUser.call({ from: accounts[accountIndex] })
+    await instance.readUser.call({ from: accounts[accountIndex] })
       .then(res => resolve(res))
       .catch(err => reject(Error(err)));
   });
@@ -212,7 +212,7 @@ contract("Users", accounts => {
         .then(() => { })
         .catch(err => console.log(`\t\t${err.reason}`));
 
-      const updatedUser1 = await instance.getUser.call({ from: accounts[0] });
+      const updatedUser1 = await instance.readUser.call({ from: accounts[0] });
 
       assert(
         user1[3] !== updatedUser1[3],

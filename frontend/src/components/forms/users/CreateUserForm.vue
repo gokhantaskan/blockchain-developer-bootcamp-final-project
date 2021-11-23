@@ -27,6 +27,7 @@
               vv-name="First Name"
               vv-rules="required|min:2|alpha_spaces"
               message="At least 2 characters"
+              placeholder="ex. John"
               required
             />
           </div>
@@ -39,6 +40,7 @@
               vv-name="Last Name"
               vv-rules="required|min:2|alpha"
               message="At least 2 characters"
+              placeholder="ex. Doe"
               required
             />
           </div>
@@ -50,6 +52,7 @@
               label="National ID"
               vv-name="National ID"
               vv-rules="required"
+              placeholder="ex. XYZ-12345"
               show-password
               required
             />

@@ -136,7 +136,7 @@ export default defineComponent({
       .call({ from: ethereum.selectedAddress })
       .then((res: boolean) => {
         if (res) { // If registered, get the details
-          this.$store.dispatch("user/getUser", ethereum.selectedAddress);
+          this.$store.dispatch("user/readUser", ethereum.selectedAddress);
         } else {
           this.$store.dispatch("user/resetUserState");
         }
@@ -158,7 +158,7 @@ export default defineComponent({
   methods: {
     afterUpdate() {
       this.editModalVisible = false;
-      this.$store.dispatch("user/getUser", useEthereum().state.selectedAddress);
+      this.$store.dispatch("user/readUser", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile updated successfully!",

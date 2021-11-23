@@ -6,11 +6,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Organization is Ownable, AccessControl {
-  string private name;
-  string private registrationId;
-  string private email;
-  string private phone;
-  address[] private admins;
+  string public name;
+  string public registrationId;
+  string public email;
+  string public phone;
+  address[] public admins;
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -61,7 +61,7 @@ contract Organization is Ownable, AccessControl {
     }
   }
 
-  function getOrganizationDetails()
+  function readOrganizationDetails()
     public
     view
     returns (
@@ -74,7 +74,7 @@ contract Organization is Ownable, AccessControl {
     return (name, registrationId, email, phone);
   }
 
-  function getOrganizationAdmins() public view returns (address[] memory) {
+  function readOrganizationAdmins() public view returns (address[] memory) {
     return admins;
   }
 

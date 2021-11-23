@@ -47,10 +47,10 @@ export const userModule = {
     },
   },
   actions: {
-    getUser({ commit, dispatch }: any, address: string): Promise<void> {
+    readUser({ commit, dispatch }: any, address: string): Promise<void> {
       return new Promise<void>((resolve, reject) => {
         web3UserContract.methods
-          .getUser()
+          .readUser()
           .call({ from: address })
           .then((res: any) => {
             commit("SET_USER_DETAILS", res);

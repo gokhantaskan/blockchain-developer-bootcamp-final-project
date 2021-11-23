@@ -25,7 +25,7 @@ export default defineComponent({
     const root = vm().root.proxy;
 
     const afterCreate = async () => {
-      root.$store.dispatch("user/getUser", useEthereum().state.selectedAddress);
+      root.$store.dispatch("user/readUser", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile created successfully!",

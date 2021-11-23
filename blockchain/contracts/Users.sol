@@ -117,7 +117,7 @@ contract Users {
     );
   }
 
-  function getUser()
+  function readUser()
     public
     view
     returns (
