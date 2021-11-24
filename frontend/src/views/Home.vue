@@ -36,7 +36,6 @@
                   <el-dialog
                     title="Update User Details"
                     :visible.sync="updateModalVisible"
-                    destroy-on-close
                   >
                     <UpdateUserForm
                       @updating="_updating"
@@ -136,7 +135,7 @@ export default defineComponent({
       .call({ from: ethereum.selectedAddress })
       .then((res: boolean) => {
         if (res) { // If registered, get the details
-          this.$store.dispatch("user/readUser", ethereum.selectedAddress);
+          this.$store.dispatch("user/setUser", ethereum.selectedAddress);
         } else {
           this.$store.dispatch("user/resetUserState");
         }
@@ -158,7 +157,7 @@ export default defineComponent({
   methods: {
     afterUpdate() {
       this.updateModalVisible = false;
-      this.$store.dispatch("user/readUser", useEthereum().state.selectedAddress);
+      this.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile updated successfully!",
@@ -181,13 +180,15 @@ export default defineComponent({
         {
           confirmButtonText: "Yes",
           cancelButtonText: "No",
+          customClass: "warning",
+          confirmButtonClass: "el-button--warning",
+          cancelButtonClass: "is-plain",
           type: "warning",
           dangerouslyUseHTMLString: true,
         }
       )
         .then(async () => {
           await this.$store.dispatch("user/deleteUser", useEthereum().state.selectedAddress);
-          // .then(transaction => console.log("tx", transaction));
 
           Message({
             message: "Profile deleted successfully!",

@@ -33,21 +33,23 @@ export const userModule = {
   state: { ...INITIAL_STATE },
   mutations: {
     SET_USER_DETAILS(state: typeof INITIAL_STATE, payload: Partial<IUserDetails>) {
-      if (payload.firstName) Vue.set(state.details, "firstName", payload.firstName);
-      if (payload.lastName) Vue.set(state.details, "lastName", payload.lastName);
-      if (payload.nationalId) Vue.set(state.details, "nationalId", payload.nationalId);
-      if (payload.gender) Vue.set(state.details, "gender", payload.gender);
-      if (payload.email) Vue.set(state.details, "email", payload.email);
-      if (payload.phone) Vue.set(state.details, "phone", payload.phone);
+      console.log("set payload", payload)
+      if (typeof payload.firstName === "string") Vue.set(state.details, "firstName", payload.firstName);
+      if (typeof payload.lastName === "string") Vue.set(state.details, "lastName", payload.lastName);
+      if (typeof payload.nationalId === "string") Vue.set(state.details, "nationalId", payload.nationalId);
+      if (typeof payload.gender === "string") Vue.set(state.details, "gender", Number(payload.gender));
+      if (typeof payload.email === "string") Vue.set(state.details, "email", payload.email);
+      if (typeof payload.phone === "string") Vue.set(state.details, "phone", payload.phone);
       Vue.set(state, "detailsLoaded", true);
     },
     RESET_USER_STATE(state: typeof INITIAL_STATE) {
+      console.log("reset user state", { ...INITIAL_STATE.details });
       Vue.set(state, "details", { ...INITIAL_STATE.details });
       Vue.set(state, "detailsLoaded", false);
     },
   },
   actions: {
-    readUser({ commit, dispatch }: any, address: string): Promise<void> {
+    setUser({ commit, dispatch }: any, address: string): Promise<void> {
       return new Promise<void>((resolve, reject) => {
         web3UserContract.methods
           .readUser()

@@ -7,6 +7,7 @@
     "test": "test"
   },
   "scripts": {
+    "compile": "truffle migrate --compile-all --reset",
     "lint": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol --config .solhint.json --fix",
     "test:users": "truffle test ./test/user.test.js"
   },

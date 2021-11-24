@@ -23,14 +23,13 @@ contract Users {
     Transgender
   }
 
-  mapping(address => User) private usersList;
+  mapping(address => User) private users;
+  mapping(address => Organization[]) public organizations;
   mapping(bytes32 => address) private nationalIds;
   mapping(bytes32 => address) private emails;
   mapping(bytes32 => address) private phones;
 
   uint public userCount;
-
-  mapping(address => Organization) public organizationsList;
 
   event LogUserCreated(
     address indexed addr,
@@ -44,7 +43,7 @@ contract Users {
   event LogUserDeleted(address indexed addr);
 
   function stringToBytes32(string memory str) internal pure returns (bytes32) {
-    return (keccak256(abi.encode(str)));
+    return (keccak256(abi.encodePacked(str)));
   }
 
   // ! USER FUNCTIONS START
@@ -54,9 +53,9 @@ contract Users {
   /// @return bool - true or false
   function isUser(address _address) public view returns (bool) {
     if (
-      bytes(usersList[_address].firstName).length != 0 &&
-      bytes(usersList[_address].lastName).length != 0 &&
-      bytes(usersList[_address].nationalId).length != 0
+      bytes(users[_address].firstName).length != 0 &&
+      bytes(users[_address].lastName).length != 0 &&
+      bytes(users[_address].nationalId).length != 0
     ) {
       return true;
     } else {
@@ -104,7 +103,7 @@ contract Users {
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
 
-    usersList[msg.sender] = user;
+    users[msg.sender] = user;
     userCount += 1;
 
     emit LogUserCreated(
@@ -130,18 +129,18 @@ contract Users {
     )
   {
     return (
-      usersList[msg.sender].firstName,
-      usersList[msg.sender].lastName,
-      usersList[msg.sender].nationalId,
-      usersList[msg.sender].email,
-      usersList[msg.sender].phone,
-      usersList[msg.sender].gender
+      users[msg.sender].firstName,
+      users[msg.sender].lastName,
+      users[msg.sender].nationalId,
+      users[msg.sender].email,
+      users[msg.sender].phone,
+      users[msg.sender].gender
     );
   }
 
   function updateUser(string memory _email, string memory _phone) public {
-    string memory currentEmail = usersList[msg.sender].email;
-    string memory currentPhone = usersList[msg.sender].phone;
+    string memory currentEmail = users[msg.sender].email;
+    string memory currentPhone = users[msg.sender].phone;
 
     if (
       emails[stringToBytes32(_email)] != address(0) &&
@@ -157,8 +156,8 @@ contract Users {
       revert("This phone is used before!");
     }
 
-    usersList[msg.sender].email = _email;
-    usersList[msg.sender].phone = _phone;
+    users[msg.sender].email = _email;
+    users[msg.sender].phone = _phone;
 
     emails[stringToBytes32(currentEmail)] = address(0);
     phones[stringToBytes32(currentPhone)] = address(0);
@@ -174,15 +173,15 @@ contract Users {
   }
 
   function deleteUser() public {
-    string memory nationalId = usersList[msg.sender].nationalId;
-    string memory email = usersList[msg.sender].email;
-    string memory phone = usersList[msg.sender].phone;
+    string memory nationalId = users[msg.sender].nationalId;
+    string memory email = users[msg.sender].email;
+    string memory phone = users[msg.sender].phone;
 
     nationalIds[stringToBytes32(nationalId)] = address(0);
     emails[stringToBytes32(email)] = address(0);
     phones[stringToBytes32(phone)] = address(0);
 
-    delete usersList[msg.sender];
+    delete users[msg.sender];
 
     userCount -= 1;
 
@@ -199,14 +198,21 @@ contract Users {
     string memory _phone,
     address[] memory _admins
   ) public {
+    if (!isUser(msg.sender)) revert("You need to be a user first!");
+
     Organization o = new Organization(
       _name,
       _registrationId,
       _email,
       _phone,
-      _admins
+      _admins,
+      msg.sender
     );
 
-    organizationsList[msg.sender] = o;
+    organizations[msg.sender].push(o);
+
+    for (uint i; i < _admins.length; i++) {
+      organizations[_admins[i]].push(o);
+    }
   }
 }

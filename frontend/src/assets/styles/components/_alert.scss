@@ -15,4 +15,8 @@
     background-color: $--border-color-lighter;
     color: $--border-color-base;
   }
+
+  &__content {
+    padding: 0 1.5rem;
+  }
 }

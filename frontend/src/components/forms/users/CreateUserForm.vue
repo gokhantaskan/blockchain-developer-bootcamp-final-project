@@ -1,21 +1,21 @@
 <template>
   <div class="create-user-form">
     <ValidationObserver v-slot="{ handleSubmit }">
-      <form
-        @submit.prevent="handleSubmit(createUser)"
-        novalidate
-      >
+      <form @submit.prevent="handleSubmit(createUser)" novalidate>
         <div class="row">
           <div class="col-12 mb-4">
-            <el-alert
-              type="info"
-              show-icon
-              :closable="false"
-            >
-              Only
-              <strong>e-mail</strong> and
-              <strong>phone number</strong> can be updated later.
-              Please submit your form carefully.
+            <el-alert type="info" show-icon :closable="false">
+              <span class="d-block">
+                Only
+                <strong>e-mail</strong> and
+                <strong>phone number</strong> can be updated after you create your profile.
+              </span>
+              <span class="d-block">
+                Later on, you can
+                <strong>delete</strong> and
+                <strong>create</strong> your profile
+                <strong>again</strong>.
+              </span>
             </el-alert>
           </div>
 
@@ -66,10 +66,7 @@
               skip-if-empty
               v-slot="{ errors }"
             >
-              <GenderInput
-                v-model="form.gender"
-                :errors="errors"
-              />
+              <GenderInput v-model="form.gender" :errors="errors" />
             </ValidationProvider>
           </div>
 
@@ -84,22 +81,11 @@
           </div>
 
           <div class="col-12 col-md-6">
-            <FormItem
-              v-model="form.phone"
-              id="phone"
-              label="Phone"
-              vv-name="Phone"
-            />
+            <FormItem v-model="form.phone" id="phone" label="Phone" vv-name="Phone" />
           </div>
 
           <div class="col-12 pt-3">
-            <el-button
-              type="primary"
-              native-type="submit"
-              :loading="loading"
-            >
-              Submit
-            </el-button>
+            <el-button type="primary" native-type="submit" :loading="loading">Submit</el-button>
           </div>
         </div>
       </form>

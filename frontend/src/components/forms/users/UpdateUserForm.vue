@@ -1,11 +1,15 @@
 <template>
   <div class="update-user-form">
     <ValidationObserver v-slot="{ handleSubmit }">
-      <form
-        id="update-user-form"
-        @submit.prevent="handleSubmit(updateUser)"
-        novalidate
-      >
+      <form id="update-user-form" @submit.prevent="handleSubmit(updateUser)" novalidate>
+        <div class="col-12 mb-4">
+          <el-alert type="info" show-icon :closable="false">
+            <span class="d-block">
+              If you want to remove your e-mail and/or phone, clear the fields and submit the form.
+            </span>
+          </el-alert>
+        </div>
+
         <div class="row">
           <div class="col-12 col-lg-6">
             <FormItem
@@ -18,12 +22,7 @@
           </div>
 
           <div class="col-12 col-lg-6">
-            <FormItem
-              v-model="form.phone"
-              id="phone"
-              label="Phone"
-              vv-name="Phone"
-            />
+            <FormItem v-model="form.phone" id="phone" label="Phone" vv-name="Phone" />
           </div>
         </div>
       </form>
