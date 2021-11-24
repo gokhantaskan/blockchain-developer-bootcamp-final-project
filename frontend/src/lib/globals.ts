@@ -1,4 +1,5 @@
 import { getCurrentInstance } from "vue-demi";
+import type { ComponentInternalInstance } from "vue-demi";
 
 interface IWindow extends Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -7,8 +8,7 @@ interface IWindow extends Window {
 
 export const _window: IWindow = window;
 
-export const vm = () => {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const instance = getCurrentInstance()!;
-  return instance.root;
+export const vm = (): ComponentInternalInstance["proxy"] | undefined => {
+  const instance = getCurrentInstance();
+  if (instance) return instance.root.proxy;
 };

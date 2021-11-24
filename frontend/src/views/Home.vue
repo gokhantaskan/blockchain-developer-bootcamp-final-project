@@ -104,7 +104,6 @@
 
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
-import { web3UserContract } from "@/lib/web3";
 import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
@@ -129,35 +128,20 @@ export default defineComponent({
 
     this.loading = true;
 
-    // Check if the account is registered before
-    web3UserContract.methods
-      .isUser(ethereum.selectedAddress)
-      .call({ from: ethereum.selectedAddress })
-      .then((res: boolean) => {
-        if (res) { // If registered, get the details
+    await this.$store.dispatch("user/isUser", ethereum.selectedAddress)
+      .then(res => {
+        if (res) {
           this.$store.dispatch("user/setUser", ethereum.selectedAddress);
         } else {
           this.$store.dispatch("user/resetUserState");
         }
-      })
-      .catch((err: any) => {
-        this.$store.dispatch("user/resetUserState");
-
-        Message({
-          message: err.message,
-          type: "error",
-          duration: 0,
-          showClose: true,
-        });
-      })
-      .finally(() => {
-        this.loading = false;
       });
+
+    this.loading = false;
   },
   methods: {
     afterUpdate() {
       this.updateModalVisible = false;
-      this.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
 
       Message({
         message: "Profile updated successfully!",

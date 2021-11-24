@@ -22,18 +22,20 @@ export default defineComponent({
     CreateOrganizationForm: () => import("@/components/forms/organizations/CreateOrganizationForm.vue"),
   },
   setup() {
-    const root = vm().root.proxy;
+    const root = vm();
 
     const afterCreate = async () => {
-      root.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
+      if (root) {
+        root.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
 
-      Message({
-        message: "Profile created successfully!",
-        type: "success",
-        duration: 5000,
-      });
+        Message({
+          message: "Profile created successfully!",
+          type: "success",
+          duration: 5000,
+        });
 
-      root.$router.push({ name: "Home" });
+        root.$router.push({ name: "Home" });
+      }
     };
 
     return {

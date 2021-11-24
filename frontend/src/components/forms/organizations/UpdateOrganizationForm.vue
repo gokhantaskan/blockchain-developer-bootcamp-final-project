@@ -153,7 +153,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      const userDetails = vm().root.proxy.$store.state.user.details;
+      const userDetails = vm()?.$store.state.user.details;
 
       form.firstName = userDetails.firstName;
       form.lastName = userDetails.lastName;

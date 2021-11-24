@@ -1,19 +1,21 @@
 <template>
-  <div
-    v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)"
-    :key="appKey"
-  >
+  <div v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
     <div class="navigation">
       <div class="container">
         <PageHeader title="Sertifie.me">
           <template #helper>
-            <span class="d-block">Selected Account:{{ " " }}
+            <span class="d-block">
+              Selected Account:{{ " " }}
               <Clipboard
                 :text="ethereum.selectedAddress"
                 address
                 toggle
-              /></span>
-            <span class="d-block">Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}] {{ appKey }}</span>
+              />
+            </span>
+
+            <span class="d-block">
+              Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]
+            </span>
           </template>
         </PageHeader>
       </div>
@@ -33,16 +35,12 @@
         src="https://raw.githubusercontent.com/MetaMask/brand-resources/c3c894bb8c460a2e9f47c07f6ef32e234190a7aa/SVG/metamask-fox.svg"
         alt="Just a fox"
         width="120"
-      >
-      <p>
-        Please install MetaMask in order to continue!
-      </p>
+      />
+      <p>Please install MetaMask in order to continue!</p>
       <a
         class="el-button el-button--primary is-round"
         href="https://metamask.io/download.html"
-      >
-        Download MetaMask
-      </a>
+      >Download MetaMask</a>
     </div>
   </div>
 
@@ -52,7 +50,8 @@
         Please select a correct network in order to continue!
       </p>
       <p class="m-0">
-        Allowed Networks: {{ ethereum.allowedChains.join(", ") }}<span v-if="ethereum.chainId">{{ ` - Current Network: ${ethereum.chainId}` }}</span>
+        Allowed Networks: {{ ethereum.allowedChains.join(", ") }}
+        <span v-if="ethereum.chainId">{{ ` - Current Network: ${ethereum.chainId}` }}</span>
       </p>
     </div>
   </div>
@@ -72,20 +71,37 @@ export default defineComponent({
   setup() {
     const { state: ethereum } = useEthereum();
     const appKey = ref(0);
+    const root = vm();
 
     onMounted(async () => {
-      vm().root.proxy.$nextTick(async () => {
-        ethereum.setAllowedChains(["0x539", "0x4"]);
-        await ethereum.requestAccounts();
-        if (ethereum.setListeners !== undefined) ethereum.setListeners();
-      });
+      if (root) {
+        root.$nextTick(async () => {
+          ethereum.setAllowedChains(["0x539", "0x4"]);
+          await ethereum.requestAccounts();
+          if (ethereum.setListeners !== undefined) ethereum.setListeners();
 
-      watch(
-        () => ethereum.selectedAddress,
-        () => {
-          appKey.value++;
-        }
-      );
+          watch(
+            () => ethereum.selectedAddress,
+            async () => {
+              root.$store.dispatch("user/resetUserState");
+
+              await root.$store.dispatch("user/isUser", ethereum.selectedAddress)
+                .then(res => {
+                  if (res) {
+                    root.$store.dispatch("user/setUser", ethereum.selectedAddress);
+                  } else {
+                    root.$store.dispatch("user/resetUserState");
+                  }
+                });
+
+              appKey.value++;
+            },
+            {
+              flush: "post",
+            }
+          );
+        });
+      }
     });
 
     onUnmounted(async () => {

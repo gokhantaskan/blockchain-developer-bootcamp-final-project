@@ -25,18 +25,19 @@ export default defineComponent({
     CreateUserForm: () => import("@/components/forms/users/CreateUserForm.vue"),
   },
   setup() {
-    const root = vm().root.proxy;
+    const root = vm();
 
     const afterCreate = async () => {
-      root.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
+      if (root) {
+        root.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
+        root.$router.push({ name: "Home" });
 
-      Message({
-        message: "Profile created successfully!",
-        type: "success",
-        duration: 5000,
-      });
-
-      root.$router.push({ name: "Home" });
+        Message({
+          message: "Profile created successfully!",
+          type: "success",
+          duration: 5000,
+        });
+      }
     };
 
     return {
