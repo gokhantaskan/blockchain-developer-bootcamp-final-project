@@ -63,6 +63,7 @@ contract Users {
     }
   }
 
+  /// @notice 0.0069995ETH latest with a full profile
   function createUser(
     string memory _firstName,
     string memory _lastName,
@@ -188,9 +189,8 @@ contract Users {
     emit LogUserDeleted(msg.sender);
   }
 
-  // ! USER FUNCTIONS END
-
   // ! ORGANIZATON FUNCTIONS START
+
   function createOrganization(
     string memory _name,
     string memory _registrationId,

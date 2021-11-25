@@ -13,9 +13,7 @@
               />
             </span>
 
-            <span class="d-block">
-              Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]
-            </span>
+            <span class="d-block">Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]</span>
           </template>
         </PageHeader>
       </div>
@@ -51,7 +49,9 @@
       </p>
       <p class="m-0">
         Allowed Networks: {{ ethereum.allowedChains.join(", ") }}
-        <span v-if="ethereum.chainId">{{ ` - Current Network: ${ethereum.chainId}` }}</span>
+        <span
+          v-if="ethereum.chainId"
+        >{{ ` - Current Network: ${ethereum.chainId}` }}</span>
       </p>
     </div>
   </div>
@@ -70,45 +70,59 @@ export default defineComponent({
   },
   setup() {
     const { state: ethereum } = useEthereum();
-    const appKey = ref(0);
     const root = vm();
 
-    onMounted(async () => {
+    const fetch = async (address: string) => {
       if (root) {
-        root.$nextTick(async () => {
+        root.$store.dispatch("user/setSelectedAddress", address);
+
+        await root.$store.dispatch("user/isUser")
+          .then(res => {
+            if (res) { // Is User
+              root.$store.dispatch("user/setUser");
+            } else { // Not User
+              root.$store.dispatch("user/resetUserState");
+            }
+          });
+      }
+    };
+
+    onMounted(
+      async () => {
+        if (root) {
           ethereum.setAllowedChains(["0x539", "0x4"]);
           await ethereum.requestAccounts();
           if (ethereum.setListeners !== undefined) ethereum.setListeners();
 
           watch(
             () => ethereum.selectedAddress,
-            async () => {
-              root.$store.dispatch("user/resetUserState");
+            async newVal => {
+              root.$store.dispatch("user/setSelectedAddress", newVal);
 
-              await root.$store.dispatch("user/isUser", ethereum.selectedAddress)
+              await root.$store.dispatch("user/isUser")
                 .then(res => {
-                  if (res) {
-                    root.$store.dispatch("user/setUser", ethereum.selectedAddress);
-                  } else {
+                  if (res) { // Is User
+                    root.$store.dispatch("user/setUser");
+                  } else { // Not User
                     root.$store.dispatch("user/resetUserState");
                   }
                 });
-
-              appKey.value++;
             },
             {
-              flush: "post",
+              immediate: true,
             }
           );
-        });
+        }
       }
-    });
+    );
 
-    onUnmounted(async () => {
-      if (ethereum.removeListeners !== undefined) ethereum.removeListeners();
-    });
+    onUnmounted(
+      async () => {
+        if (ethereum.removeListeners !== undefined) ethereum.removeListeners();
+      }
+    );
 
-    return { ethereum, appKey };
+    return { ethereum };
   },
 });
 </script>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="home"
-    v-loading="loading"
-  >
+  <div class="home">
     <div class="container">
       <transition
         name="fade"
@@ -103,7 +100,6 @@
 </template>
 
 <script lang="ts">
-import { useEthereum } from "@/composables/ethereum";
 import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
@@ -117,27 +113,10 @@ export default defineComponent({
   },
   data() {
     return {
-      loading: false,
       updateModalVisible: false,
       deleting: false,
       updating: false,
     };
-  },
-  async beforeMount() {
-    const { state: ethereum } = useEthereum();
-
-    this.loading = true;
-
-    await this.$store.dispatch("user/isUser", ethereum.selectedAddress)
-      .then(res => {
-        if (res) {
-          this.$store.dispatch("user/setUser", ethereum.selectedAddress);
-        } else {
-          this.$store.dispatch("user/resetUserState");
-        }
-      });
-
-    this.loading = false;
   },
   methods: {
     afterUpdate() {
@@ -172,7 +151,7 @@ export default defineComponent({
         }
       )
         .then(async () => {
-          await this.$store.dispatch("user/deleteUser", useEthereum().state.selectedAddress);
+          await this.$store.dispatch("user/deleteUser");
 
           Message({
             message: "Profile deleted successfully!",

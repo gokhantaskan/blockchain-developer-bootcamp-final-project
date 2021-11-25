@@ -116,7 +116,6 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue-demi";
-import { useEthereum } from "@/composables/ethereum";
 import { Gender } from "@/lib/types";
 import { vm } from "@/lib/globals";
 
@@ -126,7 +125,6 @@ export default defineComponent({
     GenderInput: () => import("../../GenderInput.vue"),
   },
   setup(_props, { emit }) {
-    const { state: ethereum } = useEthereum();
     const root = vm();
     const loading = ref(false);
 
@@ -137,7 +135,6 @@ export default defineComponent({
       email: "",
       phone: "",
       gender: undefined,
-      selectedAddress: ethereum.selectedAddress,
     });
 
     const createUser = async () => {

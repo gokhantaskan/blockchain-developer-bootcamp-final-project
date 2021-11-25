@@ -7,8 +7,12 @@
     line-height: 1.5;
   }
 
-  &__icon.el-icon-info.is-big {
-    color: #607D8B;
+  &__icon {
+    align-self: flex-start;
+
+    &.el-icon-info.is-big {
+      color: #607D8B;
+    }
   }
 
   &--info.is-light {
@@ -17,6 +21,6 @@
   }
 
   &__content {
-    padding: 0 1.5rem;
+    padding: 0 1rem;
   }
 }

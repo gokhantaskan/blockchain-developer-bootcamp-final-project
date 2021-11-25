@@ -14,14 +14,13 @@ interface IUserDetails {
   phone: string;
 }
 
-interface IUserCreateFormData {
+interface IUserFormData {
   firstName: string;
   lastName: string;
   nationalId: string;
+  gender: number;
   email: string;
   phone: string;
-  gender: number;
-  selectedAddress: string;
 }
 
 const INITIAL_STATE = {
@@ -33,10 +32,9 @@ const INITIAL_STATE = {
     email: "",
     phone: "",
   },
+  selectedAddress: "",
   detailsLoaded: false,
 };
-
-console.log("initial state", INITIAL_STATE);
 
 const STATE = cloneDeep(INITIAL_STATE);
 
@@ -46,6 +44,10 @@ export const userModule = {
   state: STATE,
 
   mutations: {
+    SET_SELECTED_ADDRESS(state: typeof STATE, payload: string) {
+      Vue.set(state, "selectedAddress", payload);
+    },
+
     SET_USER_DETAILS(state: typeof STATE, payload: Partial<IUserDetails>) {
       if (typeof payload.firstName === "string") Vue.set(state.details, "firstName", payload.firstName);
       if (typeof payload.lastName === "string") Vue.set(state.details, "lastName", payload.lastName);
@@ -64,11 +66,15 @@ export const userModule = {
   },
 
   actions: {
-    isUser({ dispatch }: any, address: string) {
+    setSelectedAddress({ commit }: any, payload: string) {
+      commit("SET_SELECTED_ADDRESS", payload);
+    },
+
+    isUser({ dispatch, state }: any) {
       return new Promise<boolean>((resolve, reject) => {
         web3UserContract.methods
-          .isUser(address)
-          .call({ from: address })
+          .isUser(state.selectedAddress)
+          .call({ from: state.selectedAddress })
           .then((res: boolean) => {
             resolve(res);
           })
@@ -87,7 +93,7 @@ export const userModule = {
       });
     },
 
-    createUser({ dispatch }: any, payload: IUserCreateFormData): Promise<ITransactionReceipt> {
+    createUser({ dispatch, state }: any, payload: IUserFormData): Promise<ITransactionReceipt> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -95,7 +101,7 @@ export const userModule = {
 
         web3UserContract.methods
           .createUser(payload.firstName, payload.lastName, payload.nationalId, payload.email, payload.phone, payload.gender)
-          .send({ from: payload.selectedAddress })
+          .send({ from: state.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -121,17 +127,17 @@ export const userModule = {
               title: "Transaction confirmed!",
             });
 
-            dispatch("setUser", payload.selectedAddress);
+            dispatch("setUser");
 
             resolve(receipt);
           })
-          .catch(async (error: any) => {
+          .catch(async (err: any) => {
             await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
               if (error) console.error("Error during getting the receipt: ", error);
               receipt = transactionReceipt as ITransactionReceipt;
             });
 
-            if (error.code === -32603) {
+            if (err.code === -32603) {
               Message({
                 type: "error",
                 message: "MetaMask RPC Error [-32603]: The tx doesn't have the correct nonce!",
@@ -140,7 +146,7 @@ export const userModule = {
             } else {
               Message({
                 type: "error",
-                message: error.message,
+                message: err.message,
                 duration: 5000,
               });
             }
@@ -157,16 +163,16 @@ export const userModule = {
               });
             }
 
-            reject(error);
+            reject(err);
           });
       });
     },
 
-    setUser({ commit, dispatch }: any, address: string): Promise<void> {
+    setUser({ commit, dispatch, state }: any): Promise<void> {
       return new Promise<void>((resolve, reject) => {
         web3UserContract.methods
           .readUser()
-          .call({ from: address })
+          .call({ from: state.selectedAddress })
           .then((res: any) => {
             commit("SET_USER_DETAILS", res);
 
@@ -185,15 +191,82 @@ export const userModule = {
       });
     },
 
-    deleteUser({ dispatch }: any, address: string) {
-      return new Promise<void>((resolve, reject) => {
+    updateUser({ dispatch, state }: any, payload: Partial<IUserFormData>) {
+      return new Promise<ITransactionReceipt>((resolve, reject) => {
+        let receipt: ITransactionReceipt;
+        let tx_hash = "";
+        let infoNot: any;
+
+        web3UserContract.methods
+          .updateUser(payload.email, payload.phone)
+          .send({ from: state.selectedAddress })
+          .once("transactionHash", (txHash: string) => {
+            tx_hash = txHash;
+
+            infoNot = Notification.info({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Update User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              title: "Transaction submitted!",
+            });
+          })
+          .once("receipt", (res: any) => {
+            receipt = res;
+          })
+          .then(() => {
+            infoNot.close();
+
+            Notification.success({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              title: "Transaction confirmed!",
+            });
+
+            dispatch("setUser");
+
+            resolve(receipt);
+          })
+          .catch(async (err: any) => {
+            await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+              if (error) console.error("Error during getting the receipt: ", error);
+              receipt = transactionReceipt as ITransactionReceipt;
+            });
+
+            Message({
+              type: "error",
+              message: err.message,
+              duration: 5000,
+            });
+
+            if (tx_hash.length) {
+              infoNot.close();
+
+              Notification.error({
+                position: "bottom-left",
+                duration: 0,
+                dangerouslyUseHTMLString: true,
+                message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                title: "Transaction reverted!",
+              });
+            }
+
+            reject(err);
+          });
+      });
+    },
+
+    deleteUser({ dispatch, state }: any): Promise<ITransactionReceipt> {
+      return new Promise<ITransactionReceipt>((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
 
         web3UserContract.methods
           .deleteUser()
-          .send({ from: address })
+          .send({ from: state.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -208,7 +281,7 @@ export const userModule = {
           .once("receipt", (res: any) => {
             receipt = res;
           })
-          .then((res: any) => {
+          .then(() => {
             infoNot.close();
 
             Notification.success({
@@ -220,7 +293,7 @@ export const userModule = {
             });
 
             dispatch("resetUserState");
-            resolve(res);
+            resolve(receipt);
           })
           .catch(async (err: any) => {
             await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
