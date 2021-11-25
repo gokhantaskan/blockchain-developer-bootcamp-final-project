@@ -18,10 +18,10 @@ const store = new Vuex.Store({
 
 // const unsubscribeAction = store.subscribeAction({
 //   before: (action, state: any) => {
-//     console.log("before action type: ", action.type, action.payload, state.user.details);
+//     console.log(`before ${action.type}: `, state.user.details.firstName);
 //   },
 //   after: (action, state: any) => {
-//     console.log("after action type: ", action.type, action.payload, state.user.details);
+//     console.log(`after ${action.type}: `, state.user.details.firstName);
 //   },
 // });
 
