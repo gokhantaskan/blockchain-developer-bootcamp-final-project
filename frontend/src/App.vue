@@ -16,7 +16,9 @@
                   toggle
                 />
               </span>
-              <span class="d-block">Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]</span>
+              <span
+                class="d-block"
+              >Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]</span>
             </template>
           </PageHeader>
         </div>
@@ -77,34 +79,40 @@ export default defineComponent({
     onMounted(
       async () => {
         loading.value = true;
-
+        await ethereum.initialize();
         ethereum.setAllowedChains(["0x539", "0x4"]);
-        await ethereum.requestAccounts();
-        if (ethereum.setListeners !== undefined) ethereum.setListeners();
 
-        if (root) {
-          root.$nextTick(() => {
-            watch(
-              () => ethereum.selectedAddress,
-              async newVal => {
-                root.$store.dispatch("user/setSelectedAddress", newVal);
+        if (ethereum.isConnected) {
+          await ethereum.requestAccounts();
+          if (ethereum.setListeners !== undefined) ethereum.setListeners();
 
-                await root.$store.dispatch("user/isUser")
-                  .then(res => {
-                    if (res) { // Is User
-                      root.$store.dispatch("user/setUser");
-                    } else { // Not User
-                      root.$store.dispatch("user/resetUserState");
-                    }
-                  })
-                  .finally(() => { loading.value = false });
-              },
-              {
-                immediate: true,
-              }
-            );
-          });
+          if (root) {
+            root.$nextTick(() => {
+              watch(
+                () => ethereum.selectedAddress,
+                async newVal => {
+                  if (newVal) {
+                    root.$store.dispatch("user/setSelectedAddress", newVal);
+
+                    await root.$store.dispatch("user/isUser")
+                      .then(res => {
+                        if (res) { // Is User
+                          root.$store.dispatch("user/setUser");
+                        } else { // Not User
+                          root.$store.dispatch("user/resetUserState");
+                        }
+                      })
+                  }
+                },
+                {
+                  immediate: true,
+                }
+              );
+            });
+          }
         }
+
+        loading.value = false;
       }
     );
 
