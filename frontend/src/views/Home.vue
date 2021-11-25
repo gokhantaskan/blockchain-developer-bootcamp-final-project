@@ -1,20 +1,21 @@
 <template>
   <div class="home">
     <div class="container">
-      <transition
-        name="fade"
-        mode="out-in"
-      >
-        <div v-if="$store.state.user.detailsLoaded">
-          <el-card
-            key="1"
-            shadow="never"
+      <el-tabs>
+        <el-tab-pane label="Profile">
+          <transition
+            name="fade"
+            mode="out-in"
           >
-            <template #header>
-              <div class="d-flex align-items-center justify-content-between">
+            <div
+              key="1"
+              v-if="$store.state.user.detailsLoaded"
+            >
+              <div class="d-flex align-items-center justify-content-between mb-4">
                 <h2 class="m-0">
                   User Details
                 </h2>
+
                 <div>
                   <el-tooltip
                     class="item"
@@ -69,32 +70,39 @@
                   </el-tooltip>
                 </div>
               </div>
-            </template>
-            <UserDetails />
-          </el-card>
 
-          <div class="mt-4">
-            <el-button
-              type="primary"
-              @click="$router.push({ name: 'CreateOrganization' })"
+              <el-card shadow="never">
+                <UserDetails />
+              </el-card>
+            </div>
+
+            <div
+              key="2"
+              v-else
             >
-              Create Organization
-            </el-button>
-          </div>
-        </div>
+              <el-button
+                type="primary"
+                @click="$router.push({ name: 'CreateUser' })"
+              >
+                Create User
+              </el-button>
+            </div>
+          </transition>
+        </el-tab-pane>
 
-        <div
-          key="2"
-          v-else
-        >
+        <el-tab-pane label="Organizations">
           <el-button
             type="primary"
-            @click="$router.push({ name: 'CreateUser' })"
+            @click="$router.push({ name: 'CreateOrganization' })"
           >
-            Create User
+            Create Organization
           </el-button>
-        </div>
-      </transition>
+
+          <div class="mt-4">
+            <pre><code>{{ $store.state.user.organizations }}</code></pre>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
@@ -150,15 +158,18 @@ export default defineComponent({
           dangerouslyUseHTMLString: true,
         }
       )
-        .then(async () => {
-          await this.$store.dispatch("user/deleteUser");
-
-          Message({
-            message: "Profile deleted successfully!",
-            type: "success",
-            duration: 5000,
-          });
+        .then(async res => {
+          await this.$store.dispatch("user/deleteUser")
+            .then(() => {
+              Message({
+                message: "Profile deleted successfully!",
+                type: "success",
+                duration: 5000,
+              });
+            })
+            .catch(err => console.log(err));
         })
+        .catch(() => {})
         .finally(() => {
           this.deleting = false;
         });

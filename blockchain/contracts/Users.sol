@@ -215,4 +215,13 @@ contract Users {
       organizations[_admins[i]].push(o);
     }
   }
+
+  function getInvolvedOrganizations()
+    public
+    view
+    returns (Organization[] memory)
+  {
+    if (!isUser(msg.sender)) revert("You need to be a user first!");
+    return organizations[msg.sender];
+  }
 }

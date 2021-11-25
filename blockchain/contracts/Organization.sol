@@ -78,11 +78,11 @@ contract Organization is AccessControl {
     public
     view
     returns (
-      string memory,
-      string memory,
-      string memory,
-      string memory,
-      address[] memory
+      string memory _name,
+      string memory _registrationId,
+      string memory _email,
+      string memory _phone,
+      address[] memory _admins
     )
   {
     return (name, registrationId, email, phone, admins);

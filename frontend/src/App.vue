@@ -27,7 +27,7 @@
         name="fade"
         mode="out-in"
       >
-        <router-view />
+        <router-view v-if="ethereum.selectedAddress" />
       </transition>
     </div>
     <div v-else-if="!ethereum.isMetaMask">
@@ -92,16 +92,17 @@ export default defineComponent({
                 () => ethereum.selectedAddress,
                 async newVal => {
                   if (newVal) {
-                    root.$store.dispatch("user/setSelectedAddress", newVal);
+                    await root.$store.dispatch("user/setSelectedAddress", newVal);
 
                     await root.$store.dispatch("user/isUser")
                       .then(res => {
                         if (res) { // Is User
                           root.$store.dispatch("user/setUser");
+                          root.$store.dispatch("user/setOrganizations");
                         } else { // Not User
                           root.$store.dispatch("user/resetUserState");
                         }
-                      })
+                      });
                   }
                 },
                 {

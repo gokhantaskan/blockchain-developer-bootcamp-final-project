@@ -16,6 +16,8 @@ import {
   MessageBox,
   Message,
   Notification,
+  Tabs,
+  TabPane,
   Tooltip
 } from "element-ui";
 
@@ -30,6 +32,8 @@ Vue.use(RadioButton);
 Vue.use(RadioGroup);
 Vue.use(Input);
 Vue.use(InputNumber);
+Vue.use(Tabs);
+Vue.use(TabPane);
 Vue.use(Tooltip);
 
 Vue.use(Loading.directive);

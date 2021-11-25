@@ -23,6 +23,23 @@ interface IUserFormData {
   phone: string;
 }
 
+interface IOrganizationDetails {
+  name: string;
+  registrationId: string;
+  email: string;
+  phone: string;
+  admins: string[];
+  owner: string;
+}
+
+interface IOrganizationFormData {
+  name: string;
+  registrationId: string;
+  email: string;
+  phone: string;
+  admins: string[];
+}
+
 const INITIAL_STATE = {
   details: {
     firstName: "",
@@ -32,8 +49,10 @@ const INITIAL_STATE = {
     email: "",
     phone: "",
   },
+  organizations: [] as string[],
   selectedAddress: "",
   detailsLoaded: false,
+  organizationsLoaded: false,
 };
 
 const STATE = cloneDeep(INITIAL_STATE);
@@ -61,7 +80,14 @@ export const userModule = {
 
     RESET_USER_STATE(state: typeof STATE, payload: typeof INITIAL_STATE) {
       Vue.set(state, "details", payload.details);
+      Vue.set(state, "organizations", payload.organizations);
       Vue.set(state, "detailsLoaded", payload.detailsLoaded);
+      Vue.set(state, "organizationsLoaded", payload.organizationsLoaded);
+    },
+
+    SET_USER_ORGANIZATIONS(state: typeof STATE, payload: Partial<IUserDetails>) {
+      Vue.set(state, "organizations", payload);
+      Vue.set(state, "organizationsLoaded", true);
     },
   },
 
@@ -76,6 +102,7 @@ export const userModule = {
           .isUser(state.selectedAddress)
           .call({ from: state.selectedAddress })
           .then((res: boolean) => {
+            console.log("isUser", res);
             resolve(res);
           })
           .catch((err: any) => {
@@ -93,7 +120,7 @@ export const userModule = {
       });
     },
 
-    createUser({ dispatch, state }: any, payload: IUserFormData): Promise<ITransactionReceipt> {
+    createUser({ dispatch, state }: any, payload: IUserFormData): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -116,7 +143,7 @@ export const userModule = {
           .once("receipt", (res: any) => {
             receipt = res;
           })
-          .then(() => {
+          .then((res: any) => {
             infoNot.close();
 
             Notification.success({
@@ -129,7 +156,7 @@ export const userModule = {
 
             dispatch("setUser");
 
-            resolve(receipt);
+            resolve({ res });
           })
           .catch(async (err: any) => {
             await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
@@ -182,6 +209,7 @@ export const userModule = {
             Message.error({
               message: err.message,
               duration: 0,
+              showClose: true,
             });
 
             dispatch("resetUserState");
@@ -191,8 +219,8 @@ export const userModule = {
       });
     },
 
-    updateUser({ dispatch, state }: any, payload: Partial<IUserFormData>) {
-      return new Promise<ITransactionReceipt>((resolve, reject) => {
+    updateUser({ dispatch, state }: any, payload: Partial<IUserFormData>): Promise<{ res: ITransactionReceipt }> {
+      return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
@@ -214,7 +242,7 @@ export const userModule = {
           .once("receipt", (res: any) => {
             receipt = res;
           })
-          .then(() => {
+          .then((res: any) => {
             infoNot.close();
 
             Notification.success({
@@ -227,7 +255,7 @@ export const userModule = {
 
             dispatch("setUser");
 
-            resolve(receipt);
+            resolve({ res });
           })
           .catch(async (err: any) => {
             await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
@@ -258,8 +286,8 @@ export const userModule = {
       });
     },
 
-    deleteUser({ dispatch, state }: any): Promise<ITransactionReceipt> {
-      return new Promise<ITransactionReceipt>((resolve, reject) => {
+    deleteUser({ dispatch, state }: any): Promise<{ res: ITransactionReceipt }> {
+      return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
@@ -281,7 +309,7 @@ export const userModule = {
           .once("receipt", (res: any) => {
             receipt = res;
           })
-          .then(() => {
+          .then((res: any) => {
             infoNot.close();
 
             Notification.success({
@@ -293,7 +321,7 @@ export const userModule = {
             });
 
             dispatch("resetUserState");
-            resolve(receipt);
+            resolve({ res });
           })
           .catch(async (err: any) => {
             await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
@@ -327,7 +355,108 @@ export const userModule = {
     },
 
     async resetUserState({ commit }: any): Promise<void> {
-      commit("RESET_USER_STATE", INITIAL_STATE);
+      commit("RESET_USER_STATE", cloneDeep(INITIAL_STATE));
+    },
+
+    // ! Organizations
+    createOrganization({ dispatch, state }: any, payload: IOrganizationFormData): Promise<{ res: ITransactionReceipt }> {
+      return new Promise((resolve, reject) => {
+        let receipt: ITransactionReceipt;
+        let tx_hash = "";
+        let infoNot: any = null;
+
+        web3UserContract.methods
+          .createOrganization(payload.name, payload.registrationId, payload.email, payload.phone, payload.admins)
+          .send({ from: state.selectedAddress })
+          .once("transactionHash", (txHash: string) => {
+            tx_hash = txHash;
+
+            infoNot = Notification.info({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Create Organization:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              title: "Transaction submitted!",
+            });
+          })
+          .once("receipt", (res: any) => {
+            receipt = res;
+          })
+          .then((res: any) => {
+            infoNot.close();
+
+            Notification.success({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Create Organization: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              title: "Transaction confirmed!",
+            });
+
+            dispatch("setUser");
+
+            resolve({ res });
+          })
+          .catch(async (err: any) => {
+            await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+              if (error) console.error("Error during getting the receipt: ", error);
+              receipt = transactionReceipt as ITransactionReceipt;
+            });
+
+            if (err.code === -32603) {
+              Message({
+                type: "error",
+                message: "MetaMask RPC Error [-32603]: The tx doesn't have the correct nonce!",
+                duration: 5000,
+              });
+            } else {
+              Message({
+                type: "error",
+                message: err.message,
+                duration: 5000,
+              });
+            }
+
+            if (tx_hash.length) {
+              infoNot.close();
+
+              Notification.error({
+                position: "bottom-left",
+                duration: 0,
+                dangerouslyUseHTMLString: true,
+                message: `Create Organization: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                title: "Transaction reverted!",
+              });
+            }
+
+            reject(err);
+          });
+      });
+    },
+
+    setOrganizations({ commit, dispatch, state }: any): Promise<string[]> {
+      return new Promise((resolve, reject) => {
+        web3UserContract.methods
+          .getInvolvedOrganizations()
+          .call({ from: state.selectedAddress })
+          .then((res: any) => {
+            console.log(res);
+            commit("SET_USER_ORGANIZATIONS", res);
+
+            resolve(res);
+          })
+          .catch((err: any) => {
+            Message.error({
+              message: err.message,
+              duration: 0,
+              showClose: true,
+            });
+
+            dispatch("resetUserState");
+
+            reject(err);
+          });
+      });
     },
   },
 };

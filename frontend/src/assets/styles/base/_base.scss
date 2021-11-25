@@ -2,12 +2,18 @@
   min-height: 100vh;
 }
 
+::selection {
+  background-color: $--color-primary;
+  color: white;
+}
+
 pre {
   display: inline-block;
   box-sizing: border-box;
   text-align: left;
   background: $--color-primary-light-9;
-  border: 1px solid #e5e5e5;
+  border: 1px solid $--color-primary-light-8;
+  color: $--color-primary;
   border-radius: 4px;
   padding: 1rem;
   width: 100%;

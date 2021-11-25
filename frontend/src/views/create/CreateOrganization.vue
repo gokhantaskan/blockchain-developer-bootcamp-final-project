@@ -1,17 +1,25 @@
 <template>
-  <el-card shadow="never">
-    <template #header>
-      <h2 class="m-0">
+  <div class="create-organization">
+    <div class="d-flex align-items-center justify-content-start mb-4">
+      <el-button
+        @click="$router.go(-1)"
+        size="small"
+      >
+        <i class="el-icon-back"></i>
+      </el-button>
+
+      <h2 class="m-0 ms-2">
         Create Organization Profile
       </h2>
-    </template>
+    </div>
 
-    <CreateOrganizationForm @created="afterCreate" />
-  </el-card>
+    <el-card shadow="never">
+      <CreateOrganizationForm @created="afterCreate" />
+    </el-card>
+  </div>
 </template>
 
 <script lang="ts">
-import { useEthereum } from "@/composables/ethereum";
 import { vm } from "@/lib/globals";
 import { Message } from "element-ui";
 import { defineComponent } from "vue-demi";
@@ -26,10 +34,10 @@ export default defineComponent({
 
     const afterCreate = async () => {
       if (root) {
-        root.$store.dispatch("user/setUser", useEthereum().state.selectedAddress);
+        root.$store.dispatch("user/setUser");
 
         Message({
-          message: "Profile created successfully!",
+          message: "Organization created successfully!",
           type: "success",
           duration: 5000,
         });

@@ -12,7 +12,7 @@
               id="name"
               label="Name"
               vv-name="Name"
-              vv-rules="required|min:2|alpha_spaces"
+              vv-rules="required|min:2"
               message="At least 2 characters"
               required
             />
@@ -117,11 +117,13 @@ import { defineComponent, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { Message, Notification } from "element-ui";
 import { web3UserContract } from "@/lib/web3";
+import { vm } from "@/lib/globals";
 
 export default defineComponent({
   name: "CreateOrganizationForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
+    const root = vm();
 
     const loading = ref(false);
     const adminsRef = ref("");
@@ -155,58 +157,15 @@ export default defineComponent({
 
     const createOrganization = async () => {
       loading.value = true;
-      let tx_hash = "";
-      let receipt: any = null;
 
-      await web3UserContract.methods
-        .createUser(form.name, form.registrationId, form.email, form.phone, form.admins)
-        .send({ from: ethereum.selectedAddress })
-        .once("transactionHash", (txHash: string) => {
-          tx_hash = txHash;
-
-          Notification.info({
-            position: "bottom-left",
-            duration: 0,
-            dangerouslyUseHTMLString: true,
-            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
-            title: "Transaction submitted!",
-          });
-        })
-        .then((res: any) => {
-          receipt = res;
-
-          Notification.success({
-            position: "bottom-left",
-            duration: 0,
-            dangerouslyUseHTMLString: true,
-            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
-            title: "Transaction confirmed!",
-          });
-
+      await root?.$store.dispatch("user/createOrganization", { ...form })
+        .then(res => {
+          console.log(res);
           emit("created", true);
         })
-        .catch((error: any) => {
-          console.error(typeof error, error);
+        .catch(err => console.log(err));
 
-          Message({
-            type: "error",
-            message: error.message,
-            duration: 5000,
-          });
-
-          if (tx_hash.length) {
-            Notification.error({
-              position: "bottom-left",
-              duration: 0,
-              dangerouslyUseHTMLString: true,
-              message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
-              title: "Transaction reverted!",
-            });
-          }
-        })
-        .finally(() => {
-          loading.value = false;
-        });
+      loading.value = false;
     };
 
     return { form, loading, createOrganization, adminsRef, addAdmin, removeAdmin };
