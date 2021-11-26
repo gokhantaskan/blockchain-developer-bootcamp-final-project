@@ -45,9 +45,7 @@
         </div>
       </div>
 
-      <div
-        class="col-12 col-lg-3 mt-4 mt-lg-0 d-flex flex-column align-items-center align-items-lg-end justify-content-center"
-      >
+      <div class="col-12 col-lg-3 mt-4 mt-lg-0 d-flex flex-column align-items-center align-items-lg-end justify-content-center">
         <div
           class="qr-code"
           ref="qrCodeRef"
@@ -66,7 +64,7 @@
 <script lang="ts">
 import { useEthereum } from "@/composables/ethereum";
 import { convertGender } from "@/helpers/utils";
-import { computed, defineComponent } from "vue-demi";
+import { defineComponent } from "vue-demi";
 
 export default defineComponent({
   name: "UserDetails",
@@ -76,7 +74,6 @@ export default defineComponent({
   data() {
     return {
       qrCode: null,
-      editModalVisible: false,
     };
   },
   mounted() {

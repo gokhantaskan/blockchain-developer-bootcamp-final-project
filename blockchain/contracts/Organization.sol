@@ -2,33 +2,43 @@
 pragma solidity 0.8.9;
 
 // TODO: It will be the factory (or abstract?) contract
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract Organization is Ownable, AccessControl {
+contract Organization is AccessControl {
   string public name;
   string public registrationId;
   string public email;
   string public phone;
   address[] public admins;
+  address public owner;
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
   event LogOrganizationCreated(
-    address indexed addr,
+    address indexed contractAddress,
     string name,
     string registrationId,
     string email,
     string phone,
-    address[] admins
+    address[] admins,
+    address owner
   );
+
+  /**
+   * @dev Throws if called by any account other than the owner.
+   */
+  modifier onlyOwner(address _owner) {
+    require(owner == _owner, "Ownable: caller is not the owner");
+    _;
+  }
 
   constructor(
     string memory _name,
     string memory _registrationId,
     string memory _email,
     string memory _phone,
-    address[] memory _admins
+    address[] memory _admins,
+    address _owner
   ) {
     if (
       (bytes(_name).length != 0) &&
@@ -41,8 +51,10 @@ contract Organization is Ownable, AccessControl {
       email = _email;
       phone = _phone;
       admins = _admins;
+      owner = _owner;
 
-      _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+      _setupRole(DEFAULT_ADMIN_ROLE, _owner);
+      _setupRole(ADMIN_ROLE, _owner);
 
       for (uint i = 0; i < admins.length; i++) {
         _setupRole(ADMIN_ROLE, _admins[i]);
@@ -54,28 +66,26 @@ contract Organization is Ownable, AccessControl {
         _registrationId,
         _email,
         _phone,
-        _admins
+        _admins,
+        _owner
       );
     } else {
       revert("Fill all the fields!");
     }
   }
 
-  function readOrganizationDetails()
+  function readOrganization()
     public
     view
     returns (
-      string memory,
-      string memory,
-      string memory,
-      string memory
+      string memory _name,
+      string memory _registrationId,
+      string memory _email,
+      string memory _phone,
+      address[] memory _admins
     )
   {
-    return (name, registrationId, email, phone);
-  }
-
-  function readOrganizationAdmins() public view returns (address[] memory) {
-    return admins;
+    return (name, registrationId, email, phone, admins);
   }
 
   function updateOrganizationDetails(
@@ -90,7 +100,10 @@ contract Organization is Ownable, AccessControl {
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function updateOrganizationAdmins(address[] memory _admins) public onlyOwner {
+  function updateOrganizationAdmins(address[] memory _admins)
+    public
+    onlyOwner(msg.sender)
+  {
     admins = _admins;
 
     for (uint i = 0; i < _admins.length; i++) {

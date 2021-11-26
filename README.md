@@ -12,10 +12,10 @@ ConsenSys Blockchain Developer Bootcamp 2021
   - At the end of each event, users scan a final QR code to declare their attendance and get their certificate.
 
 ## Get Started
-If you don't have truffle, install it:\
+If you don't have Truffle, install it:\
 `$ npm i -g truffle`
 
-If you don't have ganache, download it from https://www.trufflesuite.com/ganache
+If you don't have Ganache, download it from https://www.trufflesuite.com/ganache
 
 Create a new Ethereum workspace in Ganache UI (Quickstart Ethereum) and set its port number to `7545`
 
@@ -31,14 +31,36 @@ Chain ID: 1337
 Currency Symbol: ETH
 ```
 
-Open a terminal in the root folder:\
+Open Ganache and then open a terminal in the root folder:\
 `$ cd blockchain`
 
-`$ truffle compile`
+`$ npm install`
 
-`$ truffle migrate --network development`
+`$ npm run migrate`
 
-Copy the deployed `Users` contract address and use it as `VUE_APP_USERS_CONTRACT_ADDRESS` variable under `.env`.
+Copy the deployed `Users` contract address, create a `.env` file under `frontend` folder and set the address as `VUE_APP_USERS_CONTRACT_ADDRESS` variable.
+
+After that, open `blockchain/build/contracts` folder and copy `abi` in `Users.json` file. Paste it inside `frontend/abi/Users.json`.
+```
+/// frontend/abi/Users.json
+
+"abi": [
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "addr",
+        "type": "address"
+      },
+      ...
+    ]
+  }
+]
+```
+
+---
 
 Open a new terminal in the root folder:\
 `$ cd frontend`
@@ -47,4 +69,4 @@ Open a new terminal in the root folder:\
 
 `$ npm run serve`
 
-Check the browser console if the contract is deployed and can be used on the frontend.
+Now, you can start using it!

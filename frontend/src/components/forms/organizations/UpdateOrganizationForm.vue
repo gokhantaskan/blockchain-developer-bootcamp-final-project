@@ -1,8 +1,8 @@
 <template>
-  <div class="edit-user-form">
+  <div class="update-user-form">
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
-        id="edit-user-form"
+        id="update-user-form"
         @submit.prevent="handleSubmit(updateUser)"
         novalidate
       >
@@ -153,7 +153,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      const userDetails = vm().root.proxy.$store.state.user.details;
+      const userDetails = vm()?.$store.state.user.details;
 
       form.firstName = userDetails.firstName;
       form.lastName = userDetails.lastName;

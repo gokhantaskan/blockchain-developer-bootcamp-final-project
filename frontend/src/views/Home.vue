@@ -1,45 +1,42 @@
 <template>
-  <div
-    class="home"
-    v-loading="loading"
-  >
+  <div class="home">
     <div class="container">
-      <transition
-        name="fade"
-        mode="out-in"
-      >
-        <div v-if="$store.state.user.detailsLoaded">
-          <el-card
-            key="1"
-            shadow="never"
+      <el-tabs>
+        <el-tab-pane label="Profile">
+          <transition
+            name="fade"
+            mode="out-in"
           >
-            <template #header>
-              <div class="d-flex align-items-center justify-content-between">
+            <div
+              key="1"
+              v-if="$store.state.user.detailsLoaded"
+            >
+              <div class="d-flex align-items-center justify-content-between mb-4">
                 <h2 class="m-0">
                   User Details
                 </h2>
+
                 <div>
                   <el-tooltip
                     class="item"
                     effect="dark"
-                    content="Edit"
+                    content="Update"
                     placement="bottom"
                     :visible-arrow="false"
                   >
                     <el-button
                       type="primary"
                       icon="el-icon-edit"
-                      @click="editModalVisible = true"
-                      :loading="editModalVisible"
+                      @click="updateModalVisible = true"
+                      :loading="updateModalVisible"
                     ></el-button>
                   </el-tooltip>
                   <el-dialog
-                    title="Edit User Details"
-                    :visible.sync="editModalVisible"
-                    destroy-on-close
+                    title="Update User Details"
+                    :visible.sync="updateModalVisible"
                   >
                     <UpdateUserForm
-                      @updating="updating"
+                      @updating="_updating"
                       @updated="afterUpdate"
                     />
                     <template
@@ -47,10 +44,10 @@
                       class="dialog-footer"
                     >
                       <el-button
-                        form="edit-user-form"
+                        form="update-user-form"
                         type="primary"
                         native-type="submit"
-                        :loading="editing"
+                        :loading="updating"
                       >
                         Confirm
                       </el-button>
@@ -73,39 +70,44 @@
                   </el-tooltip>
                 </div>
               </div>
-            </template>
-            <UserDetails />
-          </el-card>
 
-          <div class="mt-4">
-            <el-button
-              type="primary"
-              @click="$router.push({ name: 'CreateOrganization' })"
+              <el-card shadow="never">
+                <UserDetails />
+              </el-card>
+            </div>
+
+            <div
+              key="2"
+              v-else
             >
-              Create Organization
-            </el-button>
-          </div>
-        </div>
+              <el-button
+                type="primary"
+                @click="$router.push({ name: 'CreateUser' })"
+              >
+                Create User
+              </el-button>
+            </div>
+          </transition>
+        </el-tab-pane>
 
-        <div
-          key="2"
-          v-else
-        >
+        <el-tab-pane label="Organizations">
           <el-button
             type="primary"
-            @click="$router.push({ name: 'CreateUser' })"
+            @click="$router.push({ name: 'CreateOrganization' })"
           >
-            Create User
+            Create Organization
           </el-button>
-        </div>
-      </transition>
+
+          <div class="mt-4">
+            <pre><code>{{ $store.state.user.organizations }}</code></pre>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { useEthereum } from "@/composables/ethereum";
-import { web3UserContract } from "@/lib/web3";
 import { defineComponent } from "vue-demi";
 import { Message } from "element-ui";
 
@@ -119,46 +121,14 @@ export default defineComponent({
   },
   data() {
     return {
-      loading: false,
-      editModalVisible: false,
+      updateModalVisible: false,
       deleting: false,
-      editing: false,
+      updating: false,
     };
-  },
-  async beforeMount() {
-    const { state: ethereum } = useEthereum();
-
-    this.loading = true;
-
-    // Check if the account is registered before
-    web3UserContract.methods
-      .isUser(ethereum.selectedAddress)
-      .call({ from: ethereum.selectedAddress })
-      .then((res: boolean) => {
-        if (res) { // If registered, get the details
-          this.$store.dispatch("user/readUser", ethereum.selectedAddress);
-        } else {
-          this.$store.dispatch("user/resetUserState");
-        }
-      })
-      .catch((err: any) => {
-        this.$store.dispatch("user/resetUserState");
-
-        Message({
-          message: err.message,
-          type: "error",
-          duration: 0,
-          showClose: true,
-        });
-      })
-      .finally(() => {
-        this.loading = false;
-      });
   },
   methods: {
     afterUpdate() {
-      this.editModalVisible = false;
-      this.$store.dispatch("user/readUser", useEthereum().state.selectedAddress);
+      this.updateModalVisible = false;
 
       Message({
         message: "Profile updated successfully!",
@@ -166,8 +136,8 @@ export default defineComponent({
         duration: 5000,
       });
     },
-    updating(e: boolean) {
-      this.editing = e;
+    _updating(e: boolean) {
+      this.updating = e;
     },
     deleteUser() {
       this.deleting = true;
@@ -181,20 +151,25 @@ export default defineComponent({
         {
           confirmButtonText: "Yes",
           cancelButtonText: "No",
+          customClass: "warning",
+          confirmButtonClass: "el-button--warning",
+          cancelButtonClass: "is-plain",
           type: "warning",
           dangerouslyUseHTMLString: true,
         }
       )
-        .then(async () => {
-          await this.$store.dispatch("user/deleteUser", useEthereum().state.selectedAddress);
-          // .then(transaction => console.log("tx", transaction));
-
-          Message({
-            message: "Profile deleted successfully!",
-            type: "success",
-            duration: 5000,
-          });
+        .then(async res => {
+          await this.$store.dispatch("user/deleteUser")
+            .then(() => {
+              Message({
+                message: "Profile deleted successfully!",
+                type: "success",
+                duration: 5000,
+              });
+            })
+            .catch(err => console.log(err));
         })
+        .catch(() => {})
         .finally(() => {
           this.deleting = false;
         });

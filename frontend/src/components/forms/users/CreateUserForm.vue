@@ -12,10 +12,17 @@
               show-icon
               :closable="false"
             >
-              Only
-              <strong>e-mail</strong> and
-              <strong>phone number</strong> can be updated later.
-              Please submit your form carefully.
+              <span class="d-block">
+                Only
+                <strong>e-mail</strong> and
+                <strong>phone number</strong> can be updated after you create your profile.
+              </span>
+              <span class="d-block">
+                Later on, you can
+                <strong>delete</strong> and
+                <strong>create</strong> your profile
+                <strong>again</strong>.
+              </span>
             </el-alert>
           </div>
 
@@ -109,11 +116,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue-demi";
-import { useEthereum } from "@/composables/ethereum";
-import { Message, Notification } from "element-ui";
-import { web3, web3UserContract } from "@/lib/web3";
 import { Gender } from "@/lib/types";
-import { ITransactionReceipt } from "@/lib/types/web3";
+import { vm } from "@/lib/globals";
 
 export default defineComponent({
   name: "CreateUserForm",
@@ -121,8 +125,7 @@ export default defineComponent({
     GenderInput: () => import("../../GenderInput.vue"),
   },
   setup(_props, { emit }) {
-    const { state: ethereum } = useEthereum();
-
+    const root = vm();
     const loading = ref(false);
 
     const form = reactive({
@@ -136,79 +139,15 @@ export default defineComponent({
 
     const createUser = async () => {
       loading.value = true;
-      let receipt: ITransactionReceipt;
-      let tx_hash = "";
-      let infoNot: any = null;
 
-      await web3UserContract.methods
-        .createUser(form.firstName, form.lastName, form.nationalId, form.email, form.phone, form.gender)
-        .send({ from: ethereum.selectedAddress })
-        .once("transactionHash", (txHash: string) => {
-          tx_hash = txHash;
-
-          infoNot = Notification.info({
-            position: "bottom-left",
-            duration: 0,
-            dangerouslyUseHTMLString: true,
-            message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
-            title: "Transaction submitted!",
-          });
-        })
-        .once("receipt", (res: any) => {
-          receipt = res;
-          console.log(receipt);
-        })
-        .then(() => {
-          infoNot.close();
-
-          Notification.success({
-            position: "bottom-left",
-            duration: 0,
-            dangerouslyUseHTMLString: true,
-            message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
-            title: "Transaction confirmed!",
-          });
-
+      await root?.$store.dispatch("user/createUser", { ...form })
+        .then(res => {
+          console.log(res);
           emit("created", true);
         })
-        .catch(async (error: any) => {
-          await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
-            if (error) console.error(error);
-            receipt = transactionReceipt as ITransactionReceipt;
-          });
+        .catch(err => console.log(err));
 
-          console.log(receipt);
-          console.log(error);
-
-          if (error.code === -32603) {
-            Message({
-              type: "error",
-              message: "MetaMask RPC Error [-32603]: The tx doesn't have the correct nonce!",
-              duration: 5000,
-            });
-          } else {
-            Message({
-              type: "error",
-              message: error.message,
-              duration: 5000,
-            });
-          }
-
-          if (tx_hash.length) {
-            infoNot.close();
-
-            Notification.error({
-              position: "bottom-left",
-              duration: 0,
-              dangerouslyUseHTMLString: true,
-              message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
-              title: "Transaction reverted!",
-            });
-          }
-        })
-        .finally(() => {
-          loading.value = false;
-        });
+      loading.value = false;
     };
 
     return { form, loading, createUser, Gender };

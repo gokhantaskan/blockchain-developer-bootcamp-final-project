@@ -7,12 +7,20 @@
     line-height: 1.5;
   }
 
-  &__icon.el-icon-info.is-big {
-    color: #607D8B;
+  &__icon {
+    align-self: flex-start;
+
+    &.el-icon-info.is-big {
+      color: #607D8B;
+    }
   }
 
   &--info.is-light {
     background-color: $--border-color-lighter;
     color: $--border-color-base;
+  }
+
+  &__content {
+    padding: 0 1rem;
   }
 }
