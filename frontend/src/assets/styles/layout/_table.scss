@@ -18,12 +18,14 @@
       th,
       td {
         padding: 0.5rem;
-        border-bottom: 1px solid  $--border-color-base;
+        border-bottom: 1px solid $--border-color-base;
         line-height: 2rem;
+        color:  $--color-text-secondary;
       }
 
       th {
         text-align: left;
+        color: $--color-text-primary;
       }
 
       &:last-child {

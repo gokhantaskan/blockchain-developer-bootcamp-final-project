@@ -29,7 +29,7 @@ export interface IOrganizationDetails {
   phone: string;
   admins: string[];
   owner: string;
-  address: string;
+  contractAddress: string;
 }
 
 export interface IOrganizationFormData {

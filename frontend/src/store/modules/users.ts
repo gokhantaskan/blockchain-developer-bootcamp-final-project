@@ -59,7 +59,7 @@ export const userModule = {
 
   actions: {
     setSelectedAddress({ commit }: any, payload: string) {
-      commit("SET_SELECTED_ADDRESS", payload);
+      commit("SET_SELECTED_ADDRESS", web3.utils.toChecksumAddress(payload));
     },
 
     isUser({ dispatch, state }: any) {
@@ -410,10 +410,10 @@ export const userModule = {
 
             if (res.length) {
               for (let i = 0; i < res.length; i++) {
-                const address = res[i];
+                const contractAddress = res[i];
 
                 await web3UserContract.methods
-                  .getOrganizationDetails(address)
+                  .getOrganizationDetails(contractAddress)
                   .call({ from: state.selectedAddress })
                   .then((res: IOrganizationDetailsRes) => {
                     arr.push({
@@ -423,14 +423,13 @@ export const userModule = {
                       phone: res._phone,
                       admins: res._admins,
                       owner: res._owner,
-                      address,
+                      contractAddress,
                     });
                   });
               }
             }
-            console.log(arr);
-            commit("SET_USER_ORGANIZATIONS", arr);
 
+            commit("SET_USER_ORGANIZATIONS", arr);
             resolve(res);
           })
           .catch((err: any) => {
@@ -445,6 +444,16 @@ export const userModule = {
             reject(err);
           });
       });
+    },
+  },
+
+  getters: {
+    ownedOrganizations: (state: typeof STATE) => {
+      return state.organizations.filter(organization => organization.owner === state.selectedAddress);
+    },
+
+    attendedOrganizations: (state: typeof STATE) => {
+      return state.organizations.filter(organization => organization.admins.includes(state.selectedAddress));
     },
   },
 };

@@ -1,36 +1,47 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
-import Home from "../views/Home.vue";
 
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
-  },
-  {
-    path: "/create",
-    component: () => import("../views/Create.vue"),
-    redirect: { name: "Home" },
+    component: () => import("../views/user/UserWrapper.vue"),
+    redirect: { name: "UserProfile" },
     children: [
       {
-        path: "user",
-        name: "CreateUser",
-        component: () => import("../views/create/CreateUser.vue"),
+        path: "",
+        component: () => import("../views/user/UserProfile.vue"),
+        name: "UserProfile",
       },
       {
-        path: "organization",
-        name: "CreateOrganization",
-        component: () => import("../views/create/CreateOrganization.vue"),
+        path: "create",
+        name: "CreateUser",
+        component: () => import("../views/user/CreateUser.vue"),
       },
     ],
   },
   {
-    path: "/about",
-    name: "About",
-    component: () => import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/organizations",
+    component: () => import("../views/organizations/OrganizationsWrapper.vue"),
+    redirect: { name: "OrganizationsList" },
+    children: [
+      {
+        path: "",
+        component: () => import("../views/organizations/OrganizationsList.vue"),
+        name: "OrganizationsList",
+      },
+      {
+        path: ":address",
+        component: () => import("../views/organizations/OrganizationProfile.vue"),
+        name: "OrganizationProfile",
+      },
+      {
+        path: "create",
+        name: "CreateOrganization",
+        component: () => import("../views/organizations/CreateOrganization.vue"),
+      },
+    ],
   },
 ];
 

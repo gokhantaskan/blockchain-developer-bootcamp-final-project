@@ -5,11 +5,11 @@ pragma solidity 0.8.9;
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Organization is AccessControl {
-  string public name;
-  string public registrationId;
-  string public email;
-  string public phone;
-  address[] public admins;
+  string private name;
+  string private registrationId;
+  string private email;
+  string private phone;
+  address[] private admins;
   address public owner;
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
@@ -70,7 +70,7 @@ contract Organization is AccessControl {
         _owner
       );
     } else {
-      revert("Fill all the fields!");
+      revert("Missing one or more requirements!");
     }
   }
 
@@ -82,10 +82,11 @@ contract Organization is AccessControl {
       string memory _registrationId,
       string memory _email,
       string memory _phone,
-      address[] memory _admins
+      address[] memory _admins,
+      address _owner
     )
   {
-    return (name, registrationId, email, phone, admins);
+    return (name, registrationId, email, phone, admins, owner);
   }
 
   function updateOrganizationDetails(
@@ -100,14 +101,19 @@ contract Organization is AccessControl {
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function updateOrganizationAdmins(address[] memory _admins)
-    public
-    onlyOwner(msg.sender)
-  {
+  function grantAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
     admins = _admins;
 
     for (uint i = 0; i < _admins.length; i++) {
-      _setupRole(ADMIN_ROLE, _admins[i]);
+      grantRole(ADMIN_ROLE, _admins[i]);
+    }
+  }
+
+  function revokeAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
+    admins = _admins;
+
+    for (uint i = 0; i < _admins.length; i++) {
+      revokeRole(ADMIN_ROLE, _admins[i]);
     }
   }
 

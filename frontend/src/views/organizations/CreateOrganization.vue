@@ -34,7 +34,7 @@ export default defineComponent({
 
     const afterCreate = async () => {
       if (root) {
-        root.$store.dispatch("user/setUser");
+        root.$store.dispatch("user/setOrganization");
 
         Message({
           message: "Organization created successfully!",
