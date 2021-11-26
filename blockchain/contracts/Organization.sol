@@ -15,7 +15,7 @@ contract Organization is AccessControl {
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
   event LogOrganizationCreated(
-    address indexed addr,
+    address indexed contractAddress,
     string name,
     string registrationId,
     string email,

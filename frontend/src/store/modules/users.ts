@@ -30,6 +30,7 @@ interface IOrganizationDetails {
   phone: string;
   admins: string[];
   owner: string;
+  address: string;
 }
 
 interface IOrganizationFormData {
@@ -38,6 +39,15 @@ interface IOrganizationFormData {
   email: string;
   phone: string;
   admins: string[];
+}
+
+interface IOrganizationDetailsRes {
+  _name: string;
+  _registrationId: string;
+  _email: string;
+  _phone: string;
+  _admins: string[];
+  _owner: string;
 }
 
 const INITIAL_STATE = {
@@ -49,7 +59,7 @@ const INITIAL_STATE = {
     email: "",
     phone: "",
   },
-  organizations: [] as string[],
+  organizations: [] as IOrganizationDetails[],
   selectedAddress: "",
   detailsLoaded: false,
   organizationsLoaded: false,
@@ -437,11 +447,33 @@ export const userModule = {
     setOrganizations({ commit, dispatch, state }: any): Promise<string[]> {
       return new Promise((resolve, reject) => {
         web3UserContract.methods
-          .getInvolvedOrganizations()
+          .getOrganizations()
           .call({ from: state.selectedAddress })
-          .then((res: any) => {
-            console.log(res);
-            commit("SET_USER_ORGANIZATIONS", res);
+          .then(async (res: string[]) => {
+            const arr = [] as IOrganizationDetails[];
+
+            if (res.length) {
+              for (let i = 0; i < res.length; i++) {
+                const address = res[i];
+
+                await web3UserContract.methods
+                  .getOrganizationDetails(address)
+                  .call({ from: state.selectedAddress })
+                  .then((res: IOrganizationDetailsRes) => {
+                    arr.push({
+                      name: res._name,
+                      registrationId: res._registrationId,
+                      email: res._email,
+                      phone: res._phone,
+                      admins: res._admins,
+                      owner: res._owner,
+                      address
+                    })
+                  });
+              }
+            }
+            console.log(arr);
+            commit("SET_USER_ORGANIZATIONS", arr);
 
             resolve(res);
           })

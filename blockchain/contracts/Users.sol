@@ -216,12 +216,22 @@ contract Users {
     }
   }
 
-  function getInvolvedOrganizations()
+  function getOrganizations() public view returns (Organization[] memory) {
+    return organizations[msg.sender];
+  }
+
+  function getOrganizationDetails(address _contractAddress)
     public
     view
-    returns (Organization[] memory)
+    returns (
+      string memory _name,
+      string memory _registrationId,
+      string memory _email,
+      string memory _phone,
+      address[] memory _admins
+    )
   {
-    if (!isUser(msg.sender)) revert("You need to be a user first!");
-    return organizations[msg.sender];
+    Organization o = Organization(_contractAddress);
+    return o.readOrganization();
   }
 }

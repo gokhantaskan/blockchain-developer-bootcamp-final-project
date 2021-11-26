@@ -277,11 +277,51 @@
     },
     {
       "inputs": [],
-      "name": "getInvolvedOrganizations",
+      "name": "getOrganizations",
       "outputs": [
         {
           "internalType": "contract Organization[]",
           "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function",
+      "constant": true
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_contractAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getOrganizationDetails",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "_name",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_registrationId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_email",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_phone",
+          "type": "string"
+        },
+        {
+          "internalType": "address[]",
+          "name": "_admins",
           "type": "address[]"
         }
       ],

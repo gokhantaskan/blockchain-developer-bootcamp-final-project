@@ -42,7 +42,7 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "addr",
+          "name": "contractAddress",
           "type": "address"
         },
         {
@@ -392,27 +392,27 @@
       "outputs": [
         {
           "internalType": "string",
-          "name": "",
+          "name": "_name",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "",
+          "name": "_registrationId",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "",
+          "name": "_email",
           "type": "string"
         },
         {
           "internalType": "string",
-          "name": "",
+          "name": "_phone",
           "type": "string"
         },
         {
           "internalType": "address[]",
-          "name": "",
+          "name": "_admins",
           "type": "address[]"
         }
       ],
