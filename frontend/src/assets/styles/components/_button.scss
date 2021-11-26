@@ -3,11 +3,22 @@
   text-decoration: none;
   padding-left: 12px;
   padding-right: 12px;
+  border-radius: 0 !important;
 
   &--small.is-round {
     width: 24px !important;
     height: 24px !important;
     padding: 0 !important;
+  }
+
+  &--info.is-plain {
+    color: $--color-text-regular;
+    background: $--color-border-extra-light;
+    border-color: $--color-border-base;
+  }
+
+  &.block {
+    width: 100%;
   }
 }
 

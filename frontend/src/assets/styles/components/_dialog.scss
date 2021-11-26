@@ -1,6 +1,7 @@
 .el-dialog {
   width: 75%;
   max-width: 800px;
+  border-radius: 0;
 
   &__title {
     color: $--color-text-secondary;

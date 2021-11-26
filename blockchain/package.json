@@ -14,14 +14,14 @@
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
-    "prettier": "^2.4.1",
-    "prettier-plugin-solidity": "^1.0.0-beta.18",
+    "prettier": "^2.5.0",
+    "prettier-plugin-solidity": "1.0.0-beta.19",
     "solhint": "^3.3.6",
     "solhint-plugin-prettier": "0.0.5"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.3.3",
-    "@truffle/hdwallet-provider": "^1.5.1",
+    "@openzeppelin/contracts": "^4.4.0",
+    "@truffle/hdwallet-provider": "^1.7.0",
     "truffle-plugin-debugger": "0.0.2"
   }
 }

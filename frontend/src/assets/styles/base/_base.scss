@@ -1,5 +1,5 @@
-#app {
-  min-height: 100vh;
+body {
+  background: $--color-border-extra-light;
 }
 
 ::selection {
@@ -20,6 +20,11 @@ pre {
   overflow: auto;
 }
 
+a {
+  color: $--color-text-regular;
+  text-decoration: underline;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition-duration: 0.2s;
@@ -32,11 +37,12 @@ pre {
   opacity: 0
 }
 
-.page-header {
+#app {
+  min-height: 100vh;
+}
 
-  span.d-block {
-    line-height: 32px;
-  }
+.app-wrapper {
+  padding: 24px 0;
 }
 
 .cover-whole {

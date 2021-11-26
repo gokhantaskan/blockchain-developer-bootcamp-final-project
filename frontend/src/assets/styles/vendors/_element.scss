@@ -31,17 +31,17 @@ $--color-text-placeholder: #90A4AE;
 
 /// ! BORDER
 /// color|1|Border Color|3
-$--border-color-base: #CFD8DC;
+$--color-border-base: #CFD8DC;
 /// color|1|Border Color|3
-$--border-color-light: mix($--color-white, $--border-color-base, 25%);
+$--color-border-light: mix($--color-white, $--color-border-base, 25%);
 /// color|1|Border Color|3
-$--border-color-lighter: mix($--color-white, $--border-color-base, 50%);
+$--color-border-lighter: mix($--color-white, $--color-border-base, 50%);
 /// color|1|Border Color|3
-$--border-color-extra-light: mix($--color-white, $--border-color-base, 75%);
+$--color-border-extra-light: mix($--color-white, $--color-border-base, 75%);
 /// color|1|Background Color|4
 $--background-color-base: #ECEFF1;
 
-$--card-border-color: $--border-color-base;
+$--card-color-border: $--color-border-base;
 
 
 /* Icon

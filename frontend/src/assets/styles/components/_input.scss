@@ -9,9 +9,10 @@
   }
 
   &__inner {
+    border-radius: 0;
 
     &:read-only {
-      border-color: darken($--border-color-extra-light, 5%);
+      border-color: darken($--color-border-extra-light, 5%);
     }
   }
 }
@@ -21,7 +22,7 @@
 
   .el-input__inner {
     background-color: transparent;
-    // border-color: $--border-color-base;
+    // border-color: $--color-border-base;
   }
 
   &.not-valid {

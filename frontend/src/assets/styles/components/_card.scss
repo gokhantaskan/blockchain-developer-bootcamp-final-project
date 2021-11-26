@@ -1,6 +1,4 @@
 .el-card {
-
-  &__header {
-    line-height: 40px;
-  }
+  border-radius: 0;
+  border-color: $--color-border-base;
 }

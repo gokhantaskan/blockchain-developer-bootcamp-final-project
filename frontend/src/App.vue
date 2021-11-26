@@ -4,32 +4,18 @@
     v-loading="loading"
   >
     <div v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
-      <div class="navigation">
-        <div class="container">
-          <PageHeader title="Sertifie.me">
-            <template #helper>
-              <span class="d-block">
-                Selected Account:{{ " " }}
-                <Clipboard
-                  :text="ethereum.selectedAddress"
-                  address
-                  toggle
-                />
-              </span>
-              <span
-                class="d-block"
-              >Selected Chain: {{ ethereum.chainId }} [{{ ethereum.chainName }}]</span>
-            </template>
-          </PageHeader>
-        </div>
+      <Navbar />
+
+      <div class="app-wrapper">
+        <transition
+          name="fade"
+          mode="out-in"
+        >
+          <router-view v-if="ethereum.selectedAddress" />
+        </transition>
       </div>
-      <transition
-        name="fade"
-        mode="out-in"
-      >
-        <router-view v-if="ethereum.selectedAddress" />
-      </transition>
     </div>
+
     <div v-else-if="!ethereum.isMetaMask">
       <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
         <img
@@ -44,6 +30,7 @@
         >Download MetaMask</a>
       </div>
     </div>
+
     <div v-else>
       <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
         <p class="mt-0">
@@ -68,8 +55,7 @@ import { vm } from "./lib/globals";
 export default defineComponent({
   name: "App",
   components: {
-    PageHeader: () => import("@/components/PageHeader.vue"),
-    Clipboard: () => import("@/components/Clipboard.vue"),
+    Navbar: () => import("@/components/Navbar.vue"),
   },
   setup() {
     const { state: ethereum } = useEthereum();

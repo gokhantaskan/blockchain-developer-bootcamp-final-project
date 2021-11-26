@@ -31,14 +31,14 @@
           v-for="(details, i) in $store.state.user.organizations"
           :key="i"
         >
-          <el-card shadow="never">
+          <el-card class="organization-detail-card" shadow="never">
             <OrganizationDetails :details="details" />
             <el-button
-              class="mt-4"
+              class="mt-4 block"
               type="primary"
               @click="$router.push({ name: 'OrganizationProfile', params: { address: details.contractAddress } })"
             >
-              Details
+              Organize
             </el-button>
           </el-card>
         </div>

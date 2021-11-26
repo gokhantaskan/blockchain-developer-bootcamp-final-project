@@ -1,12 +1,11 @@
 <template>
-  <el-button
+  <button
+    class="connect-metamask-button"
     :disabled="!!ethereum.accounts[0] || !!ethereum.selectedAddress"
     @click="ethereum.requestAccounts"
-    type="warning"
-    plain
   >
     {{ ethereum.accounts.length || ethereum.selectedAddress ? "Connected to Metamask" : "Connect to Metamask" }}
-  </el-button>
+  </button>
 </template>
 
 <script lang="ts">

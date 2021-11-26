@@ -7,7 +7,6 @@
       >
         {{ title }}
       </component>
-      <ConnectMetamaskButton />
     </div>
 
     <div>
@@ -24,7 +23,6 @@ import Clipboard from "./Clipboard.vue";
 export default defineComponent({
   name: "PageHeader",
   components: {
-    ConnectMetamaskButton: () => import("./ConnectMetamaskButton.vue"),
     Clipboard,
   },
   props: {

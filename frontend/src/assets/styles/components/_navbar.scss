@@ -1,0 +1,62 @@
+.navbar {
+  border-bottom: 1px solid $--color-border-base;
+  height: 56px;
+  line-height: 55px;
+  background: white;
+  z-index: 1000;
+  position: relative;
+
+  .container {
+    display: flex;
+    justify-content: last baseline;
+  }
+
+  &__brand {
+    font-weight: 600;
+    font-size: 2rem;
+    padding: 0 1rem;
+    color: $--color-primary;
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-color: $--color-border-base;
+  }
+
+  &__nav {
+    flex: 1;
+    text-align: left;
+    padding: 0 1rem;
+    text-transform: uppercase;
+
+    a,
+    .router-link {
+      display: inline-flex;
+      font-weight: 600;
+      text-decoration: none;
+      padding: 0 1rem;
+    }
+
+    .router-link-active,
+    .router-link-exact-active {
+      color: $--color-primary;
+    }
+  }
+
+  &__nav-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__helper {
+    border-left: 1px solid;
+    border-right: 1px solid;
+    border-color: $--color-border-base;
+    padding: 0 1rem;
+  }
+
+  .connect-metamask-button {
+    background-color: transparent;
+    border: none;
+    line-height: 55px;
+  }
+}

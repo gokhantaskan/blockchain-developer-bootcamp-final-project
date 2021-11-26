@@ -1,5 +1,6 @@
 .el-alert {
   padding: 1rem 2rem;
+  border-radius: 0;
 
   &__description {
     font-size: 0.875rem !important;
@@ -16,8 +17,8 @@
   }
 
   &--info.is-light {
-    background-color: $--border-color-lighter;
-    color: $--border-color-base;
+    background-color: $--color-border-lighter;
+    color: $--color-border-base;
   }
 
   &__content {

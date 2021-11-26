@@ -7,7 +7,7 @@
   vertical-align: top;
 
   &--responsive {
-    overflow-x: scroll;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -18,7 +18,7 @@
       th,
       td {
         padding: 0.5rem;
-        border-bottom: 1px solid $--border-color-base;
+        border-bottom: 1px solid $--color-border-base;
         line-height: 2rem;
         color:  $--color-text-secondary;
       }
@@ -26,6 +26,7 @@
       th {
         text-align: left;
         color: $--color-text-primary;
+        font-weight: 600;
       }
 
       &:last-child {

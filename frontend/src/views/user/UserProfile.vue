@@ -11,7 +11,7 @@
         >
           <div class="d-flex align-items-center justify-content-between mb-4">
             <h1 class="m-0">
-              User Details
+              Profile
             </h1>
             <div>
               <el-tooltip
