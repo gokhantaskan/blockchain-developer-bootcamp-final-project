@@ -2,7 +2,7 @@
   <div class="user-details">
     <div class="row">
       <div class="col-12 col-lg-9">
-        <div class="table-responsive">
+        <div class="table--responsive">
           <table class="table table--details">
             <tbody>
               <tr>

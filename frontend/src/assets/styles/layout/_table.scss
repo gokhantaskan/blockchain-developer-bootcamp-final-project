@@ -6,8 +6,8 @@
   border-collapse: collapse;
   vertical-align: top;
 
-  &-responsive {
-    overflow-x: auto;
+  &--responsive {
+    overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
   }
 
@@ -42,6 +42,7 @@
     tbody {
       th {
         width: 25%;
+        min-width: 164px;
       }
     }
   }

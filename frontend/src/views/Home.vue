@@ -84,22 +84,44 @@
                 type="primary"
                 @click="$router.push({ name: 'CreateUser' })"
               >
-                Create User
+                Create User Profile
               </el-button>
             </div>
           </transition>
         </el-tab-pane>
 
         <el-tab-pane label="Organizations">
-          <el-button
-            type="primary"
-            @click="$router.push({ name: 'CreateOrganization' })"
-          >
-            Create Organization
-          </el-button>
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h2 class="m-0">
+              Organizations
+            </h2>
+            <el-button
+              type="primary"
+              @click="$router.push({ name: 'CreateOrganization' })"
+              :disabled="!$store.state.user.detailsLoaded"
+            >
+              Create Organization Profile
+            </el-button>
+          </div>
 
-          <div class="mt-4">
-            <pre><code>{{ $store.state.user.organizations }}</code></pre>
+          <div
+            class="row"
+            v-if="$store.state.user.organizations.length"
+          >
+            <div
+              class="col-12 col-lg-6"
+              v-for="(details, i) in $store.state.user.organizations"
+              :key="i"
+            >
+              <el-card
+                shadow="never"
+              >
+                <OrganizationDetails :details="details" />
+              </el-card>
+            </div>
+          </div>
+          <div v-else>
+            There is no organization found which you are involving. If you attended as an admin, you have to create your user profile first to see.
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -116,6 +138,7 @@ export default defineComponent({
   components: {
     PageHeader: () => import("@/components/PageHeader.vue"),
     UserDetails: () => import("@/components/UserDetails.vue"),
+    OrganizationDetails: () => import("@/components/OrganizationDetails.vue"),
     CreateUserForm: () => import("@/components/forms/users/CreateUserForm.vue"),
     UpdateUserForm: () => import("@/components/forms/users/UpdateUserForm.vue"),
   },
@@ -158,7 +181,7 @@ export default defineComponent({
           dangerouslyUseHTMLString: true,
         }
       )
-        .then(async res => {
+        .then(async () => {
           await this.$store.dispatch("user/deleteUser")
             .then(() => {
               Message({

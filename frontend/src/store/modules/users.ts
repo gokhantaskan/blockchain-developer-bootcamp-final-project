@@ -4,51 +4,7 @@ import { Message, Notification } from "element-ui";
 import { ITransactionReceipt } from "@/lib/types/web3";
 
 import { cloneDeep } from "lodash";
-
-interface IUserDetails {
-  firstName: string;
-  lastName: string;
-  nationalId: string;
-  gender: number;
-  email: string;
-  phone: string;
-}
-
-interface IUserFormData {
-  firstName: string;
-  lastName: string;
-  nationalId: string;
-  gender: number;
-  email: string;
-  phone: string;
-}
-
-interface IOrganizationDetails {
-  name: string;
-  registrationId: string;
-  email: string;
-  phone: string;
-  admins: string[];
-  owner: string;
-  address: string;
-}
-
-interface IOrganizationFormData {
-  name: string;
-  registrationId: string;
-  email: string;
-  phone: string;
-  admins: string[];
-}
-
-interface IOrganizationDetailsRes {
-  _name: string;
-  _registrationId: string;
-  _email: string;
-  _phone: string;
-  _admins: string[];
-  _owner: string;
-}
+import { IOrganizationDetails, IOrganizationDetailsRes, IOrganizationFormData, IUserDetails, IUserFormData } from "@/lib/types";
 
 const INITIAL_STATE = {
   details: {
@@ -467,8 +423,8 @@ export const userModule = {
                       phone: res._phone,
                       admins: res._admins,
                       owner: res._owner,
-                      address
-                    })
+                      address,
+                    });
                   });
               }
             }
