@@ -7,7 +7,10 @@
 
       <div class="navbar__nav">
         <ul class="navbar__nav-list">
-          <router-link to="/" :exact="true">
+          <router-link
+            to="/"
+            :exact="true"
+          >
             Profile
           </router-link>
           <router-link to="/organizations">
@@ -53,6 +56,6 @@ export default defineComponent({
     return {
       ethereum,
     };
-  }
+  },
 });
 </script>

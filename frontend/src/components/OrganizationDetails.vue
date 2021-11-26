@@ -2,50 +2,45 @@
   <div class="organization-details">
     <div class="row">
       <div class="col-12">
-        <div class="table--responsive">
-          <table class="table table--details">
-            <tbody>
-              <tr>
-                <th>Name</th>
-                <td>{{ details.name }}</td>
-              </tr>
-              <tr>
-                <th>Registration ID</th>
-                <td>
-                  <Clipboard
-                    :text="details.registrationId"
-                    toggle
-                  />
-                </td>
-              </tr>
-              <tr>
-                <th>E-mail</th>
-                <td>{{ details.email }}</td>
-              </tr>
-              <tr>
-                <th>Phone</th>
-                <td>{{ details.phone }}</td>
-              </tr>
-              <tr>
-                <th>Admins</th>
-                <td>
-                  <ul class="ps-3 my-0">
-                    <li
-                      v-for="(admin, i) in details.admins"
-                      :key="i"
-                    >
-                      <Clipboard
-                        :text="admin"
-                        address
-                        toggle
-                      />
-                    </li>
-                  </ul>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <h2 class="m-0 mb-2">
+          {{ details.name }}
+        </h2>
+
+        <p class="m-0 mb-4">
+          <strong>Registration ID: </strong>
+          <Clipboard
+            :text="details.registrationId"
+            toggle
+          />
+        </p>
+
+        <p class="m-0 mb-2">
+          <strong>E-mail: </strong>
+          {{ details.email }}
+        </p>
+
+        <p class="m-0 mb-2">
+          <strong>Phone: </strong>
+          {{ details.phone }}
+        </p>
+
+        <p class="m-0">
+          <strong>Member count: </strong>
+          {{ details.admins.length }}
+        </p>
+        <!-- Admins
+          <ul class="ps-3 my-0">
+            <li
+              v-for="(admin, i) in details.admins"
+              :key="i"
+            >
+              <Clipboard
+                :text="admin"
+                address
+                toggle
+              />
+            </li>
+          </ul> -->
       </div>
     </div>
   </div>

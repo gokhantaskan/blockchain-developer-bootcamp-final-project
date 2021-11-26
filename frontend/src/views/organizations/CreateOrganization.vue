@@ -1,21 +1,21 @@
 <template>
   <div class="create-organization">
-    <div class="d-flex align-items-center justify-content-start mb-4">
-      <el-button
-        @click="$router.go(-1)"
-        size="small"
-      >
-        <i class="el-icon-back"></i>
-      </el-button>
-
-      <h2 class="m-0 ms-2">
-        Create Organization Profile
-      </h2>
+    <div class="container">
+      <div class="d-flex align-items-center justify-content-start mb-4">
+        <el-button
+          @click="$router.go(-1)"
+          size="small"
+        >
+          <i class="el-icon-back"></i>
+        </el-button>
+        <h2 class="m-0 ms-2">
+          Create Organization Profile
+        </h2>
+      </div>
+      <el-card shadow="never">
+        <CreateOrganizationForm @created="afterCreate" />
+      </el-card>
     </div>
-
-    <el-card shadow="never">
-      <CreateOrganizationForm @created="afterCreate" />
-    </el-card>
   </div>
 </template>
 

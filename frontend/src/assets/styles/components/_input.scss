@@ -9,6 +9,7 @@
   }
 
   &__inner {
+    border-color: $--color-border-base;
     border-radius: 0;
 
     &:read-only {
