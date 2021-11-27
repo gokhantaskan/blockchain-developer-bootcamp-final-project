@@ -66,7 +66,7 @@ export default defineComponent({
       async () => {
         loading.value = true;
         await ethereum.initialize();
-        ethereum.setAllowedChains(["0x539", "0x4"]);
+        ethereum.setAllowedChains(["0x539", "0x3", "0x4"]);
 
         if (ethereum.isConnected) {
           await ethereum.requestAccounts();
