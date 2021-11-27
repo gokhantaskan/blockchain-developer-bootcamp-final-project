@@ -2,7 +2,7 @@ import { web3 } from "@/lib/web3";
 import Vue from "vue";
 import Vuex from "vuex";
 
-import { userModule } from "./modules/users";
+import { userModule } from "./modules/user";
 
 Vue.use(Vuex);
 

@@ -31,13 +31,13 @@ export const organizationModule = {
       Vue.set(state, "contractAddress", payload);
     },
 
-    SET_ORGANIZATION_DETAILS(state: typeof STATE, payload: Partial<IOrganizationDetails>) {
-      if (typeof payload.name === "string") Vue.set(state.details, "name", payload.name);
-      if (typeof payload.registrationId === "string") Vue.set(state.details, "registrationId", payload.registrationId);
-      if (typeof payload.email === "string") Vue.set(state.details, "email", payload.email);
-      if (typeof payload.phone === "string") Vue.set(state.details, "phone", Number(payload.phone));
-      if (typeof payload.admins === "string") Vue.set(state.details, "admins", payload.admins);
-      if (typeof payload.owner === "string") Vue.set(state.details, "owner", payload.owner);
+    SET_ORGANIZATION_DETAILS(state: typeof STATE, payload: Partial<IOrganizationDetailsRes>) {
+      if (typeof payload._name === "string") Vue.set(state.details, "name", payload._name);
+      if (typeof payload._registrationId === "string") Vue.set(state.details, "registrationId", payload._registrationId);
+      if (typeof payload._email === "string") Vue.set(state.details, "email", payload._email);
+      if (typeof payload._phone === "string") Vue.set(state.details, "phone", payload._phone);
+      if (typeof payload._admins === "object") Vue.set(state.details, "admins", payload._admins);
+      if (typeof payload._owner === "string") Vue.set(state.details, "owner", payload._owner);
 
       Vue.set(state, "detailsLoaded", true);
     },

@@ -3,7 +3,9 @@
     <div class="container">
       <div class="row" v-if="moduleRegistered">
         <div class="col-12">
-          {{ $route.params.address }}
+          <h1>
+            {{ $route.params.address }}
+          </h1>
         </div>
 
         <div class="col-12">
@@ -24,6 +26,9 @@ export default defineComponent({
     return {
       moduleRegistered: false,
     };
+  },
+  mounted() {
+    this.$store.dispatch("organization/setOrganization");
   },
   beforeRouteEnter(_to, _from, next) {
     next(vm => {
