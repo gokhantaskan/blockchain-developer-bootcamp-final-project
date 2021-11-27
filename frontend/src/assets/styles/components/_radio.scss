@@ -9,9 +9,13 @@
     }
   }
 
-  // &__inner {
-  //   background: $--color-border-extra-light;
-  // }
+  &__inner {
+    border-radius: 0 !important;
+
+    &:hover {
+      background: $--color-primary-light-9;
+    }
+  }
 
   .not-valid & {
 

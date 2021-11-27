@@ -1,6 +1,65 @@
 <template>
   <div class="user-profile">
     <div class="container">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h1 class="m-0">
+          Profile
+        </h1>
+        <div v-if="$store.state.user.detailsLoaded">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="Update"
+            placement="bottom"
+            :visible-arrow="false"
+          >
+            <el-button
+              type="primary"
+              icon="el-icon-edit"
+              @click="updateModalVisible = true"
+              :loading="updateModalVisible"
+            ></el-button>
+          </el-tooltip>
+          <el-dialog
+            title="Update User Details"
+            :visible.sync="updateModalVisible"
+          >
+            <UpdateUserForm
+              @updating="_updating"
+              @updated="afterUpdate"
+            />
+            <template
+              slot="footer"
+              class="dialog-footer"
+            >
+              <el-button
+                form="update-user-form"
+                type="primary"
+                native-type="submit"
+                :loading="updating"
+              >
+                Confirm
+              </el-button>
+            </template>
+          </el-dialog>
+          <el-tooltip
+            class="item"
+            effect="dark"
+            content="Delete"
+            placement="bottom"
+            :visible-arrow="false"
+          >
+            <el-button
+              type="danger"
+              icon="el-icon-delete"
+              class="ms-2"
+              @click="deleteUser"
+              :loading="deleting"
+            ></el-button>
+          </el-tooltip>
+        </div>
+      </div>
+
       <transition
         name="fade"
         mode="out-in"
@@ -9,64 +68,6 @@
           key="1"
           v-if="$store.state.user.detailsLoaded"
         >
-          <div class="d-flex align-items-center justify-content-between mb-4">
-            <h1 class="m-0">
-              Profile
-            </h1>
-            <div>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="Update"
-                placement="bottom"
-                :visible-arrow="false"
-              >
-                <el-button
-                  type="primary"
-                  icon="el-icon-edit"
-                  @click="updateModalVisible = true"
-                  :loading="updateModalVisible"
-                ></el-button>
-              </el-tooltip>
-              <el-dialog
-                title="Update User Details"
-                :visible.sync="updateModalVisible"
-              >
-                <UpdateUserForm
-                  @updating="_updating"
-                  @updated="afterUpdate"
-                />
-                <template
-                  slot="footer"
-                  class="dialog-footer"
-                >
-                  <el-button
-                    form="update-user-form"
-                    type="primary"
-                    native-type="submit"
-                    :loading="updating"
-                  >
-                    Confirm
-                  </el-button>
-                </template>
-              </el-dialog>
-              <el-tooltip
-                class="item"
-                effect="dark"
-                content="Delete"
-                placement="bottom"
-                :visible-arrow="false"
-              >
-                <el-button
-                  type="danger"
-                  icon="el-icon-delete"
-                  class="ms-2"
-                  @click="deleteUser"
-                  :loading="deleting"
-                ></el-button>
-              </el-tooltip>
-            </div>
-          </div>
           <el-card shadow="never">
             <UserDetails />
           </el-card>

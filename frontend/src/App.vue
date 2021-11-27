@@ -78,7 +78,7 @@ export default defineComponent({
                 () => ethereum.selectedAddress,
                 async newVal => {
                   if (newVal) {
-                    await root.$store.dispatch("user/setSelectedAddress", newVal);
+                    await root.$store.dispatch("setSelectedAddress", newVal);
 
                     await root.$store.dispatch("user/isUser")
                       .then(res => {

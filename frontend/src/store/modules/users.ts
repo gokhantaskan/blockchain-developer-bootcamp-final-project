@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { web3, web3UserContract } from "@/lib/web3";
+import { web3, web3OrganizationContract, web3UserContract } from "@/lib/web3";
 import { Message, Notification } from "element-ui";
 import { ITransactionReceipt } from "@/lib/types/web3";
 
@@ -16,7 +16,6 @@ const INITIAL_STATE = {
     phone: "",
   },
   organizations: [] as IOrganizationDetails[],
-  selectedAddress: "",
   detailsLoaded: false,
   organizationsLoaded: false,
 };
@@ -29,10 +28,6 @@ export const userModule = {
   state: STATE,
 
   mutations: {
-    SET_SELECTED_ADDRESS(state: typeof STATE, payload: string) {
-      Vue.set(state, "selectedAddress", payload);
-    },
-
     SET_USER_DETAILS(state: typeof STATE, payload: Partial<IUserDetails>) {
       if (typeof payload.firstName === "string") Vue.set(state.details, "firstName", payload.firstName);
       if (typeof payload.lastName === "string") Vue.set(state.details, "lastName", payload.lastName);
@@ -58,15 +53,11 @@ export const userModule = {
   },
 
   actions: {
-    setSelectedAddress({ commit }: any, payload: string) {
-      commit("SET_SELECTED_ADDRESS", web3.utils.toChecksumAddress(payload));
-    },
-
-    isUser({ dispatch, state }: any) {
+    isUser({ dispatch, rootState }: any) {
       return new Promise<boolean>((resolve, reject) => {
         web3UserContract.methods
-          .isUser(state.selectedAddress)
-          .call({ from: state.selectedAddress })
+          .isUser(rootState.selectedAddress)
+          .call({ from: rootState.selectedAddress })
           .then((res: boolean) => {
             console.log("isUser", res);
             resolve(res);
@@ -86,7 +77,7 @@ export const userModule = {
       });
     },
 
-    createUser({ dispatch, state }: any, payload: IUserFormData): Promise<{ res: ITransactionReceipt }> {
+    createUser({ dispatch, rootState }: any, payload: IUserFormData): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -94,7 +85,7 @@ export const userModule = {
 
         web3UserContract.methods
           .createUser(payload.firstName, payload.lastName, payload.nationalId, payload.email, payload.phone, payload.gender)
-          .send({ from: state.selectedAddress })
+          .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -161,11 +152,11 @@ export const userModule = {
       });
     },
 
-    setUser({ commit, dispatch, state }: any): Promise<void> {
+    setUser({ commit, dispatch, rootState }: any): Promise<void> {
       return new Promise<void>((resolve, reject) => {
         web3UserContract.methods
           .readUser()
-          .call({ from: state.selectedAddress })
+          .call({ from: rootState.selectedAddress })
           .then((res: any) => {
             commit("SET_USER_DETAILS", res);
 
@@ -185,7 +176,7 @@ export const userModule = {
       });
     },
 
-    updateUser({ dispatch, state }: any, payload: Partial<IUserFormData>): Promise<{ res: ITransactionReceipt }> {
+    updateUser({ dispatch, rootState }: any, payload: Partial<IUserFormData>): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -193,7 +184,7 @@ export const userModule = {
 
         web3UserContract.methods
           .updateUser(payload.email, payload.phone)
-          .send({ from: state.selectedAddress })
+          .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -252,7 +243,7 @@ export const userModule = {
       });
     },
 
-    deleteUser({ dispatch, state }: any): Promise<{ res: ITransactionReceipt }> {
+    deleteUser({ dispatch, rootState }: any): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -260,7 +251,7 @@ export const userModule = {
 
         web3UserContract.methods
           .deleteUser()
-          .send({ from: state.selectedAddress })
+          .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -325,7 +316,7 @@ export const userModule = {
     },
 
     // ! Organizations
-    createOrganization({ dispatch, state }: any, payload: IOrganizationFormData): Promise<{ res: ITransactionReceipt }> {
+    createOrganization({ dispatch, rootState }: any, payload: IOrganizationFormData): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
@@ -333,7 +324,7 @@ export const userModule = {
 
         web3UserContract.methods
           .createOrganization(payload.name, payload.registrationId, payload.email, payload.phone, payload.admins)
-          .send({ from: state.selectedAddress })
+          .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -400,11 +391,13 @@ export const userModule = {
       });
     },
 
-    setOrganizations({ commit, dispatch, state }: any): Promise<string[]> {
+    setOrganizations({ commit, dispatch, rootState }: any): Promise<string[]> {
+      console.log(rootState);
+
       return new Promise((resolve, reject) => {
         web3UserContract.methods
           .getOrganizations()
-          .call({ from: state.selectedAddress })
+          .call({ from: rootState.selectedAddress })
           .then(async (res: string[]) => {
             const arr = [] as IOrganizationDetails[];
 
@@ -412,9 +405,9 @@ export const userModule = {
               for (let i = 0; i < res.length; i++) {
                 const contractAddress = res[i];
 
-                await web3UserContract.methods
-                  .getOrganizationDetails(contractAddress)
-                  .call({ from: state.selectedAddress })
+                await web3OrganizationContract(contractAddress).methods
+                  .readOrganization()
+                  .call({ from: rootState.selectedAddress })
                   .then((res: IOrganizationDetailsRes) => {
                     arr.push({
                       name: res._name,
@@ -448,12 +441,12 @@ export const userModule = {
   },
 
   getters: {
-    ownedOrganizations: (state: typeof STATE) => {
-      return state.organizations.filter(organization => organization.owner === state.selectedAddress);
+    ownedOrganizations: (state: typeof STATE, _getters: any, rootState: any) => {
+      return state.organizations.filter(organization => organization.owner === rootState.selectedAddress);
     },
 
-    attendedOrganizations: (state: typeof STATE) => {
-      return state.organizations.filter(organization => organization.admins.includes(state.selectedAddress));
+    attendedOrganizations: (state: typeof STATE, _getters: any, rootState: any) => {
+      return state.organizations.filter(organization => organization.admins.includes(rootState.selectedAddress));
     },
   },
 };
