@@ -34,7 +34,7 @@ export default defineComponent({
 
     const afterCreate = async () => {
       if (root) {
-        root.$store.dispatch("user/setOrganization");
+        root.$store.dispatch("user/setOrganizations");
 
         Message({
           message: "Organization created successfully!",
@@ -42,7 +42,8 @@ export default defineComponent({
           duration: 5000,
         });
 
-        root.$router.push({ name: "Home" });
+        root.$router.push({ name: "OrganizationsList" });
+        // window.location.reload();
       }
     };
 

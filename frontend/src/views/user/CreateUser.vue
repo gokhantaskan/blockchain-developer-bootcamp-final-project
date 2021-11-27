@@ -38,7 +38,7 @@ export default defineComponent({
     const afterCreate = async () => {
       if (root) {
         root.$store.dispatch("user/setUser");
-        root.$router.push({ name: "Home" });
+        root.$router.push({ name: "UserProfile" });
 
         Message({
           message: "Profile created successfully!",

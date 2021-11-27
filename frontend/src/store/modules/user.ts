@@ -93,7 +93,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Create User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              message: `Create User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
@@ -107,7 +107,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Create User: <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
@@ -142,7 +142,7 @@ export const userModule = {
                 position: "bottom-left",
                 duration: 0,
                 dangerouslyUseHTMLString: true,
-                message: `Create User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                message: `Create User: <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                 title: "Transaction reverted!",
               });
             }
@@ -192,7 +192,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Update User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              message: `Update User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
@@ -206,7 +206,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Update user:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
@@ -233,7 +233,7 @@ export const userModule = {
                 position: "bottom-left",
                 duration: 0,
                 dangerouslyUseHTMLString: true,
-                message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                message: `Update user:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                 title: "Transaction reverted!",
               });
             }
@@ -259,7 +259,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              message: `Remove User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
@@ -273,7 +273,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Remove User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Remove User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
@@ -300,7 +300,7 @@ export const userModule = {
                   position: "bottom-left",
                   duration: 0,
                   dangerouslyUseHTMLString: true,
-                  message: `Remove User: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                  message: `Remove User: <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                   title: "Transaction reverted!",
                 });
               }
@@ -332,7 +332,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Create Organization:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              message: `Create Organization:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
@@ -346,7 +346,7 @@ export const userModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Create Organization: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Create Organization: <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
@@ -381,7 +381,7 @@ export const userModule = {
                 position: "bottom-left",
                 duration: 0,
                 dangerouslyUseHTMLString: true,
-                message: `Create Organization: <a href="https://rinkeby.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                message: `Create Organization: <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                 title: "Transaction reverted!",
               });
             }
@@ -392,8 +392,6 @@ export const userModule = {
     },
 
     setOrganizations({ commit, dispatch, rootState }: any): Promise<string[]> {
-      console.log(rootState);
-
       return new Promise((resolve, reject) => {
         web3UserContract.methods
           .getOrganizations()

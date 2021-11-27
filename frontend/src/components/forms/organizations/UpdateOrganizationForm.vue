@@ -110,7 +110,7 @@ export default defineComponent({
             position: "bottom-left",
             duration: 0,
             dangerouslyUseHTMLString: true,
-            message: `Update User:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+            message: `Update User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
             title: "Transaction submitted!",
           });
         })
@@ -124,7 +124,7 @@ export default defineComponent({
             position: "bottom-left",
             duration: 0,
             dangerouslyUseHTMLString: true,
-            message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+            message: `Update user:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
             title: "Transaction confirmed!",
           });
 
@@ -142,7 +142,7 @@ export default defineComponent({
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Update user:  <a href="https://rinkeby.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Update user:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction reverted!",
             });
           }

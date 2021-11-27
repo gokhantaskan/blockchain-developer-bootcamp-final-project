@@ -17,7 +17,7 @@
               :visible-arrow="false"
             >
               <span
-                class="ownership text-primary"
+                class="d-inline-block ownership text-primary"
                 v-if="$store.state.organization.details.owner === $store.state.selectedAddress"
               ><i class="el-icon-s-flag" /></span>
             </el-tooltip>
