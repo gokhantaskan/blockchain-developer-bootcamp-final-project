@@ -24,3 +24,52 @@ th {
 strong {
   font-weight: 700;
 }
+
+.text-left {
+  text-align: left !important;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+.text-right {
+  text-align: right !important;
+}
+
+.text-primary {
+  color: $--color-primary !important;
+}
+
+.text-info {
+  color: $--color-info !important;
+}
+
+.text-success {
+  color: $--color-success !important;
+}
+
+.text-warning {
+  color: $--color-warning !important;
+}
+
+.text-error,
+.text-danger {
+  color: $--color-danger !important;
+}
+
+.text-dark {
+  color: $--color-text-primary !important;
+
+  &-l1 {
+    color: $--color-text-regular !important;
+  }
+
+  &-l2 {
+    color: $--color-text-secondary !important;
+  }
+
+  &-l3 {
+    color: $--color-text-placeholder !important;
+  }
+}

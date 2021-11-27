@@ -52,12 +52,13 @@
     border-right: 1px solid;
     border-color: $--color-border-base;
     padding: 0 1rem;
+    display: flex;
   }
 
   .connect-metamask-button {
     background-color: transparent;
     border: none;
-    line-height: 55px;
+    height: 55px;
 
     &:disabled {
       color: $--color-success;
