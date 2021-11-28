@@ -115,6 +115,7 @@
                               icon="el-icon-close"
                               @click="revokeAdmin(admin)"
                               :loading="deletingAdmin"
+                              :disabled="deletingAdmin"
                             ></el-button>
                           </div>
                         </li>
