@@ -1,59 +1,14 @@
 <template>
-  <div class="create-organization-form">
+  <div class="update-organization-form">
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
-        @submit.prevent="handleSubmit(createOrganization)"
+        id="update-organization-form"
+        @submit.prevent="handleSubmit(updateAdmins)"
         novalidate
       >
         <div class="row">
-          <div class="col-12 col-md-6">
-            <FormItem
-              v-model="form.name"
-              id="name"
-              label="Name"
-              vv-name="Name"
-              vv-rules="required|min:2"
-              message="At least 2 characters"
-              required
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <FormItem
-              v-model="form.registrationId"
-              id="registrationId"
-              label="Registration ID"
-              vv-name="Registration ID"
-              vv-rules="required"
-              show-password
-              required
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <FormItem
-              v-model="form.email"
-              id="email"
-              label="E-mail"
-              vv-name="E-mail"
-              vv-rules="email|required"
-              required
-            />
-          </div>
-
-          <div class="col-12 col-md-6">
-            <FormItem
-              v-model="form.phone"
-              id="phone"
-              label="Phone"
-              vv-name="Phone"
-              vv-rules="required"
-              required
-            />
-          </div>
-
           <div
-            class="col-12 col-md-6 d-flex align-items-start"
+            class="col-12 col-md-8 d-flex align-items-start"
             :class="$style.spec"
           >
             <FormItem
@@ -73,11 +28,11 @@
 
           <div
             class="col-12"
-            v-if="form.admins.length"
+            v-if="admins.length"
           >
             <ul class="ps-4">
               <li
-                v-for="(admin, i) in form.admins"
+                v-for="(admin, i) in admins"
                 :key="i"
               >
                 <div class="d-flex align-items-center py-2">
@@ -99,16 +54,6 @@
               </li>
             </ul>
           </div>
-
-          <div class="col-12 pt-3">
-            <el-button
-              type="primary"
-              native-type="submit"
-              :loading="loading"
-            >
-              Submit
-            </el-button>
-          </div>
         </div>
       </form>
     </ValidationObserver>
@@ -116,60 +61,56 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue-demi";
+import { defineComponent, onMounted, reactive, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { vm } from "@/lib/globals";
 
 export default defineComponent({
-  name: "CreateOrganizationForm",
+  name: "GrantAdminsForm",
   setup(_props, { emit }) {
     const { state: ethereum } = useEthereum();
     const root = vm();
 
-    const loading = ref(false);
     const adminsRef = ref("");
+    const admins = ref<string[]>([]);
 
-    const form = reactive({
-      name: "",
-      registrationId: "",
-      email: "",
-      phone: "",
-      admins: [] as string[],
+    onMounted(() => {
+      admins.value = [...vm()?.$store.state.organization.details.admins];
     });
 
     const addAdmin = () => {
       if (adminsRef.value.toLowerCase() === ethereum.selectedAddress) {
-        alert("You will be the owner of this organization and cannot be an admin!");
+        alert("You are the owner!");
       } else {
         if (
           adminsRef.value.length &&
           ethereum.addressRegex.test(adminsRef.value) &&
-          form.admins.indexOf(adminsRef.value) === -1
+          admins.value.indexOf(adminsRef.value) === -1
         ) {
-          form.admins.push(adminsRef.value);
+          admins.value.push(adminsRef.value);
           adminsRef.value = "";
         }
       }
     };
 
     const removeAdmin = (i: number) => {
-      form.admins.splice(i, 1);
+      admins.value.splice(i, 1);
     };
 
-    const createOrganization = async () => {
-      loading.value = true;
+    const updateAdmins = async () => {
+      emit("updating", true);
 
-      await root?.$store.dispatch("user/createOrganization", { ...form })
+      await root?.$store.dispatch("organization/updateAdmins", admins.value)
         .then(res => {
           console.log(res);
-          emit("created", true);
+          emit("updated", true);
         })
         .catch(err => console.log(err));
 
-      loading.value = false;
+      emit("updating", false);
     };
 
-    return { form, loading, createOrganization, adminsRef, addAdmin, removeAdmin };
+    return { admins, adminsRef, addAdmin, removeAdmin, updateAdmins };
   },
 });
 </script>

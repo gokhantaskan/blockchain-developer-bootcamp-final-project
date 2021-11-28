@@ -5,21 +5,15 @@
         <h1 class="m-0">
           Organizations
         </h1>
-        <el-tooltip
-          class="item"
-          effect="dark"
-          content="Create"
-          placement="bottom"
-          :visible-arrow="false"
-        >
-          <el-button
-            type="primary"
-            icon="el-icon-circle-plus-outline"
-            size="default"
-            @click="$router.push({ name: 'CreateOrganization' })"
-            :disabled="!$store.state.user.detailsLoaded"
-          ></el-button>
-        </el-tooltip>
+
+        <el-button
+          type="primary"
+          icon="el-icon-circle-plus-outline"
+          size="default"
+          @click="$router.push({ name: 'CreateOrganization' })"
+          :disabled="!$store.state.user.detailsLoaded"
+          v-tippy="{ content: 'Create', placement: 'bottom-end' }"
+        ></el-button>
       </div>
 
       <div

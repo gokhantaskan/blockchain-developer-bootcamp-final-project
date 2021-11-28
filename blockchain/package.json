@@ -10,7 +10,8 @@
     "migrate": "truffle migrate --compile-all --reset",
     "lint": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol --config .solhint.json --fix",
     "test:users": "truffle test ./test/user.test.js",
-    "debug": "truffle run debug start"
+    "debug": "truffle run debug start",
+    "size": "truffle run contract-size"
   },
   "devDependencies": {
     "dotenv": "^10.0.0",
@@ -22,6 +23,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.4.0",
     "@truffle/hdwallet-provider": "^1.7.0",
+    "truffle-contract-size": "^2.0.1",
     "truffle-plugin-debugger": "0.0.2"
   }
 }

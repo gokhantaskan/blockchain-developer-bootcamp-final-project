@@ -24,7 +24,7 @@ contract Users {
   }
 
   mapping(address => User) private users;
-  mapping(address => Organization[]) public organizations;
+  mapping(address => Organization[]) private organizations;
   mapping(bytes32 => address) private nationalIds;
   mapping(bytes32 => address) private emails;
   mapping(bytes32 => address) private phones;
@@ -63,7 +63,6 @@ contract Users {
     }
   }
 
-  /// @notice 0.0069995ETH latest with a full profile
   function createUser(
     string memory _firstName,
     string memory _lastName,
@@ -89,7 +88,13 @@ contract Users {
     if (phones[stringToBytes32(_phone)] != address(0))
       revert("This phone is used before!");
 
-    User memory user = User({
+    if (bytes(_nationalId).length != 0)
+      nationalIds[stringToBytes32(_nationalId)] = msg.sender;
+
+    if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
+    if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
+
+    users[msg.sender] = User({
       firstName: _firstName,
       lastName: _lastName,
       nationalId: _nationalId,
@@ -98,13 +103,6 @@ contract Users {
       gender: _gender
     });
 
-    if (bytes(_nationalId).length != 0)
-      nationalIds[stringToBytes32(_nationalId)] = msg.sender;
-
-    if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
-    if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;
-
-    users[msg.sender] = user;
     userCount += 1;
 
     emit LogUserCreated(
@@ -140,9 +138,6 @@ contract Users {
   }
 
   function updateUser(string memory _email, string memory _phone) public {
-    string memory currentEmail = users[msg.sender].email;
-    string memory currentPhone = users[msg.sender].phone;
-
     if (
       emails[stringToBytes32(_email)] != address(0) &&
       emails[stringToBytes32(_email)] != msg.sender
@@ -160,8 +155,8 @@ contract Users {
     users[msg.sender].email = _email;
     users[msg.sender].phone = _phone;
 
-    emails[stringToBytes32(currentEmail)] = address(0);
-    phones[stringToBytes32(currentPhone)] = address(0);
+    emails[stringToBytes32(users[msg.sender].email)] = address(0);
+    phones[stringToBytes32(users[msg.sender].phone)] = address(0);
 
     if (bytes(_email).length != 0) emails[stringToBytes32(_email)] = msg.sender;
     if (bytes(_phone).length != 0) phones[stringToBytes32(_phone)] = msg.sender;

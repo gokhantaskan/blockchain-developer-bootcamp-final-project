@@ -32,7 +32,7 @@ const routes: Array<RouteConfig> = [
         name: "OrganizationsList",
       },
       {
-        path: ":address",
+        path: "c/:address",
         component: () => import("../views/organizations/OrganizationProfile.vue"),
         name: "OrganizationProfile",
       },

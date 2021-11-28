@@ -1,16 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.9;
 
-// TODO: It will be the factory (or abstract?) contract
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Organization is AccessControl {
+  address private owner;
   string private name;
   string private registrationId;
   string private email;
   string private phone;
+
   address[] private admins;
-  address public owner;
+  mapping(address => uint) private adminOrder;
 
   bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
 
@@ -28,7 +29,7 @@ contract Organization is AccessControl {
    * @dev Throws if called by any account other than the owner.
    */
   modifier onlyOwner(address _owner) {
-    require(owner == _owner, "Ownable: caller is not the owner");
+    require(owner == _owner, "Caller is not the owner");
     _;
   }
 
@@ -58,6 +59,7 @@ contract Organization is AccessControl {
 
       for (uint i = 0; i < admins.length; i++) {
         _setupRole(ADMIN_ROLE, _admins[i]);
+        adminOrder[_admins[i]] = i + 1;
       }
 
       emit LogOrganizationCreated(
@@ -70,8 +72,19 @@ contract Organization is AccessControl {
         _owner
       );
     } else {
-      revert("Missing one or more requirements!");
+      revert("Missing fields!");
     }
+  }
+
+  function removeArrayItem(uint _index) internal {
+    require(_index < admins.length, "index out of bound");
+
+    for (uint i = _index; i < admins.length - 1; i++) {
+      admins[i] = admins[i + 1];
+      adminOrder[admins[i]] = i + 1;
+    }
+
+    admins.pop();
   }
 
   function readOrganization()
@@ -101,18 +114,28 @@ contract Organization is AccessControl {
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function grantAdmin(address[] memory _admins) public onlyOwner(msg.sender) {
+  function grantAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
+    uint ind = admins.length + 1;
+
     for (uint i = 0; i < _admins.length; i++) {
-      grantRole(ADMIN_ROLE, _admins[i]);
+      if (adminOrder[_admins[i]] == 0) {
+        _setupRole(ADMIN_ROLE, _admins[i]);
+
+        admins.push(_admins[i]);
+        adminOrder[_admins[i]] = ind;
+        ind++;
+      }
     }
   }
 
-  function revokeAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
-    for (uint i = 0; i < _admins.length; i++) {
-      revokeRole(ADMIN_ROLE, _admins[i]);
-    }
+  function revokeAdmin(address _admin) public onlyOwner(msg.sender) {
+    uint index = adminOrder[_admin] - 1;
+
+    removeArrayItem(index);
+    revokeRole(ADMIN_ROLE, _admin);
+    delete adminOrder[_admin];
   }
 
   // TODO: Destroy the contract
-  function deleteOrganization() internal onlyOwner(msg.sender) {}
+  // function deleteOrganization() internal onlyOwner(msg.sender) {}
 }

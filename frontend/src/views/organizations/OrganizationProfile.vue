@@ -6,27 +6,63 @@
         v-if="moduleRegistered"
       >
         <div class="col-12">
-          <h1 class="mt-0">
-            {{ $store.state.organization.details.name }}
+          <div class="d-flex align-items-center justify-content-between">
+            <h1 class="mt-0">
+              {{ $store.state.organization.details.name }}
+              <span
+                tabindex="0"
+                class="text-primary"
+                v-if="$store.state.organization.details.owner === $store.state.selectedAddress"
+                v-tippy="{
+                  placement: 'right',
+                  content: 'You are the owner of this organization',
+                }"
+              >
+                <i class="el-icon-s-flag" />
+              </span>
+            </h1>
 
-            <button
-              class="text-primary"
-              v-if="$store.state.organization.details.owner === $store.state.selectedAddress"
-              v-tippy="{
-                placement : 'right',
-                content: 'You are the owner of this organization',
-              }"
-            >
-              <i class="el-icon-s-flag" />
-            </button>
-          </h1>
-          <div class="m-0">
-            <strong>Contract Address: </strong><Clipboard
-              :text="$store.state.organization.contractAddress"
-              toggle
-              address
-            />
+            <div>
+              <el-button
+                type="primary"
+                icon="el-icon-edit"
+                @click="updateModalVisible = true"
+                v-tippy="{ content: 'Edit' }"
+              ></el-button>
+
+              <el-dialog
+                title="Update Organization Details"
+                :visible.sync="updateModalVisible"
+              >
+                <UpdateOrganizationForm
+                  @updating="_updating"
+                  @updated="afterUpdate"
+                />
+                <template
+                  slot="footer"
+                  class="dialog-footer"
+                >
+                  <el-button
+                    form="update-organization-form"
+                    type="primary"
+                    native-type="submit"
+                    :loading="updating"
+                  >
+                    Confirm
+                  </el-button>
+                </template>
+              </el-dialog>
+            </div>
           </div>
+        </div>
+
+        <div class="col-12">
+          <strong>Contract Address:</strong>
+          <Clipboard
+            :text="$store.state.organization.contractAddress"
+            toggle
+            address
+          />
         </div>
 
         <div class="col-12 mt-4">
@@ -40,9 +76,7 @@
                   </tr>
                   <tr>
                     <th>E-mail</th>
-                    <td>
-                      {{ $store.state.organization.details.email }}
-                    </td>
+                    <td>{{ $store.state.organization.details.email }}</td>
                   </tr>
                   <tr>
                     <th>Phone</th>
@@ -65,7 +99,7 @@
                         <li
                           v-for="(admin, i) in $store.state.organization.details.admins"
                           :key="i"
-                          :class="[i > 0 ? 'mt-2': '']"
+                          :class="[i > 0 ? 'mt-2' : '']"
                         >
                           <div class="d-flex align-items-center">
                             <Clipboard
@@ -92,13 +126,32 @@
         </div>
 
         <div class="col-12 mt-4">
-          <el-button type="primary">
+          <el-button
+            type="primary"
+            @click="grantAdminsModalVisible = true"
+            :loading="grantAdminsModalVisible"
+          >
             Grant Admins
           </el-button>
-
-          <el-button type="warning">
-            Revoke Admins
-          </el-button>
+          <el-dialog
+            title="Update User Details"
+            :visible.sync="grantAdminsModalVisible"
+          >
+            <GrantAdminsForm />
+            <template
+              slot="footer"
+              class="dialog-footer"
+            >
+              <el-button
+                form="grant-admins-form"
+                type="primary"
+                native-type="submit"
+                :loading="updating"
+              >
+                Confirm
+              </el-button>
+            </template>
+          </el-dialog>
         </div>
       </div>
     </div>
@@ -108,24 +161,46 @@
 <script lang="ts">
 import { defineComponent } from "vue-demi";
 import { organizationModule } from "@/store/modules/organization";
+import UpdateOrganizationForm from "@/components/forms/organizations/UpdateOrganizationForm.vue";
+import { Message } from "element-ui";
+import GrantAdminsForm from "@/components/forms/organizations/GrantAdminsForm.vue";
 
 export default defineComponent({
   name: "OrganizationProfile",
   components: {
     Clipboard: () => import("@/components/Clipboard.vue"),
+    UpdateOrganizationForm,
+    GrantAdminsForm,
   },
   data() {
     return {
       moduleRegistered: false,
+      updating: false,
+      grantAdminsModalVisible: false,
+      updateModalVisible: false,
     };
   },
   computed: {
-    isOwner() {
+    isOwner(): boolean {
       return this.$store.state.organization.details.owner === this.$store.state.selectedAddress;
     },
   },
   mounted() {
     this.$store.dispatch("organization/setOrganization");
+  },
+  methods: {
+    afterUpdate() {
+      this.updateModalVisible = false;
+
+      Message({
+        message: "Organization updated successfully!",
+        type: "success",
+        duration: 5000,
+      });
+    },
+    _updating(e: boolean) {
+      this.updating = e;
+    },
   },
   beforeRouteEnter(_to, _from, next) {
     next(vm => {

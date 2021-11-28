@@ -4,7 +4,7 @@ import { Message, Notification } from "element-ui";
 import { ITransactionReceipt } from "@/lib/types/web3";
 
 import { cloneDeep } from "lodash";
-import { IOrganizationDetails, IOrganizationDetailsRes, IOrganizationFormData } from "@/lib/types";
+import { IOrganizationDetailsRes, IOrganizationFormData } from "@/lib/types";
 
 const INITIAL_STATE = {
   contractAddress: "",
@@ -77,15 +77,15 @@ export const organizationModule = {
       });
     },
 
-    updateOrganization({ dispatch, state }: any, payload: Partial<IOrganizationFormData>): Promise<{ res: ITransactionReceipt }> {
+    updateOrganization({ dispatch, state, rootState }: any, payload: Partial<IOrganizationFormData>): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";
         let infoNot: any;
 
         web3OrganizationContract(state.contractAddress).methods
-          .updateOrganization(payload.email, payload.phone)
-          .send({ from: state.selectedAddress })
+          .updateOrganizationDetails(payload.name, payload.registrationId, payload.email, payload.phone)
+          .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
 
@@ -93,7 +93,7 @@ export const organizationModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Update User:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              message: `Update Organization:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
               title: "Transaction submitted!",
             });
           })
@@ -107,11 +107,11 @@ export const organizationModule = {
               position: "bottom-left",
               duration: 0,
               dangerouslyUseHTMLString: true,
-              message: `Update user:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              message: `Update Organization:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}" target="_blank">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
               title: "Transaction confirmed!",
             });
 
-            dispatch("setUser");
+            dispatch("setOrganization");
 
             resolve({ res });
           })
