@@ -6,8 +6,8 @@
         v-if="moduleRegistered"
       >
         <div class="col-12">
-          <div class="d-flex align-items-center justify-content-between">
-            <h1 class="mt-0">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <h1>
               {{ $store.state.organization.details.name }}
               <span
                 tabindex="0"
@@ -113,6 +113,8 @@
                               size="small"
                               plain
                               icon="el-icon-close"
+                              @click="revokeAdmin(admin)"
+                              :loading="deletingAdmin"
                             ></el-button>
                           </div>
                         </li>
@@ -134,7 +136,7 @@
             Grant Admins
           </el-button>
           <el-dialog
-            title="Update User Details"
+            title="Add New Admin(s)"
             :visible.sync="grantAdminsModalVisible"
           >
             <GrantAdminsForm />
@@ -172,22 +174,27 @@ export default defineComponent({
     UpdateOrganizationForm,
     GrantAdminsForm,
   },
+
   data() {
     return {
       moduleRegistered: false,
       updating: false,
-      grantAdminsModalVisible: false,
       updateModalVisible: false,
+      grantAdminsModalVisible: false,
+      deletingAdmin: false,
     };
   },
+
   computed: {
     isOwner(): boolean {
       return this.$store.state.organization.details.owner === this.$store.state.selectedAddress;
     },
   },
+
   mounted() {
     this.$store.dispatch("organization/setOrganization");
   },
+
   methods: {
     afterUpdate() {
       this.updateModalVisible = false;
@@ -201,7 +208,17 @@ export default defineComponent({
     _updating(e: boolean) {
       this.updating = e;
     },
+    async revokeAdmin(address: string) {
+      this.deletingAdmin = true;
+
+      await this.$store.dispatch("organization/revokeAdmin", address)
+        .then(res => { console.log(res) })
+        .catch(err => { console.log(err) });
+
+      this.deletingAdmin = false;
+    },
   },
+
   beforeRouteEnter(_to, _from, next) {
     next(vm => {
       if (!vm.$store.hasModule("organization")) {

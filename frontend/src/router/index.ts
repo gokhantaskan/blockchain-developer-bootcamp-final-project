@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 
+import store from "@/store";
+
 Vue.use(VueRouter);
 
 const routes: Array<RouteConfig> = [
@@ -13,11 +15,6 @@ const routes: Array<RouteConfig> = [
         path: "",
         component: () => import("../views/user/UserProfile.vue"),
         name: "UserProfile",
-      },
-      {
-        path: "create",
-        name: "CreateUser",
-        component: () => import("../views/user/CreateUser.vue"),
       },
     ],
   },
@@ -32,16 +29,25 @@ const routes: Array<RouteConfig> = [
         name: "OrganizationsList",
       },
       {
-        path: "c/:address",
+        path: ":address",
         component: () => import("../views/organizations/OrganizationProfile.vue"),
         name: "OrganizationProfile",
       },
-      {
-        path: "create",
-        name: "CreateOrganization",
-        component: () => import("../views/organizations/CreateOrganization.vue"),
-      },
     ],
+  },
+  {
+    path: "/create-profile",
+    name: "CreateUser",
+    component: () => import("../views/user/CreateUser.vue"),
+  },
+  {
+    path: "/create-organization",
+    name: "CreateOrganization",
+    component: () => import("../views/organizations/CreateOrganization.vue"),
+  },
+  {
+    path: "*",
+    component: () => import("../views/NotFound.vue"),
   },
 ];
 
@@ -50,5 +56,11 @@ const router = new VueRouter({
   base: process.env.BASE_URL,
   routes,
 });
+
+// router.beforeEach(async (_to, _from, next) => {
+//   await store.dispatch("setSelectedAddress");
+//   await store.dispatch("isUser");
+//   next();
+// });
 
 export default router;

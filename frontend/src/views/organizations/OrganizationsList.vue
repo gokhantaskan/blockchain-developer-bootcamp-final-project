@@ -2,11 +2,12 @@
   <div class="organizations-list">
     <div class="container">
       <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="m-0">
+        <h1>
           Organizations
         </h1>
 
         <el-button
+          v-if="$store.state.isUser"
           type="primary"
           icon="el-icon-circle-plus-outline"
           size="default"
@@ -42,11 +43,13 @@
       </div>
 
       <div v-else>
-        <p class="m-0 mb-2 text-md">
+        <p class="m-0 mb-2 fs-md">
           There are no organizations found which you are involving.
         </p>
         <p class="m-0">
-          If you attended as an admin, you have to create your user profile first to see.
+          If you attended as an admin, you have to <router-link :to="{ name: 'CreateUser' }">
+            <strong>create your user profile</strong>
+          </router-link> first to see.
         </p>
       </div>
     </div>
@@ -58,6 +61,9 @@ export default {
   name: "OrganizationsList",
   components: {
     OrganizationDetails: () => import("@/components/OrganizationDetails.vue"),
+  },
+  mounted() {
+    this.$store.dispatch("user/setOrganizations");
   },
 };
 </script>

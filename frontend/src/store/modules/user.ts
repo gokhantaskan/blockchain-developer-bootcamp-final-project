@@ -53,30 +53,6 @@ export const userModule = {
   },
 
   actions: {
-    isUser({ dispatch, rootState }: any) {
-      return new Promise<boolean>((resolve, reject) => {
-        web3UserContract.methods
-          .isUser(rootState.selectedAddress)
-          .call({ from: rootState.selectedAddress })
-          .then((res: boolean) => {
-            console.log("isUser", res);
-            resolve(res);
-          })
-          .catch((err: any) => {
-            dispatch("resetUserState");
-
-            Message({
-              message: err.message,
-              type: "error",
-              duration: 0,
-              showClose: true,
-            });
-
-            reject(err);
-          });
-      });
-    },
-
     createUser({ dispatch, rootState }: any, payload: IUserFormData): Promise<{ res: ITransactionReceipt }> {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;

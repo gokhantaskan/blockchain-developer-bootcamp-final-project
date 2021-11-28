@@ -6,12 +6,13 @@ html {
 body {
   font-family: "Mulish", sans-serif;
   font-size: 100%;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
+  color: $--color-text-regular;
 }
 
 h1 {
   font-weight: 600;
+  margin: 0;
+  color: $--color-text-primary;
 }
 
 h2,
@@ -19,10 +20,36 @@ h3,
 h4,
 th {
   font-weight: 500;
+  margin: 0;
+  color: $--color-text-primary;
 }
 
 strong {
   font-weight: 700;
+}
+
+.fs-xs {
+  font-size: 0.75rem !important;
+}
+
+.fs-sm {
+  font-size: 0.875rem !important;
+}
+
+.fs-base {
+  font-size: 1rem !important;
+}
+
+.fs-md {
+  font-size: 1.25rem !important;
+}
+
+.fs-lg {
+  font-size: 1.5rem !important;
+}
+
+.fs-xl {
+  font-size: 2rem !important;
 }
 
 .text-left {
@@ -73,3 +100,7 @@ strong {
     color: $--color-text-placeholder !important;
   }
 }
+
+// .clipboard-comp {
+//   font-family: "Fira Code", monospace;
+// }

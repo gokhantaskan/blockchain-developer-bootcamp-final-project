@@ -1,10 +1,14 @@
 <template>
   <div class="user-profile">
     <div class="container">
-      <div class="d-flex align-items-center justify-content-between mb-4">
-        <h1 class="m-0">
+      <div
+        v-if="$store.state.isUser"
+        class="d-flex align-items-center justify-content-between mb-4"
+      >
+        <h1>
           Profile
         </h1>
+
         <div v-if="$store.state.user.detailsLoaded">
           <el-button
             type="primary"
@@ -64,6 +68,8 @@
           key="2"
           v-else
         >
+          <h1>Hello!</h1>
+          <p>To get started, let's create you a profile!</p>
           <el-button
             type="primary"
             @click="$router.push({ name: 'CreateUser' })"

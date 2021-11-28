@@ -1,9 +1,9 @@
 <template>
-  <div class="update-organization-form">
+  <div class="grant-admins-form">
     <ValidationObserver v-slot="{ handleSubmit }">
       <form
-        id="update-organization-form"
-        @submit.prevent="handleSubmit(updateAdmins)"
+        id="grant-admins-form"
+        @submit.prevent="handleSubmit(grantAdmins)"
         novalidate
       >
         <div class="row">
@@ -61,7 +61,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from "vue-demi";
+import { defineComponent, onMounted, ref } from "vue-demi";
 import { useEthereum } from "@/composables/ethereum";
 import { vm } from "@/lib/globals";
 
@@ -73,14 +73,19 @@ export default defineComponent({
 
     const adminsRef = ref("");
     const admins = ref<string[]>([]);
+    const currentAdmins = ref<string[]>([]);
 
     onMounted(() => {
-      admins.value = [...vm()?.$store.state.organization.details.admins];
+      currentAdmins.value = [...vm()?.$store.state.organization.details.admins];
     });
 
     const addAdmin = () => {
       if (adminsRef.value.toLowerCase() === ethereum.selectedAddress) {
-        alert("You are the owner!");
+        alert("This is the owner's address!");
+        adminsRef.value = "";
+      } else if (currentAdmins.value.indexOf(adminsRef.value) !== -1) {
+        alert("This address has already added!");
+        adminsRef.value = "";
       } else {
         if (
           adminsRef.value.length &&
@@ -97,10 +102,11 @@ export default defineComponent({
       admins.value.splice(i, 1);
     };
 
-    const updateAdmins = async () => {
+    const grantAdmins = async () => {
       emit("updating", true);
+      console.log("asda");
 
-      await root?.$store.dispatch("organization/updateAdmins", admins.value)
+      await root?.$store.dispatch("organization/grantAdmins", admins.value)
         .then(res => {
           console.log(res);
           emit("updated", true);
@@ -110,7 +116,7 @@ export default defineComponent({
       emit("updating", false);
     };
 
-    return { admins, adminsRef, addAdmin, removeAdmin, updateAdmins };
+    return { admins, currentAdmins, adminsRef, addAdmin, removeAdmin, grantAdmins };
   },
 });
 </script>

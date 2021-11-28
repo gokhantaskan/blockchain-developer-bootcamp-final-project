@@ -65,6 +65,7 @@ export default defineComponent({
     onMounted(
       async () => {
         loading.value = true;
+
         await ethereum.initialize();
         ethereum.setAllowedChains(["0x539", "0x3", "0x4"]);
 
@@ -80,7 +81,7 @@ export default defineComponent({
                   if (newVal) {
                     await root.$store.dispatch("setSelectedAddress", newVal);
 
-                    await root.$store.dispatch("user/isUser")
+                    await root.$store.dispatch("isUser")
                       .then(res => {
                         if (res) { // Is User
                           root.$store.dispatch("user/setUser");

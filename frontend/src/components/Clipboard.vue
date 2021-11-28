@@ -1,5 +1,5 @@
 <template>
-  <div class="d-inline-flex align-items-center">
+  <div class="clipboard-comp d-inline-flex align-items-center">
     <template v-if="text.length">
       <template v-if="address">
         {{ visible ? text : text.slice(0, 6) + "..." + text.slice(-4) }}

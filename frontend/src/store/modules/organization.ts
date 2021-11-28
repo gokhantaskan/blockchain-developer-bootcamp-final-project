@@ -53,11 +53,11 @@ export const organizationModule = {
       commit("SET_CONTRACT_ADDRESS", payload);
     },
 
-    setOrganization({ commit, dispatch, state }: any): Promise<IOrganizationDetailsRes> {
+    setOrganization({ commit, dispatch, state, rootState }: any): Promise<IOrganizationDetailsRes> {
       return new Promise((resolve, reject) => {
         web3OrganizationContract(state.contractAddress).methods
           .readOrganization()
-          .call({ from: state.selectedAddress })
+          .call({ from: rootState.selectedAddress })
           .then((res: any) => {
             commit("SET_ORGANIZATION_DETAILS", res);
 
@@ -202,6 +202,142 @@ export const organizationModule = {
                   duration: 0,
                   dangerouslyUseHTMLString: true,
                   message: `Remove User: <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                  title: "Transaction reverted!",
+                });
+              }
+            }
+
+            reject(err);
+          });
+      });
+    },
+
+    grantAdmins({ dispatch, commit, state, rootState }: any, payload: string[]) {
+      return new Promise((resolve, reject) => {
+        let receipt: ITransactionReceipt;
+        let tx_hash = "";
+        let infoNot: any;
+
+        web3OrganizationContract(state.contractAddress).methods
+          .grantAdmins(payload)
+          .send({ from: rootState.selectedAddress })
+          .once("transactionHash", (txHash: string) => {
+            tx_hash = txHash;
+
+            infoNot = Notification.info({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Grant Admins:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              title: "Transaction submitted!",
+            });
+          })
+          .once("receipt", (res: any) => {
+            receipt = res;
+          })
+          .then((res: any) => {
+            infoNot.close();
+
+            Notification.success({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Grant Admins:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              title: "Transaction confirmed!",
+            });
+
+            dispatch("setOrganization");
+            resolve(res);
+          })
+          .catch(async (err: any) => {
+            await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+              if (error) console.error("Error during getting the receipt: ", error);
+              receipt = transactionReceipt as ITransactionReceipt;
+            });
+
+            if ([4001].includes(err.code)) {
+              Message({
+                message: err.message,
+                type: "error",
+                duration: 5000,
+              });
+            } else {
+              if (tx_hash.length) {
+                infoNot.close();
+
+                Notification.error({
+                  position: "bottom-left",
+                  duration: 0,
+                  dangerouslyUseHTMLString: true,
+                  message: `Remove User: <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+                  title: "Transaction reverted!",
+                });
+              }
+            }
+
+            reject(err);
+          });
+      });
+    },
+
+    revokeAdmin({ dispatch, commit, state, rootState }: any, payload: string) {
+      return new Promise((resolve, reject) => {
+        let receipt: ITransactionReceipt;
+        let tx_hash = "";
+        let infoNot: any;
+
+        web3OrganizationContract(state.contractAddress).methods
+          .revokeAdmin(payload)
+          .send({ from: rootState.selectedAddress })
+          .once("transactionHash", (txHash: string) => {
+            tx_hash = txHash;
+
+            infoNot = Notification.info({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Revoke Admin:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${txHash.slice(0, 8) + "..." + txHash.slice(-8)}</a>`,
+              title: "Transaction submitted!",
+            });
+          })
+          .once("receipt", (res: any) => {
+            receipt = res;
+          })
+          .then((res: any) => {
+            infoNot.close();
+
+            Notification.success({
+              position: "bottom-left",
+              duration: 0,
+              dangerouslyUseHTMLString: true,
+              message: `Revoke Admin:  <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
+              title: "Transaction confirmed!",
+            });
+
+            dispatch("setOrganization");
+            resolve(res);
+          })
+          .catch(async (err: any) => {
+            await web3.eth.getTransactionReceipt(tx_hash, (error, transactionReceipt) => {
+              if (error) console.error("Error during getting the receipt: ", error);
+              receipt = transactionReceipt as ITransactionReceipt;
+            });
+
+            if ([4001].includes(err.code)) {
+              Message({
+                message: err.message,
+                type: "error",
+                duration: 5000,
+              });
+            } else {
+              if (tx_hash.length) {
+                infoNot.close();
+
+                Notification.error({
+                  position: "bottom-left",
+                  duration: 0,
+                  dangerouslyUseHTMLString: true,
+                  message: `Revoke Admin: <a href="https://ropsten.etherscan.io/tx/${tx_hash}">${tx_hash.slice(0, 8) + "..." + tx_hash.slice(-8)}</a>`,
                   title: "Transaction reverted!",
                 });
               }
