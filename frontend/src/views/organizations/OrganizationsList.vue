@@ -48,8 +48,12 @@
       </div>
 
       <div v-else>
-        There is no organization found which you are involving.
-        If you attended as an admin, you have to create your user profile first to see.
+        <p class="m-0 mb-2 text-md">
+          There are no organizations found which you are involving.
+        </p>
+        <p class="m-0">
+          If you attended as an admin, you have to create your user profile first to see.
+        </p>
       </div>
     </div>
   </div>

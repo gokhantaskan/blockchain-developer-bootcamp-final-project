@@ -86,7 +86,7 @@
                   </span>
 
                   <span
-                    class="delete-button d-inline-flex align-items-center justify-content-center cursor-pointer ms-2"
+                    class="pop-button d-inline-flex align-items-center justify-content-center cursor-pointer ms-2"
                     tabindex="0"
                     @click="removeAdmin(i)"
                   >

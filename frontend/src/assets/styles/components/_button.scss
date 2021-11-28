@@ -1,9 +1,20 @@
+button {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  vertical-align: baseline;
+  width: fit-content;
+  height: fit-content;
+}
+
 .el-button {
   // height: 100%;
   text-decoration: none;
   padding-left: 12px;
   padding-right: 12px;
-  border-radius: 0 !important;
+  border-radius: 0;
+  vertical-align: baseline !important;
 
   &--small.is-round {
     width: 24px !important;
@@ -22,15 +33,30 @@
   }
 }
 
-.delete-button {
+.pop-button {
   background: $--color-danger;
   border-radius: 100rem;
   overflow: hidden;
   width: 1rem;
   height: 1rem;
   color: white;
-  
+
   i {
     font-size: 0.75rem;
+  }
+}
+
+.el-button.el-button--small.is-plain.icon-button {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin-left: 0.5rem;
+  font-size: 1rem;
+
+  &:first-child {
+    margin-left: 1rem;
   }
 }

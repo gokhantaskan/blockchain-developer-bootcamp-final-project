@@ -2,6 +2,7 @@ import Vue from "vue";
 import "./plugins/composition-api";
 import "./plugins/element-ui";
 import "./plugins/vee-validate";
+import "./plugins/vue-tippy";
 import "./components/globals";
 
 import App from "./App.vue";

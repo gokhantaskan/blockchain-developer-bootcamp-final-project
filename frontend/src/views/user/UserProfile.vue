@@ -6,20 +6,14 @@
           Profile
         </h1>
         <div v-if="$store.state.user.detailsLoaded">
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="Update"
-            placement="bottom"
-            :visible-arrow="false"
-          >
-            <el-button
-              type="primary"
-              icon="el-icon-edit"
-              @click="updateModalVisible = true"
-              :loading="updateModalVisible"
-            ></el-button>
-          </el-tooltip>
+          <el-button
+            type="primary"
+            icon="el-icon-edit"
+            @click="updateModalVisible = true"
+            :loading="updateModalVisible"
+            v-tippy="{ content: 'Edit' }"
+          ></el-button>
+
           <el-dialog
             title="Update User Details"
             :visible.sync="updateModalVisible"
@@ -42,21 +36,15 @@
               </el-button>
             </template>
           </el-dialog>
-          <el-tooltip
-            class="item"
-            effect="dark"
-            content="Delete"
-            placement="bottom"
-            :visible-arrow="false"
-          >
-            <el-button
-              type="danger"
-              icon="el-icon-delete"
-              class="ms-2"
-              @click="deleteUser"
-              :loading="deleting"
-            ></el-button>
-          </el-tooltip>
+
+          <el-button
+            type="danger"
+            icon="el-icon-delete"
+            class="ms-2"
+            @click="deleteUser"
+            :loading="deleting"
+            v-tippy="{ content: 'Delete', placement: 'bottom-end' }"
+          ></el-button>
         </div>
       </div>
 
@@ -89,8 +77,8 @@
 </template>
 
 <script lang="ts">
-import { Message } from "element-ui";
 import { defineComponent } from "vue-demi";
+import { Message } from "element-ui";
 
 export default defineComponent({
   name: "UserProfile",

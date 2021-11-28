@@ -101,21 +101,18 @@ contract Organization is AccessControl {
     if (bytes(_phone).length != 0) phone = _phone;
   }
 
-  function grantAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
-    admins = _admins;
-
+  function grantAdmin(address[] memory _admins) public onlyOwner(msg.sender) {
     for (uint i = 0; i < _admins.length; i++) {
       grantRole(ADMIN_ROLE, _admins[i]);
     }
   }
 
   function revokeAdmins(address[] memory _admins) public onlyOwner(msg.sender) {
-    admins = _admins;
-
     for (uint i = 0; i < _admins.length; i++) {
       revokeRole(ADMIN_ROLE, _admins[i]);
     }
   }
 
   // TODO: Destroy the contract
+  function deleteOrganization() internal onlyOwner(msg.sender) {}
 }

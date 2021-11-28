@@ -11,6 +11,7 @@
   &__inner {
     border-color: $--color-border-base;
     border-radius: 0;
+    font-size: 1rem;
 
     &:read-only {
       border-color: darken($--color-border-extra-light, 5%);

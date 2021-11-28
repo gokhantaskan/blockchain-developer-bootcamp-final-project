@@ -219,19 +219,4 @@ contract Users {
   function getOrganizations() public view returns (Organization[] memory) {
     return organizations[msg.sender];
   }
-
-  // function getOrganizationDetails(address _contractAddress)
-  //   public
-  //   view
-  //   returns (
-  //     string memory _name,
-  //     string memory _registrationId,
-  //     string memory _email,
-  //     string memory _phone,
-  //     address[] memory _admins
-  //   )
-  // {
-  //   Organization o = Organization(_contractAddress);
-  //   return o.readOrganization();
-  // }
 }

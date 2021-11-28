@@ -4,6 +4,17 @@
       <div class="col-12">
         <h2 class="m-0 mb-2">
           {{ details.name }}
+          <button
+            class="text-primary"
+            v-if="details.owner === $store.state.selectedAddress"
+            v-tippy="{
+              placement : 'right',
+              content: 'You are the owner of this organization',
+              trigger: 'focus mouseenter'
+            }"
+          >
+            <i class="el-icon-s-flag" />
+          </button>
         </h2>
 
         <p class="m-0 mb-4">
@@ -15,17 +26,17 @@
         </p>
 
         <p class="m-0 mb-2">
-          <strong>E-mail: </strong>
+          <i class="el-icon-message"></i>
           {{ details.email }}
         </p>
 
         <p class="m-0 mb-2">
-          <strong>Phone: </strong>
+          <i class="el-icon-mobile-phone"></i>
           {{ details.phone }}
         </p>
 
         <p class="m-0">
-          <strong>Member count: </strong>
+          <i class="el-icon-user"></i>
           {{ details.admins.length }}
         </p>
         <!-- Admins

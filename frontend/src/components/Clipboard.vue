@@ -10,26 +10,18 @@
       <template v-else>
         {{ visible ? text : "****" }}
       </template>
-      <el-tooltip
-        class="item"
-        effect="dark"
-        :content="'Copy'"
-        placement="bottom"
-        :visible-arrow="false"
-      >
-        <el-button
-          :class="$style.button"
-          :disabled="copied"
-          @click="copy(text)"
-          icon="el-icon-copy-document"
-          type="info"
-          size="small"
-          plain
-        ></el-button>
-      </el-tooltip>
+      <el-button
+        class="icon-button"
+        :disabled="copied"
+        @click="copy(text)"
+        icon="el-icon-copy-document"
+        type="info"
+        size="small"
+        plain
+      ></el-button>
 
       <el-button
-        :class="$style.button"
+        class="icon-button"
         v-if="toggle"
         @click="toggleVisibility"
         icon="el-icon-view"
@@ -88,20 +80,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style module lang="scss">
-.button {
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  margin-left: 0.5rem;
-  font-size: 1rem;
-
-  &:first-child {
-    margin-left: 1rem;
-  }
-}
-</style>

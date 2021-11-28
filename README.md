@@ -8,11 +8,8 @@ https://sertifieme.netlify.app
 - ✅ Users can create profiles with their information.
   - ✅ Later on, users can update their e-mail/phone number, delete, and re-create their profile.
   - ✅ Users can not take any national ID, e-mail, and phone if they are already taken by another user.
-- ✅ Organizations can be created by users and can create sub-identities (admins) for validating attendees.
-- ❎ Organizations can create events.
-- ❎ Attendees can attend events via an application (Inıtially scanning a QR code).
-  - ❎ Attendees's time is recorded (in and out).
-  - ❎ At the end of each event, users scan a final QR code to declare their attendance and get their certificate.
+- ✅ Organizations can be created by users and admins can be attended by the organization owners.
+
 
 ## Get Started
 If you don't have Truffle, install it:\
