@@ -80,3 +80,34 @@ Now, you can start using it!
 - ✅ Displays information from your smart contract
 - ✅ Allows a user to submit a transaction to update smart contract state
 - ✅ Updates the frontend if the transaction is successful or not
+
+---
+## Blockchain
+
+Lint the files:
+
+`$ npm run lint`
+
+Check the `.sol` file sizes:
+
+`$ npm run size`
+
+```
+┌──────────────────────────────────────────────────────────────────────┬──────────┐
+│ Contract                                                             │ Size     │
+├──────────────────────────────────────────────────────────────────────┼──────────┤
+│ - Migrations                                                         │ 0.79 KiB │
+├──────────────────────────────────────────────────────────────────────┼──────────┤
+│ - Organization                                                       │ 8.06 KiB │
+├──────────────────────────────────────────────────────────────────────┼──────────┤
+│ - Users                                                              │ 23.03 K… │
+└──────────────────────────────────────────────────────────────────────┴──────────┘
+```
+
+Run the tests:
+
+```
+$ npm run test:all
+
+$ npm run test:users // To run only users tests
+```

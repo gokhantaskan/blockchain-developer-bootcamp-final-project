@@ -9,6 +9,7 @@
   "scripts": {
     "migrate": "truffle migrate --compile-all --reset",
     "lint": "prettier --write contracts/**/*.sol && solhint contracts/**/*.sol --config .solhint.json --fix",
+    "test:all": "truffle test",
     "test:users": "truffle test ./test/user.test.js",
     "debug": "truffle run debug start",
     "size": "truffle run contract-size"

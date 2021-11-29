@@ -13,6 +13,6 @@ ConsenSys Blockchain Developer Bootcamp 2021
 - `Organization.sol` is a seperate contract which is deployed each time when a user creates an organization.
   - The need of the seperate contract implementation is for adding more transparent and decentralized features to the organizations in the future.
 
-### 3-Optimizing Gas
+### 3-Optimizing Gas & File Size
 
 -
