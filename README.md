@@ -5,7 +5,9 @@ ConsenSys Blockchain Developer Bootcamp 2021
 
 https://sertifieme.netlify.app
 
-Walkthrough: https://www.loom.com/share/d0a5d04931934465abfdad88bc656ac3
+#### Walkthrough: 
+
+https://www.loom.com/share/d0a5d04931934465abfdad88bc656ac3
 
 - ✅ Users can create profiles with their information.
   - ✅ Later on, users can update their e-mail/phone number, delete, and re-create their profile.
@@ -13,7 +15,25 @@ Walkthrough: https://www.loom.com/share/d0a5d04931934465abfdad88bc656ac3
 - ✅ Organizations can be created by users and admins can be attended by the organization owners.
   - ✅ Organization details and admins can be updated by only the owner and the admins.
 
-## Get Started
+#### Future implementations:
+
+- Writing more (more) tests for all the contracts and the UI
+- Events contract implementation under organizations for users to attend
+- DAO implementation for organizations with their attendees
+- DID implementation for both users and organizations
+- Diamond pattern implementation
+- Factory/Clone implementation
+- Recording user interactions via Organizational pages (QR qode or similar)
+
+*** Organizations will create NFTs and Verifiable Credentials for the events that completed and send them their attendees. ***
+
+#### Known bugs:
+
+- When an organization is created without admin(s) and later on the owner adds admin(s), admin profiles cannot see organizations in their profile.
+- When an admin is removed from an organization, he/she still can see it under Organizations page.
+---
+### Running Blockchain
+
 If you don't have Truffle, install it:\
 `$ npm i -g truffle`
 
@@ -41,6 +61,8 @@ Open Ganache and then open a terminal in the root folder:\
 `$ npm run migrate`
 
 Copy the deployed `Users` contract address, create a `.env` file under `frontend` folder and set the address as `VUE_APP_USERS_CONTRACT_ADDRESS` variable.
+
+### Running Frontend
 
 After that, open `blockchain/build/contracts` folder and copy `abi` in `Users.json` and `Organization.json` file. Paste it inside `frontend/abi/Users.json` and `frontend/abi/Organization.json`.
 ```
@@ -111,3 +133,8 @@ $ npm run test:all
 
 $ npm run test:users // To run only users tests
 ```
+
+---
+## Public ETH account for the NFT certificate
+
+0x0297D238b9EB4931f60d4eDb6394823EB3D06D82

@@ -32,7 +32,7 @@ contract Users {
   uint public userCount;
 
   event LogUserCreated(
-    address indexed addr,
+    address indexed caller,
     bytes32 firstName,
     bytes32 lastName,
     bytes32 nationalId,
@@ -179,6 +179,7 @@ contract Users {
     string memory email = users[msg.sender].email;
     string memory phone = users[msg.sender].phone;
 
+    // These 3 lines will reset the taken id, e-mail and phones
     nationalIds[stringToBytes32(nationalId)] = address(0);
     emails[stringToBytes32(email)] = address(0);
     phones[stringToBytes32(phone)] = address(0);
