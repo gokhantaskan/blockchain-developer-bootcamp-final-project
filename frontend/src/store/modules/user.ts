@@ -35,8 +35,11 @@ export const userModule = {
       if (typeof payload.gender === "string") Vue.set(state.details, "gender", Number(payload.gender));
       if (typeof payload.email === "string") Vue.set(state.details, "email", payload.email);
       if (typeof payload.phone === "string") Vue.set(state.details, "phone", payload.phone);
-
-      Vue.set(state, "detailsLoaded", true);
+      if (
+        (typeof payload.firstName === "string" && payload.firstName.length) &&
+        (typeof payload.lastName === "string" && payload.lastName.length) &&
+        (typeof payload.nationalId === "string" && payload.nationalId.length)
+      ) Vue.set(state, "detailsLoaded", true);
     },
 
     RESET_USER_STATE(state: typeof STATE, payload: typeof INITIAL_STATE) {
@@ -134,9 +137,9 @@ export const userModule = {
           .readUser()
           .call({ from: rootState.selectedAddress })
           .then((res: any) => {
-            commit("SET_USER_DETAILS", res);
-
             resolve(res);
+
+            commit("SET_USER_DETAILS", res);
           })
           .catch((err: any) => {
             Message.error({
@@ -373,6 +376,8 @@ export const userModule = {
           .getOrganizations()
           .call({ from: rootState.selectedAddress })
           .then(async (res: string[]) => {
+            console.log(res);
+
             const arr = [] as IOrganizationDetails[];
 
             if (res.length) {

@@ -27,3 +27,6 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+## Known Bugs
+- When an organization is created without admins and the owner adds an admin later, the admin cannot see his/her involved organization

@@ -21,6 +21,17 @@
               >
                 <i class="el-icon-s-flag" />
               </span>
+              <span
+                tabindex="0"
+                class="text-primary"
+                v-if="isAdmin"
+                v-tippy="{
+                  placement: 'right',
+                  content: 'You are the admin of this organization',
+                }"
+              >
+                <i class="el-icon-user-solid" />
+              </span>
             </h1>
 
             <div v-if="isOwner || isAdmin">
@@ -119,7 +130,7 @@
                               :loading="deletingAdmin"
                               :disabled="deletingAdmin"
                             ></el-button>
-                            <span class="d-inline-block ms-3 fs-sm fw-bold">
+                            <span class="d-inline-block ms-3 fs-sm fw-bold text-primary">
                               {{ admin === $store.state.selectedAddress ? "(This is you)" : undefined }}
                             </span>
                           </div>
