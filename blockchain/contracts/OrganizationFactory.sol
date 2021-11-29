@@ -2,12 +2,11 @@
 pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./Organization.sol";
 
-contract OrganizationFactory is Ownable, AccessControl {
+contract OrganizationFactory is Ownable {
   Organization[] public organizationAddresses;
-  uint public organizationsCount;
+  uint public organizationCount;
 
   mapping(address => Organization[]) private organizations;
 
@@ -32,7 +31,7 @@ contract OrganizationFactory is Ownable, AccessControl {
 
     organizationAddresses.push(o);
 
-    // Add fucntion caller
+    // Add function caller
     organizations[msg.sender].push(o);
 
     // Add admins
@@ -40,7 +39,7 @@ contract OrganizationFactory is Ownable, AccessControl {
       organizations[_admins[i]].push(o);
     }
 
-    organizationsCount = organizationAddresses.length + 1;
+    organizationCount = organizationAddresses.length + 1;
     emit LogOrganizationAdded(o);
   }
 

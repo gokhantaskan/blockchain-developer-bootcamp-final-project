@@ -4,9 +4,6 @@ pragma solidity 0.8.9;
 /// @title Users Contract
 /// @author Gokhan Taskan
 /// @notice You can use this contract to create, update and delete a user profile
-
-import "./Organization.sol";
-
 contract Users {
   struct User {
     string firstName;
@@ -24,12 +21,12 @@ contract Users {
   }
 
   mapping(address => User) private users;
-  mapping(address => Organization[]) private organizations;
   mapping(bytes32 => address) private nationalIds;
   mapping(bytes32 => address) private emails;
   mapping(bytes32 => address) private phones;
 
   uint public userCount;
+  address public organizationFactory;
 
   event LogUserCreated(
     address indexed addr,
@@ -41,6 +38,10 @@ contract Users {
   );
   event LogUserUpdated(address indexed addr, bytes32 email, bytes32 phone);
   event LogUserDeleted(address indexed addr);
+
+  constructor (address _organizationFactory) public {
+    organizationFactory = _organizationFactory;
+  }
 
   function stringToBytes32(string memory str) internal pure returns (bytes32) {
     return (keccak256(abi.encodePacked(str)));
@@ -188,36 +189,5 @@ contract Users {
     userCount -= 1;
 
     emit LogUserDeleted(msg.sender);
-  }
-
-  // ! ORGANIZATON FUNCTIONS START
-
-  function createOrganization(
-    string memory _name,
-    string memory _registrationId,
-    string memory _email,
-    string memory _phone,
-    address[] memory _admins
-  ) public {
-    if (!isUser(msg.sender)) revert("You need to be a user first!");
-
-    Organization o = new Organization(
-      _name,
-      _registrationId,
-      _email,
-      _phone,
-      _admins,
-      msg.sender
-    );
-
-    organizations[msg.sender].push(o);
-
-    for (uint i; i < _admins.length; i++) {
-      organizations[_admins[i]].push(o);
-    }
-  }
-
-  function getOrganizations() public view returns (Organization[] memory) {
-    return organizations[msg.sender];
   }
 }

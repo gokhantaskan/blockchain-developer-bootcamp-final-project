@@ -1,7 +1,10 @@
-var Users = artifacts.require("./Users.sol");
-// var Organization = artifacts.require("./Organization.sol");
+var Users = artifacts.require("Users");
+var OrganizationFactory = artifacts.require("OrganizationFactory");
 
-module.exports = function (deployer) {
-  deployer.deploy(Users);
-  // deployer.deploy(Organizations);
+module.exports = async function (deployer) {
+  await deployer.deploy(OrganizationFactory);
+  let a = await OrganizationFactory.deployed();
+
+  // console.log("Organization Factory Contract", a);
+  deployer.deploy(Users, a.address);
 };
