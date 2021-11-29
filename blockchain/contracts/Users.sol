@@ -46,9 +46,8 @@ contract Users {
     return (keccak256(abi.encodePacked(str)));
   }
 
-  // ! USER FUNCTIONS START
-
-  /// @notice Checks if the given address is bound to a user, can be used in the front-end applications
+  /// @notice Checks if the given address is bound to a user
+  /// @dev Can be used in the front-end applications
   /// @param _address The address to check
   /// @return bool - true or false
   function isUser(address _address) public view returns (bool) {
@@ -63,6 +62,13 @@ contract Users {
     }
   }
 
+  /// @notice Creates a user profile and put the user inside "users" mapping
+  /// @param _firstName The user's first name - required
+  /// @param _lastName The user's last name - required
+  /// @param _nationalId The user's national ID - required
+  /// @param _email The user's e-mail - can be added later
+  /// @param _phone The user's phone - can be added later
+  /// @param _gender The user's gender
   function createUser(
     string memory _firstName,
     string memory _lastName,
