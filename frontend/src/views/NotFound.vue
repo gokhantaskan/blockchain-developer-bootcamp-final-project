@@ -1,5 +1,8 @@
 <template>
-  <div class="404 d-flex flex-column align-items-center justify-content-center" :class="$style['not-found']">
+  <div
+    class="404 d-flex flex-column align-items-center justify-content-center"
+    :class="$style['not-found']"
+  >
     <h1>404</h1>
     <p>Not Found</p>
 

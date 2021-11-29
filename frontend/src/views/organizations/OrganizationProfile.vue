@@ -9,10 +9,11 @@
           <div class="d-flex align-items-center justify-content-between mb-4">
             <h1>
               {{ $store.state.organization.details.name }}
+
               <span
                 tabindex="0"
                 class="text-primary"
-                v-if="$store.state.organization.details.owner === $store.state.selectedAddress"
+                v-if="isOwner"
                 v-tippy="{
                   placement: 'right',
                   content: 'You are the owner of this organization',
@@ -22,7 +23,7 @@
               </span>
             </h1>
 
-            <div>
+            <div v-if="isOwner || isAdmin">
               <el-button
                 type="primary"
                 icon="el-icon-edit"
@@ -57,7 +58,7 @@
         </div>
 
         <div class="col-12">
-          <strong>Contract Address:</strong>
+          <strong>Contract Address: </strong>
           <Clipboard
             :text="$store.state.organization.contractAddress"
             toggle
@@ -95,7 +96,7 @@
                   <tr>
                     <th>Admins</th>
                     <td>
-                      <ul class="m-0 ps-2">
+                      <ul class="m-0 ps-4">
                         <li
                           v-for="(admin, i) in $store.state.organization.details.admins"
                           :key="i"
@@ -108,6 +109,7 @@
                               toggle
                             />
                             <el-button
+                              v-if="isOwner"
                               class="icon-button"
                               type="danger"
                               size="small"
@@ -117,6 +119,9 @@
                               :loading="deletingAdmin"
                               :disabled="deletingAdmin"
                             ></el-button>
+                            <span class="d-inline-block ms-3 fs-sm fw-bold">
+                              {{ admin === $store.state.selectedAddress ? "(This is you)" : undefined }}
+                            </span>
                           </div>
                         </li>
                       </ul>
@@ -128,7 +133,10 @@
           </el-card>
         </div>
 
-        <div class="col-12 mt-4">
+        <div
+          class="col-12 mt-4"
+          v-if="isOwner"
+        >
           <el-button
             type="primary"
             @click="grantAdminsModalVisible = true"
@@ -140,7 +148,10 @@
             title="Add New Admin(s)"
             :visible.sync="grantAdminsModalVisible"
           >
-            <GrantAdminsForm />
+            <GrantAdminsForm
+              @granting="_granting"
+              @updated="afterGrant"
+            />
             <template
               slot="footer"
               class="dialog-footer"
@@ -149,7 +160,7 @@
                 form="grant-admins-form"
                 type="primary"
                 native-type="submit"
-                :loading="updating"
+                :loading="granting"
               >
                 Confirm
               </el-button>
@@ -181,6 +192,7 @@ export default defineComponent({
       moduleRegistered: false,
       updating: false,
       updateModalVisible: false,
+      granting: false,
       grantAdminsModalVisible: false,
       deletingAdmin: false,
     };
@@ -189,6 +201,9 @@ export default defineComponent({
   computed: {
     isOwner(): boolean {
       return this.$store.state.organization.details.owner === this.$store.state.selectedAddress;
+    },
+    isAdmin(): boolean {
+      return this.$store.state.organization.details.admins.includes(this.$store.state.selectedAddress);
     },
   },
 
@@ -206,8 +221,20 @@ export default defineComponent({
         duration: 5000,
       });
     },
+    afterGrant() {
+      this.grantAdminsModalVisible = false;
+
+      Message({
+        message: "Admin(s) added successfully!",
+        type: "success",
+        duration: 5000,
+      });
+    },
     _updating(e: boolean) {
       this.updating = e;
+    },
+    _granting(e: boolean) {
+      this.granting = e;
     },
     async revokeAdmin(address: string) {
       this.deletingAdmin = true;

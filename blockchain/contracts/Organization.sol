@@ -102,7 +102,7 @@ contract Organization is AccessControl {
     return (name, registrationId, email, phone, admins, owner);
   }
 
-  function updateOrganizationDetails(
+  function updateOrganization(
     string memory _name,
     string memory _registrationId,
     string memory _email,

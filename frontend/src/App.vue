@@ -1,8 +1,5 @@
 <template>
-  <div
-    id="app"
-    v-loading="loading"
-  >
+  <div id="app">
     <div v-if="ethereum.chainId && ethereum.allowedChains.includes(ethereum.chainId)">
       <Navbar />
 
@@ -33,14 +30,16 @@
 
     <div v-else>
       <div class="cover-whole d-flex flex-column align-items-center justify-content-center">
-        <p class="mt-0">
+        <p class="m-0 mb-4 fs-md">
           Please select a correct network in order to continue!
         </p>
-        <p class="m-0">
-          Allowed Networks: {{ ethereum.allowedChains.join(", ") }}
-          <span
-            v-if="ethereum.chainId"
-          >{{ ` - Current Network: ${ethereum.chainId}` }}</span>
+
+        <p class="m-0 text-center">
+          <span class="d-block fw-medium mb-2">Allowed Networks:</span>
+
+          <span v-for="(chain, i) in ethereum.allowedChains" :key="i" class="d-block text-dark-l2 fs-sm">
+            {{ ethereum.chains.filter(c => c.id === chain)[0].name }} ({{ ethereum.chains.filter(c => c.id === chain)[0].id }})
+          </span>
         </p>
       </div>
     </div>
@@ -48,7 +47,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUnmounted, ref, watch } from "vue-demi";
+import { defineComponent, onMounted, onUnmounted, watch } from "vue-demi";
 import { useEthereum } from "./composables/ethereum";
 import { vm } from "./lib/globals";
 
@@ -60,14 +59,14 @@ export default defineComponent({
   setup() {
     const { state: ethereum } = useEthereum();
     const root = vm();
-    const loading = ref(false);
+    // const loading = ref(false);
 
     onMounted(
       async () => {
-        loading.value = true;
+        // loading.value = true;
 
         await ethereum.initialize();
-        ethereum.setAllowedChains(["0x539", "0x3", "0x4"]);
+        ethereum.setAllowedChains(["0x539", "0x3"]);
 
         if (ethereum.isConnected) {
           await ethereum.requestAccounts();
@@ -100,7 +99,7 @@ export default defineComponent({
           }
         }
 
-        loading.value = false;
+        // loading.value = false;
       }
     );
 
@@ -110,7 +109,7 @@ export default defineComponent({
       }
     );
 
-    return { ethereum, loading };
+    return { ethereum /* loading */ };
   },
 });
 </script>

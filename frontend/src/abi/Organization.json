@@ -363,7 +363,7 @@
           "type": "string"
         }
       ],
-      "name": "updateOrganizationDetails",
+      "name": "updateOrganization",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

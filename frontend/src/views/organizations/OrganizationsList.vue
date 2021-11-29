@@ -46,7 +46,7 @@
         <p class="m-0 mb-2 fs-md">
           There are no organizations found which you are involving.
         </p>
-        <p class="m-0">
+        <p class="m-0" v-if="!$store.state.isUser">
           If you attended as an admin, you have to <router-link :to="{ name: 'CreateUser' }">
             <strong>create your user profile</strong>
           </router-link> first to see.

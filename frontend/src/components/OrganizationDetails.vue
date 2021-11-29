@@ -39,19 +39,6 @@
           <i class="el-icon-user"></i>
           {{ details.admins.length }}
         </p>
-        <!-- Admins
-          <ul class="ps-3 my-0">
-            <li
-              v-for="(admin, i) in details.admins"
-              :key="i"
-            >
-              <Clipboard
-                :text="admin"
-                address
-                toggle
-              />
-            </li>
-          </ul> -->
       </div>
     </div>
   </div>

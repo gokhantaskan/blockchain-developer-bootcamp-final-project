@@ -5,11 +5,13 @@ ConsenSys Blockchain Developer Bootcamp 2021
 
 https://sertifieme.netlify.app
 
+Walkthrough: https://www.loom.com/share/d0a5d04931934465abfdad88bc656ac3
+
 - ✅ Users can create profiles with their information.
   - ✅ Later on, users can update their e-mail/phone number, delete, and re-create their profile.
   - ✅ Users can not take any national ID, e-mail, and phone if they are already taken by another user.
 - ✅ Organizations can be created by users and admins can be attended by the organization owners.
-
+  - ✅ Organization details and admins can be updated by only the owner and the admins.
 
 ## Get Started
 If you don't have Truffle, install it:\
@@ -61,8 +63,6 @@ After that, open `blockchain/build/contracts` folder and copy `abi` in `Users.js
 }
 ```
 
----
-
 Open a new terminal in the root folder:\
 `$ cd frontend`
 
@@ -71,3 +71,12 @@ Open a new terminal in the root folder:\
 `$ npm run serve`
 
 Now, you can start using it!
+
+---
+## Frontend
+
+- ✅ Detects the presence of MetaMask
+- ✅ Connects to the current account
+- ✅ Displays information from your smart contract
+- ✅ Allows a user to submit a transaction to update smart contract state
+- ✅ Updates the frontend if the transaction is successful or not

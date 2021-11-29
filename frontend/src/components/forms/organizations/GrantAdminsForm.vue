@@ -74,14 +74,15 @@ export default defineComponent({
     const adminsRef = ref("");
     const admins = ref<string[]>([]);
     const currentAdmins = ref<string[]>([]);
+    const owner = vm()?.$store.state.organization.details.owner;
 
     onMounted(() => {
       currentAdmins.value = [...vm()?.$store.state.organization.details.admins];
     });
 
     const addAdmin = () => {
-      if (adminsRef.value.toLowerCase() === ethereum.selectedAddress) {
-        alert("This is the owner's address!");
+      if (adminsRef.value.toLowerCase() === owner) {
+        alert("The contract owner has already been an admin");
         adminsRef.value = "";
       } else if (currentAdmins.value.indexOf(adminsRef.value) !== -1) {
         alert("This address has already added!");
@@ -103,8 +104,7 @@ export default defineComponent({
     };
 
     const grantAdmins = async () => {
-      emit("updating", true);
-      console.log("asda");
+      emit("granting", true);
 
       await root?.$store.dispatch("organization/grantAdmins", admins.value)
         .then(res => {
@@ -113,7 +113,7 @@ export default defineComponent({
         })
         .catch(err => console.log(err));
 
-      emit("updating", false);
+      emit("granting", false);
     };
 
     return { admins, currentAdmins, adminsRef, addAdmin, removeAdmin, grantAdmins };

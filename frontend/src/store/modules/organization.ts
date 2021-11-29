@@ -84,7 +84,7 @@ export const organizationModule = {
         let infoNot: any;
 
         web3OrganizationContract(state.contractAddress).methods
-          .updateOrganizationDetails(payload.name, payload.registrationId, payload.email, payload.phone)
+          .updateOrganization(payload.name, payload.registrationId, payload.email, payload.phone)
           .send({ from: rootState.selectedAddress })
           .once("transactionHash", (txHash: string) => {
             tx_hash = txHash;
@@ -212,7 +212,7 @@ export const organizationModule = {
       });
     },
 
-    grantAdmins({ dispatch, commit, state, rootState }: any, payload: string[]) {
+    grantAdmins({ dispatch, state, rootState }: any, payload: string[]) {
       return new Promise((resolve, reject) => {
         let receipt: ITransactionReceipt;
         let tx_hash = "";

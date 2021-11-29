@@ -143,6 +143,7 @@ export default defineComponent({
       await root?.$store.dispatch("user/createUser", { ...form })
         .then(res => {
           console.log(res);
+          root.$store.dispatch("isUser");
           emit("created", true);
         })
         .catch(err => console.log(err));

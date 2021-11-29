@@ -104,6 +104,7 @@ export default defineComponent({
   mounted() {
     console.log("owned", this.$store.getters["user/ownedOrganizations"]);
     console.log("attended", this.$store.getters["user/attendedOrganizations"]);
+    this.$store.dispatch("user/setUser");
   },
   methods: {
     afterUpdate() {
